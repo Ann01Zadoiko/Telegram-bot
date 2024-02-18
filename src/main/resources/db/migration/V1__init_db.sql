@@ -15,7 +15,7 @@ create table if not exists list_of_employees(
 	id int auto_increment primary key,
     date date not null,
     id_user bigint not null,
-    at_word boolean default false,
-    number_of_list bigint not null,
+-- at_word boolean default false,
+ --   number_of_list bigint not null,
     foreign key (id_user) references users(id)
 );

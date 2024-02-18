@@ -2,11 +2,11 @@ package com.example.please.user;
 
 import com.example.please.atWork.AtWork;
 import jakarta.persistence.*;
+import jakarta.transaction.Transactional;
 import lombok.*;
 
-@Getter
 @Setter
-@ToString
+@Getter
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -31,4 +31,14 @@ public class User {
 
     @OneToOne(mappedBy = "user" , cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private AtWork atWork;
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", chatId=" + chatId +
+                ", username='" + username + '\'' +
+                ", fullName='" + fullName + '\'' +
+                ", departure='" + departure  +  '}';
+    }
 }

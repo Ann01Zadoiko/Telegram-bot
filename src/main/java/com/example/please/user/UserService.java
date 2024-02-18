@@ -13,11 +13,6 @@ public class UserService {
 
     private final UserRepository repository;
 
-//    public List<User> getAll(){
-//        List<User> users = (List<User>) repository.findAll();
-//        return repository.findAll();
-//    }
-
     public Iterable<User> listAll() {
         return repository.findAll();
     }
@@ -32,4 +27,30 @@ public class UserService {
     public User getByChatId(Long chatId){
         return repository.findByChatId(chatId);
     }
+
+    public boolean existsByChatId(Long chatId){
+        return repository.existsByChatId(chatId);
+    }
+
+
+//    change to id
+//    public void editFullName(Long chatId, String fullName){
+//        User user = repository.findByChatId(chatId);
+//        user.setFullName(fullName);
+//
+//        repository.save(user);
+//        log.info("/nChange user full name: " + user.getFullName() + " with id: " + user.getId() + " and chat id: "
+//         + user.getChatId());
+//    }
+//
+//    public void editDeparture(Long chatId, String departure){
+//        User user = repository.findByChatId(chatId);
+//        user.setDeparture(departure);
+//
+//        repository.save(user);
+//        log.info("/nChange user departure: " + user.getDeparture() + " with id: " + user.getId() + " and chat id: "
+//                + user.getChatId());
+//    }
+
 }
+
