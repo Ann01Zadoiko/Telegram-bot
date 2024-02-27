@@ -23,7 +23,7 @@ public class AtWork {
     private LocalDate date = LocalDate.now();
 
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_user")
     private User user;
 

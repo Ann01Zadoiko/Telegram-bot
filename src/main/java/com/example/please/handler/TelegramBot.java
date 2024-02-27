@@ -67,15 +67,21 @@ public class TelegramBot extends TelegramLongPollingBot {
                 String fullName = messageText.substring(5);
                 User user = service.getByChatId(charId);
 
-                if (user.getFullName() == null){
-                    user.setFullName(fullName);
-                    service.save(user);
-                    sendMessage(charId, Constance.FULL_NAME);
-                } else {
-                    user.setFullName(fullName);
-                    service.save(user);
-                    sendMessage(charId, Constance.FULL_NAME_NEW + fullName);
-                }
+                user.setFullName(fullName);
+                service.save(user);
+                sendMessage(charId, Constance.FULL_NAME);
+
+//                if (user.getFullName() == null){
+//                    user.setFullName(fullName);
+//                    service.save(user);
+//                    sendMessage(charId, Constance.FULL_NAME);
+//                } else {
+//                    user.setFullName(fullName);
+//                    service.save(user);
+//                    sendMessage(charId, Constance.FULL_NAME_NEW + fullName);
+//                }
+
+
 
                 log.info("User changed his full name to " + user.getFullName() + "\nFull info about user: " + user);
             }
@@ -103,19 +109,19 @@ public class TelegramBot extends TelegramLongPollingBot {
 
             if (messageText.equals("На місці!")){
 
-                try {
-                    if (service.checkUser(LocalDate.now(), service.getByChatId(charId))){
-                        sendMessage(charId, "DON'T BREAK MY HIBERNATE!");
-                    } else {
-                        atWorkService.atWorkClick(charId);
-                        sendMessage(charId, "Бажаю гарного робочого дня!");
-                    }
-                } catch (HibernateException e){
-                    sendMessage(charId, "aaaa");
-                }
+//                try {
+//                    if (service.checkUser(LocalDate.now(), service.getByChatId(charId))){
+//                        sendMessage(charId, "DON'T BREAK MY HIBERNATE!");
+//                    } else {
+//                        atWorkService.atWorkClick(charId);
+//                        sendMessage(charId, "Бажаю гарного робочого дня!");
+//                    }
+//                } catch (HibernateException e){
+//                    sendMessage(charId, "aaaa");
+//                }
 
-//                atWorkService.atWorkClick(charId);
-//                sendMessage(charId, "Бажаю гарного робочого дня!");
+                atWorkService.atWorkClick(charId);
+                sendMessage(charId, "Бажаю гарного робочого дня!");
             }
 
             if (messageText.contains("Пароль")){
@@ -139,7 +145,13 @@ public class TelegramBot extends TelegramLongPollingBot {
 
             if (messageText.equals("/mypassword")){
                 User user = service.getByChatId(charId);
-                sendMessage(charId, user.getPassword());
+
+                if (user.getPassword() == null){
+                    sendMessage(charId, "Your password is null");
+                } else {
+                    sendMessage(charId, user.getPassword());
+                }
+
             }
 
         }
@@ -161,7 +173,6 @@ public class TelegramBot extends TelegramLongPollingBot {
         if (!service.existsByChatId(message.getChatId())){
             User user = new User();
             user.setChatId(message.getChatId());
-            user.setUsername(message.getChat().getUserName());
             service.save(user);
 
             sendMessage(message.getChatId(), Constance.START_NEW_USER);

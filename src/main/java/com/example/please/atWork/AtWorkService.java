@@ -1,5 +1,6 @@
 package com.example.please.atWork;
 
+import com.example.please.handler.TelegramBot;
 import com.example.please.user.User;
 import com.example.please.user.UserRepository;
 import com.example.please.user.UserService;
@@ -29,13 +30,14 @@ public class AtWorkService {
         User user = userRepository.findByChatId(chatId);
 
         try {
-            if (userService.checkUser(LocalDate.now(), user)){
-                AtWork atWork = repository.findAtWorkByUserAndDate(chatId, LocalDate.now());
-                atWork.setUser(user);
-                repository.save(atWork);
+            if (userService.checkUser(LocalDate.now(), chatId)){
+               // AtWork atWork = repository.findAtWorkByUserAndDate(user, LocalDate.now());
+              //  atWork.setUser(user);
+              //  repository.save(atWork);
 
                 log.info("true");
                 log.info("User wanna be in the list AGAIN!");
+
             } else {
                 AtWork atWork = new AtWork();
                 atWork.setDate(LocalDate.now());

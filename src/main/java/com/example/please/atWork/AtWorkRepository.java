@@ -13,15 +13,12 @@ import java.util.List;
 public interface AtWorkRepository extends CrudRepository<AtWork, Long> {
 
     @Query("FROM AtWork aw JOIN FETCH aw.user WHERE aw.date =:date")
-    //@Query(nativeQuery = true, value = "select * from list_of_employees " +
-     //       "l join users u on l.id_user=u.id where l.date=:date")
     List<AtWork> findAllUsersByDate(@Param("date") LocalDate date);
 
     // select * from list_of_employees l join users u on l.id_user=u.id where l.date='2024-02-27'
 
-   @Query("FROM AtWork aw JOIN FETCH aw.user WHERE aw.user =:user AND aw.date =:date")
-  //  @Query(nativeQuery = true, value = "select * from list_of_employees l join users u on l.id_user=u.id where u.chat_id=:user and l.date=:date")
-    AtWork findAtWorkByUserAndDate(@Param("user") Long user, @Param("date") LocalDate date);
+ //  @Query("FROM AtWork aw JOIN FETCH aw.user WHERE aw.user =:user AND aw.date =:date")
+  // AtWork findAtWorkByUserAndDate(@Param("user") User user, @Param("date") LocalDate date);
 
 
 

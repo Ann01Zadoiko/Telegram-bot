@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 
 @Slf4j
@@ -34,22 +35,24 @@ public class UserService {
         return repository.existsByChatId(chatId);
     }
 
-    public List<User> listOfUsersByDate(LocalDate date){
+    public Set<User> listOfUsersByDate(LocalDate date){
         return repository.findUsersByDate(date);
     }
 
-    public boolean checkUser(LocalDate date, User user){
-        List<User> users = listOfUsersByDate(date);
+    public boolean checkUser(LocalDate date, Long chatId){
+        Set<User> users = listOfUsersByDate(date);
+
+        log.info(users.toString());
 
         for (User user1: users){
-            if (!user1.equals(user)){
+            if (user1.getChatId().equals(chatId)){
                 log.info("\nUser again wanna be in the list");
-                log.info(user.toString());
+                log.info("chatId");
                 log.info("EQUALS");
                 log.info(date.toString());
                 return true;
             } else {
-                log.info("Not\n" + user.toString());
+                log.info("Not\n" + chatId);
                 log.info("NOT EQUALS");
                 return false;
             }
