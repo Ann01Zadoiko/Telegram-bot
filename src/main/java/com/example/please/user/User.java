@@ -2,8 +2,9 @@ package com.example.please.user;
 
 import com.example.please.atWork.AtWork;
 import jakarta.persistence.*;
-import jakarta.transaction.Transactional;
 import lombok.*;
+
+import java.util.Set;
 
 @Setter
 @Getter
@@ -29,8 +30,16 @@ public class User {
     @Column(name = "departure")
     private String departure;
 
-    @OneToOne(mappedBy = "user" , cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "user" , cascade = CascadeType.ALL, orphanRemoval = true)
     private AtWork atWork;
+
+    @Column(name = "password")
+    private String password;
+
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "id_list")
+//    private AtWork atWork;
+
 
     @Override
     public String toString() {

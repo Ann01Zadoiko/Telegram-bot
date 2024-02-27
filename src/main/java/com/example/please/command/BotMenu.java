@@ -8,9 +8,9 @@ public class BotMenu {
 
     public List<BotCommand> listOfCommands(){
         List<BotCommand> list = new ArrayList<>();
-        list.add(new BotCommand("/start", "get a welcome message"));
-        list.add(new BotCommand("/help", "describe all commands"));
-        list.add(new BotCommand("/mydata", "your data"));
+        list.add(new BotCommand("/help", "опис всіх команд"));
+        list.add(new BotCommand("/mydata", "Ваші ПІБ та відділ"));
+        list.add(new BotCommand("/mypassword", "показує Ваш пароль"));
 
         return list;
     }

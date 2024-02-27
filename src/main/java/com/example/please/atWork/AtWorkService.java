@@ -2,14 +2,16 @@ package com.example.please.atWork;
 
 import com.example.please.user.User;
 import com.example.please.user.UserRepository;
+import com.example.please.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.hibernate.HibernateException;
 import org.springframework.stereotype.Service;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Service
@@ -20,20 +22,37 @@ public class AtWorkService {
 
     private final UserRepository userRepository;
 
+    private final UserService userService;
+
+
     public void atWorkClick(Long chatId){
         User user = userRepository.findByChatId(chatId);
 
-        AtWork atWork = new AtWork();
-        int number =  1;
+        try {
+            if (userService.checkUser(LocalDate.now(), user)){
+                AtWork atWork = repository.findAtWorkByUserAndDate(chatId, LocalDate.now());
+                atWork.setUser(user);
+                repository.save(atWork);
 
-     //   atWork.setAtWork(true);
-        atWork.setDate(LocalDate.now());
+                log.info("true");
+                log.info("User wanna be in the list AGAIN!");
+            } else {
+                AtWork atWork = new AtWork();
+                atWork.setDate(LocalDate.now());
+                atWork.setUser(user);
+                repository.save(atWork);
 
-        atWork.setUser(user);
+                log.info("false");
+                log.info("User was added to list of employee at work\n" + atWork);
+            }
+        } catch (HibernateException e){
+            log.info("aaaaa");
+        }
 
+    }
+
+    public void save(AtWork atWork){
         repository.save(atWork);
-
-        log.info("User was added to list of employee at work\n" + atWork);
     }
 
     public  List<AtWork> listOfEmployeeOfTheDay(LocalDate date){
@@ -46,7 +65,6 @@ public class AtWorkService {
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
         String s = formatter.format(LocalDate.now());
-        //String s = String.valueOf(date);
 
         for (AtWork atWork: list){
             s += "\n" + number + ". " +

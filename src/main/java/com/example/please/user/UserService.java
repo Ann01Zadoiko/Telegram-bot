@@ -4,7 +4,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
+
 
 @Slf4j
 @Service
@@ -32,25 +34,27 @@ public class UserService {
         return repository.existsByChatId(chatId);
     }
 
+    public List<User> listOfUsersByDate(LocalDate date){
+        return repository.findUsersByDate(date);
+    }
 
-//    change to id
-//    public void editFullName(Long chatId, String fullName){
-//        User user = repository.findByChatId(chatId);
-//        user.setFullName(fullName);
-//
-//        repository.save(user);
-//        log.info("/nChange user full name: " + user.getFullName() + " with id: " + user.getId() + " and chat id: "
-//         + user.getChatId());
-//    }
-//
-//    public void editDeparture(Long chatId, String departure){
-//        User user = repository.findByChatId(chatId);
-//        user.setDeparture(departure);
-//
-//        repository.save(user);
-//        log.info("/nChange user departure: " + user.getDeparture() + " with id: " + user.getId() + " and chat id: "
-//                + user.getChatId());
-//    }
+    public boolean checkUser(LocalDate date, User user){
+        List<User> users = listOfUsersByDate(date);
 
+        for (User user1: users){
+            if (!user1.equals(user)){
+                log.info("\nUser again wanna be in the list");
+                log.info(user.toString());
+                log.info("EQUALS");
+                log.info(date.toString());
+                return true;
+            } else {
+                log.info("Not\n" + user.toString());
+                log.info("NOT EQUALS");
+                return false;
+            }
+        }
+        return false;
+    }
 }
 

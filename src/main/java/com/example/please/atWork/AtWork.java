@@ -2,10 +2,10 @@ package com.example.please.atWork;
 
 import com.example.please.user.User;
 import jakarta.persistence.*;
-import jakarta.transaction.Transactional;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 @Getter
 @Setter
@@ -22,15 +22,13 @@ public class AtWork {
     @Column(name = "date")
     private LocalDate date = LocalDate.now();
 
-//    @Column(name = "at_word")
-//    private boolean atWork;
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_user")
     private User user;
 
-//    @Column(name = "number_of_list")
-//    private Integer numberOfList = 0;
+//    @OneToMany(mappedBy = "atWork", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private Set<User> users;
 
     @Override
     public String toString() {

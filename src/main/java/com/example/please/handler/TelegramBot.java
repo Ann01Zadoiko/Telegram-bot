@@ -8,26 +8,21 @@ import com.example.please.config.BotConfig;
 import com.example.please.constant.Constance;
 import com.example.please.convert.Converter;
 import com.example.please.user.User;
-import com.example.please.user.UserRepository;
 import com.example.please.user.UserService;
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.hibernate.HibernateException;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Chat;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
-import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.text.SimpleDateFormat;
 import java.time.LocalDate;
-import java.util.Optional;
+import java.util.List;
 
 
 @Slf4j
@@ -62,7 +57,8 @@ public class TelegramBot extends TelegramLongPollingBot {
 
             if (messageText.equals("/mydata")){
                 User user = service.getByChatId(charId);
-                String date = "ПІБ: " + user.getFullName() + "\nВідділ: " + user.getDeparture();
+                String date = "ПІБ: " + user.getFullName() +
+                        "\nВідділ: " + user.getDeparture();
                 sendMessage(charId, date);
                 log.info("\nUser: " + service.getByChatId(charId));
             }
@@ -74,7 +70,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 if (user.getFullName() == null){
                     user.setFullName(fullName);
                     service.save(user);
-                    sendMessage(charId, fullName + Constance.FULL_NAME);
+                    sendMessage(charId, Constance.FULL_NAME);
                 } else {
                     user.setFullName(fullName);
                     service.save(user);
@@ -106,14 +102,31 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
 
             if (messageText.equals("На місці!")){
-                atWorkService.atWorkClick(charId);
-                sendMessage(charId, "Бажаю гарного робочого дня!");
+
+                try {
+                    if (service.checkUser(LocalDate.now(), service.getByChatId(charId))){
+                        sendMessage(charId, "DON'T BREAK MY HIBERNATE!");
+                    } else {
+                        atWorkService.atWorkClick(charId);
+                        sendMessage(charId, "Бажаю гарного робочого дня!");
+                    }
+                } catch (HibernateException e){
+                    sendMessage(charId, "aaaa");
+                }
+
+//                atWorkService.atWorkClick(charId);
+//                sendMessage(charId, "Бажаю гарного робочого дня!");
             }
 
             if (messageText.contains("Пароль")){
                 String convert = messageText.substring(7);
 
                 String password = Converter.convertPassword(convert);
+
+                User user = service.getByChatId(charId);
+                user.setPassword(password);
+                service.save(user);
+
                 sendMessage(charId, password);
             }
 
@@ -121,21 +134,17 @@ public class TelegramBot extends TelegramLongPollingBot {
 
                 String printList = atWorkService.printList(LocalDate.now());
                 sendMessage(charId, printList);
+
+            }
+
+            if (messageText.equals("/mypassword")){
+                User user = service.getByChatId(charId);
+                sendMessage(charId, user.getPassword());
             }
 
         }
 
     }
-
-//    private void startCommandReceived(long chatId) throws TelegramApiException {
-//
-//        String text = "Вітаю! Я бот даного КП. На початку пропоную " +
-//        "Вам вести повне ПІБ  \nYour name: " + name;
-//
-//        sendMessage(chatId, text);
-//
-//        log.info("\nReplied to username: " + name);
-//    }
 
     private void sendMessage(long chatId, String text) throws TelegramApiException {
         SendMessage sendMessage = new SendMessage();
