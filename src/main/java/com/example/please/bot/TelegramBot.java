@@ -110,9 +110,14 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
 
             if (messageText.equals(Commands.LIST_OF_EMPLOYEES)){
-                String list = String.valueOf(atWorkService.print(LocalDate.now()));
+                try {
+                    String list = String.valueOf(atWorkService.print(LocalDate.now()));
 
-                sendMessage(charId, list);
+                    sendMessage(charId, list);
+
+                } catch (Exception e){
+                    sendMessage(charId, "LIST IS EMPTY");
+                }
             }
 
             if (messageText.equals(Commands.MY_PASSWORD)){
