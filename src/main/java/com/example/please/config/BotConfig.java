@@ -4,9 +4,11 @@ import org.springframework.beans.factory.annotation.Value;
 import lombok.Data;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 @Data
 @Configuration
+@EnableJpaRepositories(basePackages = "com.example.please.user")
 @PropertySource("application.properties")
 public class BotConfig {
 

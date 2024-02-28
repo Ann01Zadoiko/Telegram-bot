@@ -13,7 +13,10 @@ public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id = 0L;
+    private Long id;
+
+    @Column(name = "chat_id")
+    private Long chatId;
 
     @Column(name = "full_name")
     private String fullName;
@@ -21,10 +24,17 @@ public class User {
     @Column(name = "password")
     private String password;
 
+    @Column(name = "at_work")
+    private boolean atWork;
+
     @Override
     public String toString() {
         return "User{" +
                 "id=" + id +
-                ", fullName='" + fullName +  '}';
+                ", chatId=" + chatId +
+                ", fullName='" + fullName + '\'' +
+                ", password='" + password + '\'' +
+                ", atWork=" + atWork +
+                '}';
     }
 }

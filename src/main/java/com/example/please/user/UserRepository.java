@@ -1,6 +1,5 @@
 package com.example.please.user;
 
-
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -8,7 +7,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserRepository extends CrudRepository<User, Long> {
 
+    boolean existsByChatId(Long chatId);
 
-    boolean existsById(Long id);
+    User findByChatId(Long chatId);
 
 }

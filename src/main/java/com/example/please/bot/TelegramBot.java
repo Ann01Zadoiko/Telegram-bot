@@ -1,8 +1,9 @@
-package com.example.please.handler;
+package com.example.please.bot;
 
 
 import com.example.please.atWork.AtWorkService;
 import com.example.please.command.BotMenu;
+import com.example.please.command.Buttons;
 import com.example.please.config.BotConfig;
 import com.example.please.constant.Commands;
 import com.example.please.constant.Phrases;
@@ -20,8 +21,7 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-
-import java.util.Optional;
+import java.time.LocalDate;
 
 
 @Slf4j
@@ -34,6 +34,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @SneakyThrows
     public TelegramBot(BotConfig config, UserService service, AtWorkService atWorkService) {
+
         this.config = config;
         this.service = service;
         this.atWorkService = atWorkService;
@@ -50,93 +51,119 @@ public class TelegramBot extends TelegramLongPollingBot {
             String messageText = update.getMessage().getText();
             long charId = update.getMessage().getChatId();
 
+            String[] stringBuilder = messageText.split(" ");
+
             if (messageText.equals(Commands.START)){
                 registerUser(update.getMessage());
             }
 
-            if (messageText.equals(Commands.MY_DATA)){
-                Optional<User> user = service.getById(charId);
-                String date = "ПІБ: " + user.get().getFullName();
+            if (messageText.equals(Commands.MY_FULL_NAME)){
+                User user = service.getByChatId(charId);
+                String date = "Ваш ПІБ: " + user.getFullName();
                 sendMessage(charId, date);
-                log.info("\nUser: " + service.getById(charId));
+
+                log.info("\nUser: " + service.getByChatId(charId));
             }
 
-            if (messageText.length() > 20){
-                Optional<User> user = service.getById(charId);
 
-                user.get().setFullName(messageText);
-                service.save(user.get());
-                sendMessage(charId, Phrases.FULL_NAME);
+            if (stringBuilder.length > 1 && !(isACommand(messageText))) {
 
-                log.info("User changed his full name to " + user.get().getFullName() + "\nFull info about user: " + user);
+                User user = service.getByChatId(charId);
+
+                if (user.getFullName() == null){
+                    user.setFullName(messageText);
+                    service.update(user);
+
+                    sendMessage(charId, Phrases.FULL_NAME);
+
+                } else {
+                    user.setFullName(messageText);
+                    service.update(user);
+
+                    sendMessage(charId, Phrases.FULL_NAME_NEW + user.getFullName());
+                }
+
             }
-
 
             if (messageText.equals(Commands.HELP)){
                 sendMessage(charId, Phrases.HELP);
             }
 
             if (messageText.equals(Commands.AT_WORK)){
-                atWorkService.atWorkClick(charId);
+                atWorkService.atWorkClick(charId, LocalDate.now());
                 sendMessage(charId, "Бажаю гарного робочого дня!");
             }
 
-            if (messageText.length() <= 20){
-                if ( !(messageText.equals(Commands.MY_PASSWORD) || messageText.equals(Commands.AT_WORK) ||
-                messageText.equals(Commands.START) || messageText.equals(Commands.HELP) ||
-                messageText.equals(Commands.LIST_OF_EMPLOYEES))){
+            if (messageText.length() < 15 &&  !(isACommand(messageText)) && stringBuilder.length < 2){
+                try {
                     String password = Converter.convertPassword(messageText);
 
-                    Optional<User> user = service.getById(charId);
-                    user.get().setPassword(password);
-                    service.save(user.get());
+                    User user = service.getByChatId(charId);
+                    user.setPassword(password);
+                    service.save(user);
 
                     sendMessage(charId, password);
+
+                } catch (Exception e){
+                    sendMessage(charId, "DON'T BREAK MY TREASURE!");
                 }
             }
 
             if (messageText.equals(Commands.LIST_OF_EMPLOYEES)){
+                String list = String.valueOf(atWorkService.print(LocalDate.now()));
 
-                String list = atWorkService.print();
                 sendMessage(charId, list);
-
             }
 
             if (messageText.equals(Commands.MY_PASSWORD)){
-                Optional<User> user = service.getById(charId);
+                User user = service.getByChatId(charId);
 
-                if (user.get().getPassword() == null){
+                if (user.getPassword() == null){
                     sendMessage(charId, "Your password is null");
                 } else {
-                    sendMessage(charId, user.get().getPassword());
+                    sendMessage(charId, user.getPassword());
                 }
-
             }
+        }
+    }
 
+    private boolean isACommand(String message){
+
+        if ((message.equals(Commands.MY_PASSWORD) || message.equals(Commands.AT_WORK) ||
+                message.equals(Commands.START) || message.equals(Commands.HELP) ||
+                message.equals(Commands.LIST_OF_EMPLOYEES) || message.equals(Commands.MY_FULL_NAME))){
+            return true;
         }
 
+        return false;
     }
 
     private void sendMessage(long chatId, String text) throws TelegramApiException {
+
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId((String.valueOf(chatId)));
         sendMessage.setText(text);
 
         sendMessage.setReplyMarkup(Buttons.getButtons());
         execute(sendMessage);
+
         log.info("Reply sent: " + sendMessage.getText());
     }
 
     @SneakyThrows
     private void registerUser(Message message){
-        if (!service.existsById(message.getChatId())){
+
+        if (!service.existsByChatId(message.getChatId())){
             User user = new User();
-            user.setId(message.getChatId());
+            user.setChatId(message.getChatId());
             service.save(user);
 
             sendMessage(message.getChatId(), Phrases.START_NEW_USER);
-            log.info("user:" + service.listAll());
 
+            log.info("Users:" + service.listAll());
+
+        } else {
+            sendMessage(message.getChatId(), Phrases.START_OLD_USER);
         }
     }
 

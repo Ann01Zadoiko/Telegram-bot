@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 
 @Slf4j
@@ -16,7 +16,14 @@ public class UserService {
     private final UserRepository repository;
 
     public List<User> listAll() {
-        return (List<User>) repository.findAll();
+
+        List<User> users = new ArrayList<>();
+        Iterable<User> iterable = repository.findAll();
+        iterable.forEach(users::add);
+
+        log.info("List all: " + users);
+
+        return users;
     }
 
     public void save(User user){
@@ -27,15 +34,28 @@ public class UserService {
     }
 
 
-    public Optional<User> getById(Long id){
-        return repository.findById(id);
+    public User getByChatId(Long id){
+
+        log.info("User: " + repository.findByChatId(id));
+
+        return repository.findByChatId(id);
     }
 
-    public boolean existsById(Long id){
-        return repository.existsById(id);
+    public boolean existsByChatId(Long id){
+
+        log.info("User (" + id + ") exists: " + repository.existsByChatId(id));
+
+        return repository.existsByChatId(id); }
+
+    public void update(User user){
+
+        User user1 = repository.findByChatId(user.getChatId());
+        user1.setFullName(user.getFullName());
+        user1.setPassword(user1.getPassword());
+
+        log.info(user.getFullName() + " was updated!");
+
+        repository.save(user);
     }
-
-
-
 }
 
