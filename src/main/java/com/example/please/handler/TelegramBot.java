@@ -1,17 +1,16 @@
 package com.example.please.handler;
 
 
-import com.example.please.atWork.AtWork;
 import com.example.please.atWork.AtWorkService;
 import com.example.please.command.BotMenu;
 import com.example.please.config.BotConfig;
-import com.example.please.constant.Constance;
+import com.example.please.constant.Commands;
+import com.example.please.constant.Phrases;
 import com.example.please.convert.Converter;
 import com.example.please.user.User;
 import com.example.please.user.UserService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.hibernate.HibernateException;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
@@ -21,8 +20,8 @@ import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
-import java.time.LocalDate;
-import java.util.List;
+
+import java.util.Optional;
 
 
 @Slf4j
@@ -51,105 +50,65 @@ public class TelegramBot extends TelegramLongPollingBot {
             String messageText = update.getMessage().getText();
             long charId = update.getMessage().getChatId();
 
-            if (messageText.equals("/start private-bot")){
+            if (messageText.equals(Commands.START)){
                 registerUser(update.getMessage());
             }
 
-            if (messageText.equals("/mydata")){
-                User user = service.getByChatId(charId);
-                String date = "ПІБ: " + user.getFullName() +
-                        "\nВідділ: " + user.getDeparture();
+            if (messageText.equals(Commands.MY_DATA)){
+                Optional<User> user = service.getById(charId);
+                String date = "ПІБ: " + user.get().getFullName();
                 sendMessage(charId, date);
-                log.info("\nUser: " + service.getByChatId(charId));
+                log.info("\nUser: " + service.getById(charId));
             }
 
-            if (messageText.contains("ПІБ:")){
-                String fullName = messageText.substring(5);
-                User user = service.getByChatId(charId);
+            if (messageText.length() > 20){
+                Optional<User> user = service.getById(charId);
 
-                user.setFullName(fullName);
-                service.save(user);
-                sendMessage(charId, Constance.FULL_NAME);
+                user.get().setFullName(messageText);
+                service.save(user.get());
+                sendMessage(charId, Phrases.FULL_NAME);
 
-//                if (user.getFullName() == null){
-//                    user.setFullName(fullName);
-//                    service.save(user);
-//                    sendMessage(charId, Constance.FULL_NAME);
-//                } else {
-//                    user.setFullName(fullName);
-//                    service.save(user);
-//                    sendMessage(charId, Constance.FULL_NAME_NEW + fullName);
-//                }
-
-
-
-                log.info("User changed his full name to " + user.getFullName() + "\nFull info about user: " + user);
+                log.info("User changed his full name to " + user.get().getFullName() + "\nFull info about user: " + user);
             }
 
-            if (messageText.contains("Відділ:") || messageText.contains("відділ:")){
-                String departure = messageText.substring(8);
-                User user = service.getByChatId(charId);
 
-                if (user.getDeparture() == null) {
-                    user.setDeparture(departure);
-                    service.save(user);
-                    sendMessage(charId, Constance.DEPARTURE);
-                } else {
-                    user.setDeparture(departure);
-                    service.save(user);
-                    sendMessage(charId, Constance.DEPARTURE_NEW + user.getDeparture());
-                }
-
-                log.info("User changed his departure to " + user.getDeparture() + "\nFull info about user: " + user);
+            if (messageText.equals(Commands.HELP)){
+                sendMessage(charId, Phrases.HELP);
             }
 
-            if (messageText.equals("/help")){
-                sendMessage(charId, Constance.HELP);
-            }
-
-            if (messageText.equals("На місці!")){
-
-//                try {
-//                    if (service.checkUser(LocalDate.now(), service.getByChatId(charId))){
-//                        sendMessage(charId, "DON'T BREAK MY HIBERNATE!");
-//                    } else {
-//                        atWorkService.atWorkClick(charId);
-//                        sendMessage(charId, "Бажаю гарного робочого дня!");
-//                    }
-//                } catch (HibernateException e){
-//                    sendMessage(charId, "aaaa");
-//                }
-
+            if (messageText.equals(Commands.AT_WORK)){
                 atWorkService.atWorkClick(charId);
                 sendMessage(charId, "Бажаю гарного робочого дня!");
             }
 
-            if (messageText.contains("Пароль")){
-                String convert = messageText.substring(7);
+            if (messageText.length() <= 20){
+                if ( !(messageText.equals(Commands.MY_PASSWORD) || messageText.equals(Commands.AT_WORK) ||
+                messageText.equals(Commands.START) || messageText.equals(Commands.HELP) ||
+                messageText.equals(Commands.LIST_OF_EMPLOYEES))){
+                    String password = Converter.convertPassword(messageText);
 
-                String password = Converter.convertPassword(convert);
+                    Optional<User> user = service.getById(charId);
+                    user.get().setPassword(password);
+                    service.save(user.get());
 
-                User user = service.getByChatId(charId);
-                user.setPassword(password);
-                service.save(user);
-
-                sendMessage(charId, password);
+                    sendMessage(charId, password);
+                }
             }
 
-            if (messageText.equals("Список працівників")){
+            if (messageText.equals(Commands.LIST_OF_EMPLOYEES)){
 
-                String printList = atWorkService.printList(LocalDate.now());
-                sendMessage(charId, printList);
+                String list = atWorkService.print();
+                sendMessage(charId, list);
 
             }
 
-            if (messageText.equals("/mypassword")){
-                User user = service.getByChatId(charId);
+            if (messageText.equals(Commands.MY_PASSWORD)){
+                Optional<User> user = service.getById(charId);
 
-                if (user.getPassword() == null){
+                if (user.get().getPassword() == null){
                     sendMessage(charId, "Your password is null");
                 } else {
-                    sendMessage(charId, user.getPassword());
+                    sendMessage(charId, user.get().getPassword());
                 }
 
             }
@@ -170,18 +129,14 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @SneakyThrows
     private void registerUser(Message message){
-        if (!service.existsByChatId(message.getChatId())){
+        if (!service.existsById(message.getChatId())){
             User user = new User();
-            user.setChatId(message.getChatId());
+            user.setId(message.getChatId());
             service.save(user);
 
-            sendMessage(message.getChatId(), Constance.START_NEW_USER);
+            sendMessage(message.getChatId(), Phrases.START_NEW_USER);
             log.info("user:" + service.listAll());
 
-        } else {
-            User user = service.getByChatId(message.getChatId());
-            String fullName = user.getFullName();
-            sendMessage(message.getChatId(), fullName + Constance.START_OLD_USER);
         }
     }
 

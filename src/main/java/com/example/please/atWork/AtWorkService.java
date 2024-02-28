@@ -1,6 +1,6 @@
 package com.example.please.atWork;
 
-import com.example.please.handler.TelegramBot;
+
 import com.example.please.user.User;
 import com.example.please.user.UserRepository;
 import com.example.please.user.UserService;
@@ -11,7 +11,9 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Slf4j
@@ -19,64 +21,52 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class AtWorkService {
 
-    private final AtWorkRepository repository;
+
 
     private final UserRepository userRepository;
 
     private final UserService userService;
 
+    private HashMap<LocalDate, List<User>> map = new HashMap<>();
+    private List<User> users;
 
-    public void atWorkClick(Long chatId){
-        User user = userRepository.findByChatId(chatId);
 
-        try {
-            if (userService.checkUser(LocalDate.now(), chatId)){
-               // AtWork atWork = repository.findAtWorkByUserAndDate(user, LocalDate.now());
-              //  atWork.setUser(user);
-              //  repository.save(atWork);
+    public HashMap<LocalDate, List<User>> atWorkClick(Long chatId){
+        users = userService.listAll();
 
-                log.info("true");
-                log.info("User wanna be in the list AGAIN!");
+        Optional<User> user = userRepository.findById(chatId);
+        users.add(user.get());
+        map.put(LocalDate.now(), users);
 
-            } else {
-                AtWork atWork = new AtWork();
-                atWork.setDate(LocalDate.now());
-                atWork.setUser(user);
-                repository.save(atWork);
+        return map;
+    }
 
-                log.info("false");
-                log.info("User was added to list of employee at work\n" + atWork);
-            }
-        } catch (HibernateException e){
-            log.info("aaaaa");
+    private List<User> getListOfUsers(LocalDate date, HashMap<LocalDate, List<User>> users){
+
+        if (users.containsKey(date)) {
+            return users.get(date);
         }
 
+        return null;
     }
 
-    public void save(AtWork atWork){
-        repository.save(atWork);
-    }
+    public String print(){
 
-    public  List<AtWork> listOfEmployeeOfTheDay(LocalDate date){
-        return repository.findAllUsersByDate(date);
-    }
-
-    public  String printList(LocalDate date){
-        List<AtWork> list = listOfEmployeeOfTheDay(date);
-        int number = 1;
+        List<User> listOfUsers = getListOfUsers(LocalDate.now(), map);
 
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+
+        int number = 1;
         String s = formatter.format(LocalDate.now());
 
-        for (AtWork atWork: list){
-            s += "\n" + number + ". " +
-                    atWork.getUser().getFullName() + " ( " +
-                    atWork.getUser().getDeparture() + " )";
-
+        for (User user: listOfUsers){
+            s += "\n" + number + ". " + user.getFullName();
             ++number;
         }
 
         return s;
     }
+
+
 
 }
