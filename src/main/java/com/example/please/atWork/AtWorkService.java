@@ -19,35 +19,28 @@ public class AtWorkService {
 
     private final UserService userService;
 
-    public void atWorkClick(Long chatId, LocalDate date){
+    public void atWorkClick(Long chatId){
 
         User user = userService.getByChatId(chatId);
+        user.setAtWork(true);
+        userService.update(user);
 
-        if (date.equals(LocalDate.now())){
-            user.setAtWork(true);
-            userService.update(user);
-
-            log.info("User (" + user.getFullName() + ") is at work");
-        } else {
-            user.setAtWork(false);
-            userService.update(user);
-
-            log.info("User (" + user.getFullName() + ") is ALREADY at work");
-        }
+        log.info("Users: " + userService.listAll().toString());
 
     }
 
-    public StringBuilder print(LocalDate date){
+    public String print(String list){
 
         List<User> users1 = userService.listAll();
 
         int number = 1;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
-        StringBuilder list = new StringBuilder(formatter.format(LocalDate.now()));
+        list = formatter.format(LocalDate.now());
 
         for (User user: users1){
-            if (date.equals(LocalDate.now()) && user.isAtWork()){
-                list.append("\n").append(number++).append(". ").append(user.getFullName());
+            if (user.isAtWork()){
+               list += "\n" + (number++) + ". " + user.getFullName();
+                log.info(user.getFullName() + ": " + user.isAtWork());
             }
         }
 

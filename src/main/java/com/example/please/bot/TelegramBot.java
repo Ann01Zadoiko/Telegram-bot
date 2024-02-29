@@ -12,6 +12,7 @@ import com.example.please.user.User;
 import com.example.please.user.UserService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
@@ -22,6 +23,9 @@ import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScope
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.util.List;
 
 
 @Slf4j
@@ -31,6 +35,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     private final BotConfig config;
     private final UserService service;
     private final AtWorkService atWorkService;
+
 
     @SneakyThrows
     public TelegramBot(BotConfig config, UserService service, AtWorkService atWorkService) {
@@ -42,7 +47,6 @@ public class TelegramBot extends TelegramLongPollingBot {
         this.execute(new SetMyCommands(new BotMenu().listOfCommands(), new BotCommandScopeDefault(), null));
     }
 
-
     @SneakyThrows
     @Override
     public void onUpdateReceived(Update update) {
@@ -50,6 +54,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         if (update.hasMessage() && update.getMessage().hasText()){
             String messageText = update.getMessage().getText();
             long charId = update.getMessage().getChatId();
+
 
             String[] stringBuilder = messageText.split(" ");
 
@@ -90,35 +95,30 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
 
             if (messageText.equals(Commands.AT_WORK)){
-                atWorkService.atWorkClick(charId, LocalDate.now());
+                atWorkService.atWorkClick(charId);
+
                 sendMessage(charId, "Бажаю гарного робочого дня!");
             }
 
-            if (messageText.length() < 15 &&  !(isACommand(messageText)) && stringBuilder.length < 2){
+            if (!(isACommand(messageText)) && stringBuilder.length < 2){
 
-                    if (isCyrillic(messageText)){
-                        String password = Converter.convertPassword(messageText);
+                if (isCyrillic(messageText)){
+                    String password = Converter.convertPassword(messageText);
 
-                        User user = service.getByChatId(charId);
-                        user.setPassword(password);
-                        service.save(user);
+                    User user = service.getByChatId(charId);
+                    user.setPassword(password);
+                    service.save(user);
 
-                        sendMessage(charId, password);
-                    } else {
-                        sendMessage(charId, "WHAT ARE YOU DOING HERE?");
-                    }
+                    sendMessage(charId, password);
 
+                } else {
+                    sendMessage(charId, "WHAT ARE YOU DOING HERE?");
+                }
             }
 
             if (messageText.equals(Commands.LIST_OF_EMPLOYEES)){
-                try {
-                    String list = String.valueOf(atWorkService.print(LocalDate.now()));
 
-                    sendMessage(charId, list);
-
-                } catch (Exception e){
-                    sendMessage(charId, "LIST IS EMPTY");
-                }
+                sendMessage(charId, atWorkService.print(list));
             }
 
             if (messageText.equals(Commands.MY_PASSWORD)){
@@ -132,6 +132,27 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
         }
     }
+
+    @Scheduled(cron = "0 0 0 * * *")
+    public void becomeNewDay(){
+        List<User> users = service.listAll();
+
+        log.info("A new day!");
+
+        list = "";
+
+        log.info("List:" + list);
+
+        for (User user: users){
+            user.setAtWork(false);
+            service.update(user);
+
+            log.info(user.getFullName() + ": " + user.isAtWork());
+        }
+
+    }
+
+    private String list;
 
     public boolean isCyrillic(final String iStringToCheck) {
         return iStringToCheck.matches("^[а-яґєіїА-ЯҐЄІЇ0-9.]+$");
@@ -157,7 +178,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         sendMessage.setReplyMarkup(Buttons.getButtons());
         execute(sendMessage);
 
-        log.info("Reply sent: " + sendMessage.getText());
+        log.info("Reply sent: " + sendMessage.getText() + "\nBy user: " + sendMessage.getChatId());
     }
 
     @SneakyThrows
@@ -186,5 +207,6 @@ public class TelegramBot extends TelegramLongPollingBot {
     public String getBotToken() {
         return config.getBotToken();
     }
+
 
 }

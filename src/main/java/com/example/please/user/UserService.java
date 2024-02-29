@@ -21,6 +21,8 @@ public class UserService {
         Iterable<User> iterable = repository.findAll();
         iterable.forEach(users::add);
 
+      //  List<User> users = (List<User>) repository.findAll();
+
         log.info("List all: " + users);
 
         return users;
