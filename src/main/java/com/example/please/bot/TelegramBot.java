@@ -131,9 +131,6 @@ public class TelegramBot extends TelegramLongPollingBot {
                 }
             }
 
-            if (!isCyrillic(messageText)){
-                sendMessage(charId, "WHAT ARE YOU DOING HERE?");
-            }
         }
     }
 
