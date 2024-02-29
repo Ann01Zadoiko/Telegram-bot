@@ -95,18 +95,19 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
 
             if (messageText.length() < 15 &&  !(isACommand(messageText)) && stringBuilder.length < 2){
-                try {
-                    String password = Converter.convertPassword(messageText);
 
-                    User user = service.getByChatId(charId);
-                    user.setPassword(password);
-                    service.save(user);
+                    if (isCyrillic(messageText)){
+                        String password = Converter.convertPassword(messageText);
 
-                    sendMessage(charId, password);
+                        User user = service.getByChatId(charId);
+                        user.setPassword(password);
+                        service.save(user);
 
-                } catch (Exception e){
-                    sendMessage(charId, "DON'T BREAK MY TREASURE!");
-                }
+                        sendMessage(charId, password);
+                    } else {
+                        sendMessage(charId, "WHAT ARE YOU DOING HERE?");
+                    }
+
             }
 
             if (messageText.equals(Commands.LIST_OF_EMPLOYEES)){
@@ -130,6 +131,10 @@ public class TelegramBot extends TelegramLongPollingBot {
                 }
             }
         }
+    }
+
+    public boolean isCyrillic(final String iStringToCheck) {
+        return iStringToCheck.matches("^[а-яґєіїА-ЯҐЄІЇ0-9.]+$");
     }
 
     private boolean isACommand(String message){
