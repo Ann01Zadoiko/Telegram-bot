@@ -100,7 +100,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 sendMessage(charId, "Бажаю гарного робочого дня!");
             }
 
-            if (!(isACommand(messageText)) && stringBuilder.length < 2){
+            if (messageText.length() < 15 && !(isACommand(messageText)) && stringBuilder.length < 2){
 
                 if (isCyrillic(messageText)){
                     String password = Converter.convertPassword(messageText);
@@ -129,6 +129,10 @@ public class TelegramBot extends TelegramLongPollingBot {
                 } else {
                     sendMessage(charId, user.getPassword());
                 }
+            }
+
+            if (!isCyrillic(messageText)){
+                sendMessage(charId, "WHAT ARE YOU DOING HERE?");
             }
         }
     }
