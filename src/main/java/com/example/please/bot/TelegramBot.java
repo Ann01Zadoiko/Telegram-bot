@@ -148,15 +148,15 @@ public class TelegramBot extends TelegramLongPollingBot {
     }
 
     @SneakyThrows
-    @Scheduled(cron = "0 0 10 * * MON-FRI")
+    @Scheduled(cron = "0 0 9 * * MON-FRI")
     public void dailyRemember(){
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.setText("Хто не скаче, той москаль!\nНу що, на роботі вже?");
 
-        sendMessage.setReplyMarkup(Buttons.getButtons());
-        execute(sendMessage);
+        List<User> users = service.listAll();
 
-        log.info("Reply sent: " + sendMessage.getText() + "\nBy user: " + sendMessage.getChatId());
+        for (User user: users){
+            sendMessage(user.getChatId(),"Хто не скаче, той москаль!");
+        }
+
     }
 
     private String list;
