@@ -19,13 +19,17 @@ public class AtWorkService {
 
     private final UserService userService;
 
-    public void atWorkClick(Long chatId){
+    public String atWorkClick(Long chatId){
 
         User user = userService.getByChatId(chatId);
-        user.setAtWork(true);
-        userService.update(user);
 
-        log.info("Users: " + userService.listAll().toString());
+        if (user.isAtWork()){
+            return "Двічі півторювати це не буду!";
+        } else {
+            user.setAtWork(true);
+            userService.update(user);
+            return "Бажаю гарного робочого дня!";
+        }
 
     }
 
@@ -36,6 +40,10 @@ public class AtWorkService {
         int number = 1;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
         list = formatter.format(LocalDate.now());
+
+        if (users1.isEmpty()){
+            return "Ніхто не прийшов на роботу";
+        }
 
         for (User user: users1){
             if (user.isAtWork()){

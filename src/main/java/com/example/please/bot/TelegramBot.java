@@ -89,9 +89,9 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
 
             if (messageText.equals(Commands.AT_WORK)){
-                atWorkService.atWorkClick(charId);
+                String s = atWorkService.atWorkClick(charId);
 
-                sendMessage(charId, "Бажаю гарного робочого дня!");
+                sendMessage(charId, s);
             }
 
             if (!(isACommand(messageText)) && stringBuilder.length < 2){
@@ -119,7 +119,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 User user = service.getByChatId(charId);
 
                 if (user.getPassword() == null){
-                    sendMessage(charId, "Your password is null");
+                    sendMessage(charId, "У Вас немає паролю!\nНавіщо тоді натискати цю кнопку?");
                 } else {
                     sendMessage(charId, user.getPassword());
                 }
@@ -145,6 +145,18 @@ public class TelegramBot extends TelegramLongPollingBot {
             log.info(user.getFullName() + ": " + user.isAtWork());
         }
 
+    }
+
+    @SneakyThrows
+    @Scheduled(cron = "0 0 10 * * MON-FRI")
+    public void dailyRemember(){
+        SendMessage sendMessage = new SendMessage();
+        sendMessage.setText("Хто не скаче, той москаль!\nНу що, на роботі вже?");
+
+        sendMessage.setReplyMarkup(Buttons.getButtons());
+        execute(sendMessage);
+
+        log.info("Reply sent: " + sendMessage.getText() + "\nBy user: " + sendMessage.getChatId());
     }
 
     private String list;

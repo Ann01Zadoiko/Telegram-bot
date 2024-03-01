@@ -15,5 +15,5 @@ public interface Phrases {
             "Для того, щоб дізнатися, які дії є скористайтися командою /help";
     String FULL_NAME_NEW = "Ви змінили своє ПІБ на ";
 
-    String START_OLD_USER = "Дорогуша, Ви зареєстровані!";
+    String START_OLD_USER = "Дорогуша, Ви вже зареєстровані!";
 }
