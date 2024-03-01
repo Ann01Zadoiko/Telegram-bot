@@ -155,7 +155,9 @@ public class TelegramBot extends TelegramLongPollingBot {
         List<User> users = service.listAll();
 
         for (User user: users){
-            sendMessage(user.getChatId(),"Хто не скаче, той москаль!");
+            if (!user.isAtWork()){
+                sendMessage(user.getChatId(), "Запізнюватись не гарно!");
+            }
         }
 
     }
