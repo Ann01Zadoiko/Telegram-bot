@@ -21,10 +21,6 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.util.List;
 
 
@@ -35,7 +31,6 @@ public class TelegramBot extends TelegramLongPollingBot {
     private final BotConfig config;
     private final UserService service;
     private final AtWorkService atWorkService;
-
 
     @SneakyThrows
     public TelegramBot(BotConfig config, UserService service, AtWorkService atWorkService) {
@@ -69,7 +64,6 @@ public class TelegramBot extends TelegramLongPollingBot {
 
                 log.info("\nUser: " + service.getByChatId(charId));
             }
-
 
             if (stringBuilder.length > 1 && !(isACommand(messageText))) {
 
@@ -208,6 +202,5 @@ public class TelegramBot extends TelegramLongPollingBot {
     public String getBotToken() {
         return config.getBotToken();
     }
-
 
 }
