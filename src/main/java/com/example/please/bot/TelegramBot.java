@@ -31,6 +31,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     private final BotConfig config;
     private final UserService service;
     private final AtWorkService atWorkService;
+    private String list;
 
     @SneakyThrows
     public TelegramBot(BotConfig config, UserService service, AtWorkService atWorkService) {
@@ -79,7 +80,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                     user.setFullName(messageText);
                     service.update(user);
 
-                    sendMessage(charId, Phrases.FULL_NAME_NEW + user.getFullName());
+                    sendMessage(charId, Phrases.FULL_NAME_NEW + user.getFullName().toUpperCase());
                 }
 
             }
@@ -158,8 +159,6 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
 
     }
-
-    private String list;
 
     public boolean isCyrillic(final String iStringToCheck) {
         return iStringToCheck.matches("^[а-яґєіїА-ЯҐЄІЇ0-9.]+$");
