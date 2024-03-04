@@ -2,7 +2,7 @@ package com.example.please.bot;
 
 
 import com.example.please.atWork.AtWorkService;
-import com.example.please.check.MessageChecker;
+import com.example.please.handler.MessageChecker;
 import com.example.please.command.BotMenu;
 import com.example.please.command.Buttons;
 import com.example.please.config.BotConfig;
@@ -70,7 +70,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
             if (MessageChecker.isFullName(stringBuilder, messageText)) {
 
-                if (user.getFullName().equals("Ніхто")){
+                if (user.getFullName().equals("Хтось")){
                     user.setFullName(messageText);
                     service.update(user);
 
@@ -98,12 +98,12 @@ public class TelegramBot extends TelegramLongPollingBot {
 
             if (MessageChecker.isPassword(stringBuilder, messageText)){
 
-                        String password = Converter.convertPassword(messageText);
+                String password = Converter.convertPassword(messageText);
 
-                        user.setPassword(password);
-                        service.save(user);
+                user.setPassword(password);
+                service.save(user);
 
-                        sendMessage(charId, password);
+                sendMessage(charId, password);
             }
 
             if (MessageChecker.isUnexpectedMessage(messageText)) {
@@ -162,7 +162,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     }
 
 
-    private void sendMessage(long chatId, String text) throws TelegramApiException {
+    public void sendMessage(long chatId, String text) throws TelegramApiException {
 
         SendMessage sendMessage = new SendMessage();
         sendMessage.setChatId((String.valueOf(chatId)));
@@ -180,12 +180,10 @@ public class TelegramBot extends TelegramLongPollingBot {
         if (!service.existsByChatId(message.getChatId())){
             User user = new User();
             user.setChatId(message.getChatId());
-            user.setFullName("Ніхто");
+            user.setFullName("Хтось");
             service.save(user);
 
             sendMessage(message.getChatId(), Phrases.START_NEW_USER);
-
-            log.info("Users:" + service.listAll());
 
         } else {
             sendMessage(message.getChatId(), Phrases.START_OLD_USER);
