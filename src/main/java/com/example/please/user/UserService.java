@@ -27,7 +27,6 @@ public class UserService {
     }
 
     public void save(User user){
-
         repository.save(user);
 
         log.info("New user was saved: " + user);
@@ -35,27 +34,26 @@ public class UserService {
 
 
     public User getByChatId(Long id){
-
-        log.info("User: " + repository.findByChatId(id));
-
         return repository.findByChatId(id);
     }
 
     public boolean existsByChatId(Long id){
-
-        log.info("User (" + id + ") exists: " + repository.existsByChatId(id));
-
-        return repository.existsByChatId(id); }
+        return repository.existsByChatId(id);
+    }
 
     public void update(User user){
 
-        User user1 = repository.findByChatId(user.getChatId());
+        User user1 = repository.findById(user.getId()).get();
         user1.setFullName(user.getFullName());
         user1.setPassword(user1.getPassword());
 
         log.info(user.getFullName() + " was updated!");
 
         repository.save(user);
+    }
+
+    public User getById(Long id){
+        return repository.findById(id).get();
     }
 }
 

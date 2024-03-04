@@ -21,8 +21,6 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
-import java.time.LocalTime;
 import java.util.List;
 
 
@@ -52,6 +50,8 @@ public class TelegramBot extends TelegramLongPollingBot {
         if (update.hasMessage() && update.getMessage().hasText()){
             String messageText = update.getMessage().getText();
             long charId = update.getMessage().getChatId();
+            User user = service.getByChatId(charId);
+            Long id = user.getId();
 
 
             String[] stringBuilder = messageText.split(" ");
@@ -61,18 +61,15 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
 
             if (messageText.equals(Commands.MY_FULL_NAME)){
-                User user = service.getByChatId(charId);
                 String date = "Ваш ПІБ: " + user.getFullName();
                 sendMessage(charId, date);
 
-                log.info("\nUser: " + service.getByChatId(charId));
+                log.info("\nUser: " + service.getById(id));
             }
 
-            if (stringBuilder.length > 1 && !(isACommand(messageText)) && isCyrillic(messageText)) {
+            if (stringBuilder.length > 1 && !(isACommand(messageText))) {
 
-                User user = service.getByChatId(charId);
-
-                if (user.getFullName() == null){
+                if (user.getFullName().equals("Ніхто")){
                     user.setFullName(messageText);
                     service.update(user);
 
@@ -92,29 +89,28 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
 
             if (messageText.equals(Commands.AT_WORK)){
-                String s = atWorkService.atWorkClick(charId);
+
+                String s = atWorkService.atWorkClick(id);
 
                 sendMessage(charId, s);
             }
 
-            if (!(isACommand(messageText)) && stringBuilder.length < 2 && isCyrillic(messageText)){
+            if (!(isACommand(messageText)) && stringBuilder.length < 2){
 
-                if (isCyrillic(messageText)){
-                    String password = Converter.convertPassword(messageText);
+                    if (isCyrillic(messageText)){
+                        String password = Converter.convertPassword(messageText);
 
-                    User user = service.getByChatId(charId);
-                    user.setPassword(password);
-                    service.save(user);
+                        user.setPassword(password);
+                        service.save(user);
 
-                    sendMessage(charId, password);
-
-                } else {
-                    sendMessage(charId, "WHAT ARE YOU DOING HERE?");
-                }
+                        sendMessage(charId, password);
+                    } else {
+                        sendMessage(charId,"WHAT ARE YOU DOING HERE?" );
+                    }
             }
 
-            if (!(isCyrillic(messageText)) && !(isACommand(messageText))) {
-                sendMessage(charId, "Not this time!");
+            if (!(isCyrillic(messageText.replaceAll("\\s",""))) && !isACommand(messageText)) {
+                sendMessage(charId, "WHAT ARE YOU DOING HERE?");
             }
 
             if (messageText.equals(Commands.LIST_OF_EMPLOYEES)){
@@ -123,7 +119,6 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
 
             if (messageText.equals(Commands.MY_PASSWORD)){
-                User user = service.getByChatId(charId);
 
                 if (user.getPassword() == null){
                     sendMessage(charId, "У Вас немає паролю!\nНавіщо тоді натискати цю кнопку?");

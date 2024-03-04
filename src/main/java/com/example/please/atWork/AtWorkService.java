@@ -8,7 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
+
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -20,9 +20,9 @@ public class AtWorkService {
 
     private final UserService userService;
 
-    public String atWorkClick(Long chatId){
+    public String atWorkClick(Long id){
 
-        User user = userService.getByChatId(chatId);
+        User user = userService.getById(id);
 
         if (user.isAtWork()){
             return "Двічі півторювати це не буду!";
@@ -45,7 +45,6 @@ public class AtWorkService {
         for (User user: users1){
             if (user.isAtWork()){
                list += "\n" + (number++) + ". " + user.getFullName();
-                log.info(user.getFullName() + ": " + user.isAtWork());
             }
         }
 
