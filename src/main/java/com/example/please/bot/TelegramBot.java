@@ -2,6 +2,7 @@ package com.example.please.bot;
 
 
 import com.example.please.atWork.AtWorkService;
+import com.example.please.check.MessageChecker;
 import com.example.please.command.BotMenu;
 import com.example.please.command.Buttons;
 import com.example.please.config.BotConfig;
@@ -67,7 +68,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 log.info("\nUser: " + service.getById(id));
             }
 
-            if (stringBuilder.length > 1 && !(isACommand(messageText))) {
+            if (MessageChecker.isFullName(stringBuilder, messageText)) {
 
                 if (user.getFullName().equals("Ніхто")){
                     user.setFullName(messageText);
@@ -95,22 +96,18 @@ public class TelegramBot extends TelegramLongPollingBot {
                 sendMessage(charId, s);
             }
 
-            if (!(isACommand(messageText)) && stringBuilder.length < 2){
+            if (MessageChecker.isPassword(stringBuilder, messageText)){
 
-                    if (isCyrillic(messageText)){
                         String password = Converter.convertPassword(messageText);
 
                         user.setPassword(password);
                         service.save(user);
 
                         sendMessage(charId, password);
-                    } else {
-                        sendMessage(charId,"WHAT ARE YOU DOING HERE?" );
-                    }
             }
 
-            if (!(isCyrillic(messageText.replaceAll("\\s",""))) && !isACommand(messageText)) {
-                sendMessage(charId, "WHAT ARE YOU DOING HERE?");
+            if (MessageChecker.isUnexpectedMessage(messageText)) {
+                sendMessage(charId, "Not this time!");
             }
 
             if (messageText.equals(Commands.LIST_OF_EMPLOYEES)){
@@ -129,6 +126,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
         }
     }
+
 
     @Scheduled(cron = "0 0 0 * * *")
     public void becomeNewDay(){
@@ -163,20 +161,6 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     }
 
-    public boolean isCyrillic(final String iStringToCheck) {
-        return iStringToCheck.matches("^[а-яґєіїА-ЯҐЄІЇ0-9.]+$");
-    }
-
-    private boolean isACommand(String message){
-
-        if ((message.equals(Commands.MY_PASSWORD) || message.equals(Commands.AT_WORK) ||
-                message.equals(Commands.START) || message.equals(Commands.HELP) ||
-                message.equals(Commands.LIST_OF_EMPLOYEES) || message.equals(Commands.MY_FULL_NAME))){
-            return true;
-        }
-
-        return false;
-    }
 
     private void sendMessage(long chatId, String text) throws TelegramApiException {
 
