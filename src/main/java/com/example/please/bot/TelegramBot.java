@@ -21,6 +21,8 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
+import java.time.LocalTime;
 import java.util.List;
 
 
@@ -66,7 +68,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 log.info("\nUser: " + service.getByChatId(charId));
             }
 
-            if (stringBuilder.length > 1 && !(isACommand(messageText))) {
+            if (stringBuilder.length > 1 && !(isACommand(messageText)) && isCyrillic(messageText)) {
 
                 User user = service.getByChatId(charId);
 
@@ -95,7 +97,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 sendMessage(charId, s);
             }
 
-            if (!(isACommand(messageText)) && stringBuilder.length < 2){
+            if (!(isACommand(messageText)) && stringBuilder.length < 2 && isCyrillic(messageText)){
 
                 if (isCyrillic(messageText)){
                     String password = Converter.convertPassword(messageText);
@@ -109,6 +111,10 @@ public class TelegramBot extends TelegramLongPollingBot {
                 } else {
                     sendMessage(charId, "WHAT ARE YOU DOING HERE?");
                 }
+            }
+
+            if (!(isCyrillic(messageText)) && !(isACommand(messageText))) {
+                sendMessage(charId, "Not this time!");
             }
 
             if (messageText.equals(Commands.LIST_OF_EMPLOYEES)){
@@ -195,6 +201,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         if (!service.existsByChatId(message.getChatId())){
             User user = new User();
             user.setChatId(message.getChatId());
+            user.setFullName("Ніхто");
             service.save(user);
 
             sendMessage(message.getChatId(), Phrases.START_NEW_USER);

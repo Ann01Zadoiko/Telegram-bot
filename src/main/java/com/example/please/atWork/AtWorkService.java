@@ -8,6 +8,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -40,10 +41,6 @@ public class AtWorkService {
         int number = 1;
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
         list = formatter.format(LocalDate.now());
-
-        if (users1.isEmpty()){
-            return "Ніхто не прийшов на роботу";
-        }
 
         for (User user: users1){
             if (user.isAtWork()){
