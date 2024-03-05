@@ -6,10 +6,7 @@ import com.example.please.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
 import java.time.LocalDate;
-
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -32,7 +29,6 @@ public class AtWorkService {
             userService.update(user);
             return "Бажаю гарного робочого дня!";
         }
-
     }
 
     public String print(String list){
@@ -48,7 +44,6 @@ public class AtWorkService {
                list += "\n" + (number++) + ". " + user.getFullName();
             }
         }
-
         return list;
     }
 }

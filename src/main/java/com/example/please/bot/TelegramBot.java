@@ -22,9 +22,6 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
-
-import java.time.LocalTime;
-import java.util.HashMap;
 import java.util.List;
 
 
@@ -56,8 +53,6 @@ public class TelegramBot extends TelegramLongPollingBot {
             long charId = update.getMessage().getChatId();
             User user = service.getByChatId(charId);
             Long id = user.getId();
-
-
             String[] stringBuilder = messageText.split(" ");
 
             if (messageText.equals(Commands.START)){
@@ -93,14 +88,12 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
 
             if (messageText.equals(Commands.AT_WORK)){
-
                 String s = atWorkService.atWorkClick(id);
 
                 sendMessage(charId, s);
             }
 
             if (MessageChecker.isPassword(stringBuilder, messageText)){
-
                 String password = Converter.convertPassword(messageText);
 
                 user.setPassword(password);
@@ -118,17 +111,14 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
 
             if (messageText.equals(Commands.MY_PASSWORD)){
-
                 if (user.getPassword() == null){
                     sendMessage(charId, "У Вас немає паролю!\nНавіщо тоді натискати цю кнопку?");
                 } else {
                     sendMessage(charId, user.getPassword());
                 }
             }
-
         }
     }
-
 
     @Scheduled(cron = "0 0 0 * * *")
     public void becomeNewDay(){
@@ -140,13 +130,11 @@ public class TelegramBot extends TelegramLongPollingBot {
             user.setAtWork(false);
             service.update(user);
         }
-
     }
 
     @SneakyThrows
     @Scheduled(cron = "0 0 9 * * MON-FRI")
     public void dailyRemember(){
-
         List<User> users = service.listAll();
 
         for (User user: users){
@@ -154,7 +142,6 @@ public class TelegramBot extends TelegramLongPollingBot {
                 sendMessage(user.getChatId(), "Запізнюватись не гарно!");
             }
         }
-
     }
 
     public void sendMessage(long chatId, String text) throws TelegramApiException {
@@ -171,7 +158,6 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @SneakyThrows
     private void registerUser(Message message){
-
         if (!service.existsByChatId(message.getChatId())){
             User user = new User();
             user.setChatId(message.getChatId());
