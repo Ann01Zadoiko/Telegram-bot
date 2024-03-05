@@ -22,6 +22,9 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
+import java.time.LocalTime;
+import java.util.HashMap;
 import java.util.List;
 
 
@@ -111,7 +114,6 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
 
             if (messageText.equals(Commands.LIST_OF_EMPLOYEES)){
-
                 sendMessage(charId, atWorkService.print(list));
             }
 
@@ -131,18 +133,12 @@ public class TelegramBot extends TelegramLongPollingBot {
     @Scheduled(cron = "0 0 0 * * *")
     public void becomeNewDay(){
         List<User> users = service.listAll();
-
         log.info("A new day!");
-
         list = "";
-
-        log.info("List:" + list);
 
         for (User user: users){
             user.setAtWork(false);
             service.update(user);
-
-            log.info(user.getFullName() + ": " + user.isAtWork());
         }
 
     }
@@ -160,7 +156,6 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
 
     }
-
 
     public void sendMessage(long chatId, String text) throws TelegramApiException {
 
