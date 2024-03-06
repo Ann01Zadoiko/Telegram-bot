@@ -46,6 +46,7 @@ public class UserService {
         User user1 = repository.findById(user.getId()).get();
         user1.setFullName(user.getFullName());
         user1.setPassword(user1.getPassword());
+        user1.setAtWork(user.getAtWork());
 
         log.info(user.getFullName() + " was updated!");
 

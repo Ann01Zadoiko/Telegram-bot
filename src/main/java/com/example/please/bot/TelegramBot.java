@@ -22,6 +22,8 @@ import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
+
+import java.time.LocalTime;
 import java.util.List;
 
 
@@ -66,7 +68,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 log.info("\nUser: " + service.getById(id));
             }
 
-            if (MessageChecker.isFullName(stringBuilder, messageText)) {
+            if (MessageChecker.isFullName(stringBuilder, messageText) && !(messageText.equals("Список за обраний день"))) {
 
                 if (user.getFullName().equals("Хтось")){
                     user.setFullName(messageText);
@@ -88,7 +90,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
 
             if (messageText.equals(Commands.AT_WORK)){
-                String s = atWorkService.atWorkClick(id);
+                String s = atWorkService.atWorkClick(id, LocalTime.now());
 
                 sendMessage(charId, s);
             }
@@ -127,7 +129,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         list = "";
 
         for (User user: users){
-            user.setAtWork(false);
+            user.setAtWork((byte) 0);
             service.update(user);
         }
     }
@@ -138,7 +140,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         List<User> users = service.listAll();
 
         for (User user: users){
-            if (!user.isAtWork()){
+            if (user.getAtWork() == 0){
                 sendMessage(user.getChatId(), "Запізнюватись не гарно!");
             }
         }

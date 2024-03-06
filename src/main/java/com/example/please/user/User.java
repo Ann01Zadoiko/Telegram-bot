@@ -3,6 +3,8 @@ package com.example.please.user;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalTime;
+
 @Setter
 @Getter
 @AllArgsConstructor
@@ -25,7 +27,10 @@ public class User {
     private String password;
 
     @Column(name = "at_work")
-    private boolean atWork;
+    private byte atWork;
+
+    @Column(name = "time_coming")
+    private LocalTime timeComing;
 
     @Override
     public String toString() {
@@ -35,6 +40,7 @@ public class User {
                 ", fullName='" + fullName + '\'' +
                 ", password='" + password + '\'' +
                 ", atWork=" + atWork +
+                ", timeComing=" + timeComing +
                 '}';
     }
 }

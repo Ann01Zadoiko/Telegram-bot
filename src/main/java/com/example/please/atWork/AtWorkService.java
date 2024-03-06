@@ -5,8 +5,10 @@ import com.example.please.user.User;
 import com.example.please.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
 
@@ -14,18 +16,20 @@ import java.util.*;
 @Slf4j
 @Service
 @RequiredArgsConstructor
+@Component
 public class AtWorkService {
 
     private final UserService userService;
 
-    public String atWorkClick(Long id){
+    public String atWorkClick(Long id, LocalTime time){
 
         User user = userService.getById(id);
 
-        if (user.isAtWork()){
+        if (user.getAtWork() == 1){
             return "Двічі півторювати це не буду!";
         } else {
-            user.setAtWork(true);
+            user.setAtWork((byte) 1);
+            user.setTimeComing(time);
             userService.update(user);
             return "Бажаю гарного робочого дня!";
         }
@@ -36,14 +40,16 @@ public class AtWorkService {
         List<User> users1 = userService.listAll();
 
         int number = 1;
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd MMMM yyyy");
-        list = formatter.format(LocalDate.now());
+        DateTimeFormatter formatterDay = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+        DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm");
+        list = formatterDay.format(LocalDate.now());
 
         for (User user: users1){
-            if (user.isAtWork()){
-               list += "\n" + (number++) + ". " + user.getFullName();
+            if (user.getAtWork() == 1){
+               list += "\n" + (number++) + ". " + user.getFullName() + " (" + formatterTime.format(user.getTimeComing()) + ")";
             }
         }
         return list;
     }
+
 }
