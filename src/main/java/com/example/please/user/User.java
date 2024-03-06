@@ -5,8 +5,7 @@ import lombok.*;
 
 import java.time.LocalTime;
 
-@Setter
-@Getter
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
@@ -32,15 +31,9 @@ public class User {
     @Column(name = "time_coming")
     private LocalTime timeComing;
 
-    @Override
-    public String toString() {
-        return "User{" +
-                "id=" + id +
-                ", chatId=" + chatId +
-                ", fullName='" + fullName + '\'' +
-                ", password='" + password + '\'' +
-                ", atWork=" + atWork +
-                ", timeComing=" + timeComing +
-                '}';
-    }
+//    @Column(name = "room")
+//    private int room = 666;
+//
+//    @Column(name = "phone_number")
+//    private String phoneNumber = "";
 }

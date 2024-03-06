@@ -4,5 +4,7 @@ create table if not exists users(
     full_name varchar(150) not null,
     password varchar(20),
     at_work bit(1) default 0,
-    time_coming time
+    time_coming time,
+    room int,
+    phone_number varchar(15)
 );
