@@ -47,6 +47,8 @@ public class UserService {
         user1.setFullName(user.getFullName());
         user1.setPassword(user1.getPassword());
         user1.setAtWork(user.getAtWork());
+        user1.setPhoneNumber(user.getPhoneNumber());
+        user1.setRoom(user.getRoom());
 
         log.info(user.getFullName() + " was updated!");
 

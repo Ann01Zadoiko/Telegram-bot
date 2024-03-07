@@ -119,6 +119,46 @@ public class TelegramBot extends TelegramLongPollingBot {
                     sendMessage(charId, user.getPassword());
                 }
             }
+
+            if (MessageChecker.isARoom(messageText)){
+                if (user.getRoom() == null){
+                    user.setRoom(Integer.parseInt(messageText));
+                    service.update(user);
+                    sendMessage(charId, "Буду приходити на каву");
+                } else {
+                    user.setRoom(Integer.parseInt(messageText));
+                    service.update(user);
+                    sendMessage(charId, "Ви змінили своє місце проживання на " + user.getRoom() + " кабінет");
+                }
+            }
+
+            if (MessageChecker.isPhoneNumber(messageText)){
+                if (user.getPhoneNumber() == null){
+                    user.setPhoneNumber(messageText);
+                    service.update(user);
+                    sendMessage(charId, "Буду тепер тобі постійно звонити, мій друже");
+                } else {
+                    user.setPhoneNumber(messageText);
+                    service.update(user);
+                    sendMessage(charId, "Ви змініли свій номер на " + user.getPhoneNumber());
+                }
+            }
+
+            if (messageText.equals(Commands.ROOM)){
+                if (user.getRoom() == null){
+                    sendMessage(charId, Phrases.ROOM);
+                } else {
+                    sendMessage(charId, "Ви працюєте в " + user.getRoom() + " кабінеті");
+                }
+            }
+
+            if (messageText.equals(Commands.PHONE_NUMBER)){
+                if (user.getPhoneNumber() == null){
+                    sendMessage(charId, Phrases.PHONE_NUMBER);
+                } else {
+                    sendMessage(charId, "Ваш номер телефону: " + user.getPhoneNumber());
+                }
+            }
         }
     }
 

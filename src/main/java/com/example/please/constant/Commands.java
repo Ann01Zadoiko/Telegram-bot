@@ -9,4 +9,7 @@ public interface Commands {
     String MY_PASSWORD = "/mypassword";
     String LIST_OF_EMPLOYEES = "Список працівників";
 
+    String ROOM = "/room";
+    String PHONE_NUMBER = "/phone_number";
+
 }
