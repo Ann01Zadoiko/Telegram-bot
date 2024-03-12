@@ -1,12 +1,16 @@
 package com.example.please.command;
 
+
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
+
 public class NotificationButton {
+
+    private NotificationButton(){}
 
     public static InlineKeyboardMarkup inlineButtonsForNotificationIfOn(){
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();

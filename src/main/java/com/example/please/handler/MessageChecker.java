@@ -24,33 +24,19 @@ public class MessageChecker {
 
     public static boolean isACommand(String message){
 
-        if (message.equals(Commands.MY_PASSWORD) || message.equals(Commands.AT_WORK) ||
+        return message.equals(Commands.MY_PASSWORD) || message.equals(Commands.AT_WORK) ||
                 message.equals(Commands.START) || message.equals(Commands.HELP) ||
                 message.equals(Commands.LIST_OF_EMPLOYEES) || message.equals(Commands.MY_FULL_NAME) ||
                 message.equals(Commands.ROOM) || message.equals(Commands.PHONE_NUMBER)
-        || message.equals("/notification") || message.contains("/send")){
-            return true;
-        }
-
-        return false;
+                || message.equals("/notification") || message.contains("/send");
     }
 
     public static boolean isARoom(String message){
-
-        if (message.toCharArray().length == 3){
-            return true;
-        }
-
-        return false;
+        return message.toCharArray().length == 3;
     }
 
     public static boolean isPhoneNumber(String message){
-
-        if (message.startsWith("+380")){
-            return true;
-        }
-
-        return false;
+        return message.startsWith("+380");
     }
 
 }

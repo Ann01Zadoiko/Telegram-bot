@@ -39,11 +39,6 @@ public class User {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-   // @OneToOne(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY)
-//    @OneToOne
-//    @JoinColumn(name = "id_notification")
-//    private Notification notification;
-
     @Override
     public String toString() {
         return "User{" +

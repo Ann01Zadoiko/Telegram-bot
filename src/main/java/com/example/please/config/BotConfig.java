@@ -12,7 +12,7 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 @Data
 @Configuration
 @EnableScheduling
-@EnableJpaRepositories(basePackages = "com.example.please")
+//@EnableJpaRepositories(basePackages = "com.example.please")
 @ComponentScan("com.example.please")
 @PropertySource("application.properties")
 public class BotConfig {
