@@ -5,7 +5,6 @@ import com.example.please.user.User;
 import com.example.please.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -16,7 +15,6 @@ import java.util.*;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-@Component
 public class AtWorkService {
 
     private final UserService userService;

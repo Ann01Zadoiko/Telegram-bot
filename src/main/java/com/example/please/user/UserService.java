@@ -1,5 +1,7 @@
 package com.example.please.user;
 
+import com.example.please.user.User;
+import com.example.please.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

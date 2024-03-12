@@ -1,5 +1,6 @@
 package com.example.please.user;
 
+
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -29,7 +30,7 @@ public class User {
     @Column(name = "at_work")
     private byte atWork;
 
-    @Column(name = "time_coming")
+    @Column(name = "time_of_coming")
     private LocalTime timeComing;
 
     @Column(name = "room")
@@ -37,6 +38,11 @@ public class User {
 
     @Column(name = "phone_number")
     private String phoneNumber;
+
+   // @OneToOne(cascade = CascadeType.ALL, mappedBy = "user", fetch = FetchType.LAZY)
+//    @OneToOne
+//    @JoinColumn(name = "id_notification")
+//    private Notification notification;
 
     @Override
     public String toString() {

@@ -16,6 +16,7 @@ public class BotMenu {
         list.add(new BotCommand(Commands.MY_PASSWORD, "показує Ваш пароль"));
         list.add(new BotCommand(Commands.ROOM, "введення номеру кабінету, в якому працюєте"));
         list.add(new BotCommand(Commands.PHONE_NUMBER, "введення робочого номеру"));
+        list.add(new BotCommand("/notification", "введення робочого номеру"));
 
         return list;
     }
