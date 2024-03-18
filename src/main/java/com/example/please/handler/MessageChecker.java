@@ -28,7 +28,8 @@ public class MessageChecker {
                 message.equals(Commands.START) || message.equals(Commands.HELP) ||
                 message.equals(Commands.LIST_OF_EMPLOYEES) || message.equals(Commands.MY_FULL_NAME) ||
                 message.equals(Commands.ROOM) || message.equals(Commands.PHONE_NUMBER)
-                || message.equals("/notification") || message.contains("/send");
+                || message.equals("/notification") || message.contains("/send") ||
+                message.equals(Commands.SETTINGS);
     }
 
     public static boolean isARoom(String message){

@@ -6,8 +6,8 @@ create table if not exists users(
     at_work bit(1) default 0,
     time_of_coming time,
     room int,
-    phone_number varchar(15)
-
+    phone_number varchar(15),
+    status enum('WORK','SICK','VACATION')
 );
 
 create table if not exists notifications (

@@ -8,9 +8,11 @@ public interface Commands {
     String MY_FULL_NAME = "/myfullname";
     String MY_PASSWORD = "/mypassword";
     String LIST_OF_EMPLOYEES = "Список працівників";
-    String ROOM = "/room";
-    String PHONE_NUMBER = "/phone_number";
+    String ROOM = "/myroom";
+    String PHONE_NUMBER = "/myphonenumber";
 
     String NOTIFICATION = "/notification";
+
+    String SETTINGS = "/settings";
 
 }

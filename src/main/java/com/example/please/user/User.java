@@ -43,6 +43,9 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL,  orphanRemoval = true)
     private Notification notification;
 
+    @Enumerated(EnumType.STRING)
+    private Status status;
+
     @Override
     public String toString() {
         return "User{" +
@@ -54,6 +57,8 @@ public class User {
                 ", timeComing=" + timeComing +
                 ", room=" + room +
                 ", phoneNumber='" + phoneNumber + '\'' +
+                ", notification=" + notification +
+                ", status=" + status +
                 '}';
     }
 }

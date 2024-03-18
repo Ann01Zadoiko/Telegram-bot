@@ -96,7 +96,6 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
 
             if (messageText.equals(Commands.AT_WORK)) {
-                notificationService.getNotificationByUser(user);
 
                 String s = atWorkService.atWorkClick(id, LocalTime.now());
 
@@ -190,6 +189,10 @@ public class TelegramBot extends TelegramLongPollingBot {
                 for(User user1: service.listAll()){
                     sendMessage(user1.getChatId(), message + "\nВід: " + user.getFullName());
                 }
+            }
+
+            if (messageText.equals(Commands.SETTINGS)){
+
             }
         }
 
