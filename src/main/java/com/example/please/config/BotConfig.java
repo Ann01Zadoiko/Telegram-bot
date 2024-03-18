@@ -9,10 +9,10 @@ import org.springframework.context.annotation.PropertySource;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+//@EnableJpaRepositories(basePackages = "com.example.please")
 @Data
 @Configuration
 @EnableScheduling
-//@EnableJpaRepositories(basePackages = "com.example.please")
 @ComponentScan("com.example.please")
 @PropertySource("application.properties")
 public class BotConfig {
@@ -23,8 +23,6 @@ public class BotConfig {
     @Value("${bot.token}")
     String botToken;
 
-    @Value("${bot.chat_id}")
-    String botOwner;
 
 //    @Bean
 //    public NotificationService notificationService(){

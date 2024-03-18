@@ -1,6 +1,7 @@
 package com.example.please.user;
 
 
+import com.example.please.notification.Notification;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -38,6 +39,9 @@ public class User {
 
     @Column(name = "phone_number")
     private String phoneNumber;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL,  orphanRemoval = true)
+    private Notification notification;
 
     @Override
     public String toString() {

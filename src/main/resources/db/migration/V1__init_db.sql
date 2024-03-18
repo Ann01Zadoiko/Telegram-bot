@@ -7,6 +7,7 @@ create table if not exists users(
     time_of_coming time,
     room int,
     phone_number varchar(15)
+
 );
 
 create table if not exists notifications (
@@ -16,5 +17,5 @@ create table if not exists notifications (
     id_user bigint,
     foreign key (id_user) references users(id)
 );
-
+-- status enum('WORK','SICK','VACATION')
 

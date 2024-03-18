@@ -39,4 +39,5 @@ public class MessageChecker {
         return message.startsWith("+380");
     }
 
+
 }

@@ -2,6 +2,7 @@ package com.example.please.bot;
 
 
 import com.example.please.atWork.AtWorkService;
+import com.example.please.command.BotMenu;
 import com.example.please.command.Buttons;
 import com.example.please.command.NotificationButton;
 import com.example.please.config.BotConfig;
@@ -9,6 +10,8 @@ import com.example.please.constant.Commands;
 import com.example.please.constant.Phrases;
 import com.example.please.convert.Converter;
 import com.example.please.handler.MessageChecker;
+import com.example.please.notification.Notification;
+import com.example.please.notification.NotificationService;
 import com.example.please.user.UserService;
 import com.example.please.user.User;
 import lombok.RequiredArgsConstructor;
@@ -17,9 +20,11 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
+import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
+import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.time.LocalTime;
@@ -28,14 +33,23 @@ import java.util.List;
 
 @Slf4j
 @Component
-@RequiredArgsConstructor
 public class TelegramBot extends TelegramLongPollingBot {
 
     private final BotConfig config;
     private final UserService service;
     private final AtWorkService atWorkService;
     private String list;
+    private final NotificationService notificationService;
 
+    @SneakyThrows
+    public TelegramBot(BotConfig config, UserService service, AtWorkService atWorkService, NotificationService notificationService) {
+        this.config = config;
+        this.service = service;
+        this.atWorkService = atWorkService;
+        this.notificationService = notificationService;
+
+        this.execute(new SetMyCommands(new BotMenu().listOfCommands(), new BotCommandScopeDefault(), null));
+    }
 
 
     @SneakyThrows
@@ -82,6 +96,8 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
 
             if (messageText.equals(Commands.AT_WORK)) {
+                notificationService.getNotificationByUser(user);
+
                 String s = atWorkService.atWorkClick(id, LocalTime.now());
 
                 sendMessage(charId, s);
@@ -172,7 +188,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 String message = messageText.substring(6);
 
                 for(User user1: service.listAll()){
-                    sendMessage(user1.getChatId(), message);
+                    sendMessage(user1.getChatId(), message + "\nВід: " + user.getFullName());
                 }
             }
         }
@@ -237,6 +253,12 @@ public class TelegramBot extends TelegramLongPollingBot {
             user.setChatId(message.getChatId());
             user.setFullName("Хтось");
             service.save(user);
+
+            Notification notification = new Notification();
+            notification.setTurnOn(false);
+            notification.setTimeOfNotification("0 0 9 * * MON-FRI");
+            notification.setUser(user);
+            notificationService.save(notification);
 
             sendMessage(message.getChatId(), Phrases.START_NEW_USER);
 
