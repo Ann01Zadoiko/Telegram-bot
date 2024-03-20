@@ -24,12 +24,10 @@ public class MessageChecker {
 
     public static boolean isACommand(String message){
 
-        return message.equals(Commands.MY_PASSWORD) || message.equals(Commands.AT_WORK) ||
-                message.equals(Commands.START) || message.equals(Commands.HELP) ||
-                message.equals(Commands.LIST_OF_EMPLOYEES) || message.equals(Commands.MY_FULL_NAME) ||
-                message.equals(Commands.ROOM) || message.equals(Commands.PHONE_NUMBER)
-                || message.equals("/notification") || message.contains("/send") ||
-                message.equals(Commands.SETTINGS) || message.equals(Commands.STATUS);
+        return message.equals(Commands.AT_WORK) || message.equals(Commands.START)
+                || message.equals(Commands.HELP) || message.equals(Commands.LIST_OF_EMPLOYEES)
+              || message.contains("/send") || message.equals(Commands.SETTINGS)
+                || message.equals(Commands.LIST_OF_SICK) || message.equals(Commands.LIST_OF_VACATION);
     }
 
     public static boolean isARoom(String message){
@@ -39,6 +37,5 @@ public class MessageChecker {
     public static boolean isPhoneNumber(String message){
         return message.startsWith("+380");
     }
-
 
 }

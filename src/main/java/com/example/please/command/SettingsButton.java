@@ -22,19 +22,16 @@ public class SettingsButton {
         buttons1.add(button1);
 
         List<InlineKeyboardButton> buttons2 = new ArrayList<>();
-        buttons2.add(button2);
+        buttons2.add(button6);
 
         List<InlineKeyboardButton> buttons3 = new ArrayList<>();
+        buttons3.add(button2);
         buttons3.add(button3);
 
         List<InlineKeyboardButton> buttons4 = new ArrayList<>();
         buttons3.add(button4);
-
-        List<InlineKeyboardButton> buttons5 = new ArrayList<>();
         buttons3.add(button5);
 
-        List<InlineKeyboardButton> buttons6 = new ArrayList<>();
-        buttons3.add(button6);
 
         List<List<InlineKeyboardButton>> row = new ArrayList<>();
 
@@ -42,8 +39,6 @@ public class SettingsButton {
         row.add(buttons2);
         row.add(buttons3);
         row.add(buttons4);
-        row.add(buttons5);
-        row.add(buttons6);
 
         markup.setKeyboard(row);
 

@@ -2,6 +2,7 @@ package com.example.please.bot;
 
 
 import com.example.please.atWork.AtWorkService;
+import com.example.please.atWork.ListOfEmployees;
 import com.example.please.command.*;
 import com.example.please.config.BotConfig;
 import com.example.please.constant.Commands;
@@ -39,9 +40,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     private final BotConfig config;
     private final UserService service;
     private final AtWorkService atWorkService;
-  //  private String list;
     private final NotificationService notificationService;
-    private String cron = "0 0 9 * * MON-FRI";
 
     @SneakyThrows
     public TelegramBot(BotConfig config, UserService service, AtWorkService atWorkService, NotificationService notificationService) {
@@ -52,7 +51,6 @@ public class TelegramBot extends TelegramLongPollingBot {
 
         this.execute(new SetMyCommands(new BotMenu().listOfCommands(), new BotCommandScopeDefault(), null));
     }
-
 
     @SneakyThrows
     @Override
@@ -67,13 +65,6 @@ public class TelegramBot extends TelegramLongPollingBot {
 
             if (messageText.equals(Commands.START)) {
                 registerUser(update.getMessage());
-            }
-
-            if (messageText.equals(Commands.MY_FULL_NAME)) {
-                String date = "Ваш ПІБ: " + user.getFullName();
-                sendMessage(charId, date);
-
-                log.info("\nUser: " + service.getById(id));
             }
 
             if (MessageChecker.isFullName(stringBuilder, messageText) && !(messageText.equals("Список за обраний день"))) {
@@ -114,19 +105,11 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
 
             if (MessageChecker.isUnexpectedMessage(messageText)) {
-                sendMessage(charId, "Not this time!");
+                sendMessage(charId, "WHAT ARE YOU DOING HERE!");
             }
 
             if (messageText.equals(Commands.LIST_OF_EMPLOYEES)) {
                 sendMessage(charId, atWorkService.print());
-            }
-
-            if (messageText.equals(Commands.MY_PASSWORD)) {
-                if (user.getPassword() == null) {
-                    sendMessage(charId, "У Вас немає паролю!\nНавіщо тоді натискати цю кнопку?");
-                } else {
-                    sendMessage(charId, user.getPassword());
-                }
             }
 
             if (MessageChecker.isARoom(messageText)) {
@@ -153,65 +136,6 @@ public class TelegramBot extends TelegramLongPollingBot {
                 }
             }
 
-            if (messageText.equals(Commands.ROOM)) {
-                if (user.getRoom() == null) {
-                    sendMessage(charId, Phrases.ROOM);
-                } else {
-                    sendMessage(charId, "Ви працюєте в " + user.getRoom() + " кабінеті");
-                }
-            }
-
-            if (messageText.equals(Commands.PHONE_NUMBER)) {
-                if (user.getPhoneNumber() == null) {
-                    sendMessage(charId, Phrases.PHONE_NUMBER);
-                } else {
-                    sendMessage(charId, "Ваш номер телефону: " + user.getPhoneNumber());
-                }
-            }
-
-
-            if (messageText.equals("/notification")) {
-
-                Notification notification = notificationService.getNotificationByUser(user);
-
-                if (notification.getTurnOn() && notification.getTimeOfNotification().contains("9")){
-
-                    SendMessage build = SendMessage
-                            .builder()
-                            .chatId(charId)
-                            .text("At the moment notification work at 9 o'clock")
-                            .replyMarkup(NotificationButton.getButtonsIfTurnOnAtNine())
-                            .build();
-
-                    execute(build);
-                }
-
-                if (notification.getTurnOn() && notification.getTimeOfNotification().contains("8")){
-
-                    SendMessage build = SendMessage
-                            .builder()
-                            .chatId(charId)
-                            .text("At the moment notification work at 8 o'clock")
-                            .replyMarkup(NotificationButton.getButtonsIfTurnOnAtEight())
-                            .build();
-
-                    execute(build);
-                }
-
-                if (!notification.getTurnOn()){
-
-                    SendMessage build = SendMessage
-                            .builder()
-                            .chatId(charId)
-                            .text("At the moment the notification is turned off")
-                            .replyMarkup(NotificationButton.getButtonsIfTurnOff())
-                            .build();
-
-                    execute(build);
-                }
-
-            }
-
             if (messageText.contains("/send")){
                 String message = messageText.substring(6);
 
@@ -230,46 +154,16 @@ public class TelegramBot extends TelegramLongPollingBot {
                         .build();
 
                 execute(build);
-
             }
 
-            if (messageText.equals(Commands.STATUS)){
-
-                if (user.getStatus().equals(Status.WORK)){
-                    SendMessage build = SendMessage
-                            .builder()
-                            .chatId(charId)
-                            .text("At the moment you are " + user.getStatus())
-                            .replyMarkup(StatusButton.getButtonsIfWork())
-                            .build();
-
-                    execute(build);
-                }
-
-                if (user.getStatus().equals(Status.SICK)){
-                    SendMessage build = SendMessage
-                            .builder()
-                            .chatId(charId)
-                            .text("At the moment you are " + user.getStatus())
-                            .replyMarkup(StatusButton.getButtonsIfSick())
-                            .build();
-
-                    execute(build);
-                }
-
-                if (user.getStatus().equals(Status.VACATION)){
-                    SendMessage build = SendMessage
-                            .builder()
-                            .chatId(charId)
-                            .text("At the moment you are " + user.getStatus())
-                            .replyMarkup(StatusButton.getButtonsIfVacation())
-                            .build();
-
-                    execute(build);
-                }
-
-
+            if (messageText.equals(Commands.LIST_OF_VACATION)){
+                sendMessage(charId, new ListOfEmployees(service).printEmployeesVacation());
             }
+
+            if (messageText.equals(Commands.LIST_OF_SICK)){
+                sendMessage(charId, new ListOfEmployees(service).printEmployeesSick());
+            }
+
         }
 
         if (update.hasCallbackQuery()) {
@@ -308,7 +202,6 @@ public class TelegramBot extends TelegramLongPollingBot {
                 user.setStatus(Status.WORK);
                 service.save(user);
 
-                //sendMessage(chatId, "Now you are " + user.getStatus());
                 executeEditMessageText( "Now you are " + user.getStatus(), chatId, messageId);
             }
 
@@ -317,7 +210,6 @@ public class TelegramBot extends TelegramLongPollingBot {
                 user.setStatus(Status.SICK);
                 service.save(user);
 
-                //sendMessage(chatId, "Now you are " + user.getStatus());
                 executeEditMessageText( "Now you are " + user.getStatus(), chatId, messageId);
             }
 
@@ -326,33 +218,117 @@ public class TelegramBot extends TelegramLongPollingBot {
                 user.setStatus(Status.VACATION);
                 service.save(user);
 
-                //sendMessage(chatId, "Now you are " + user.getStatus());
                 executeEditMessageText( "Now you are " + user.getStatus(), chatId, messageId);
 
             }
 
             if (data.equals("notification")){
 
+                if (notification.getTurnOn() && notification.getTimeOfNotification().contains("9")){
+
+                   EditMessageText editMessageText = EditMessageText
+                           .builder()
+                           .chatId(chatId)
+                           .text("At the moment notification work at 9 o'clock")
+                           .replyMarkup(NotificationButton.getButtonsIfTurnOnAtNine())
+                           .messageId((int) messageId)
+                           .build();
+
+                   execute(editMessageText);
+                }
+
+                if (notification.getTurnOn() && notification.getTimeOfNotification().contains("8")){
+
+                    EditMessageText editMessageText = EditMessageText
+                            .builder()
+                            .chatId(chatId)
+                            .text("At the moment notification work at 8 o'clock")
+                            .replyMarkup(NotificationButton.getButtonsIfTurnOnAtEight())
+                            .messageId((int) messageId)
+                            .build();
+
+                    execute(editMessageText);
+                }
+
+                if (!notification.getTurnOn()){
+
+                    EditMessageText editMessageText = EditMessageText
+                            .builder()
+                            .chatId(chatId)
+                            .text("At the moment the notification is turned off")
+                            .replyMarkup(NotificationButton.getButtonsIfTurnOff())
+                            .messageId((int) messageId)
+                            .build();
+
+                    execute(editMessageText);
+                }
             }
 
             if (data.equals("full name")){
-                executeEditMessageText("Your full name: " + user.getFullName(), chatId, messageId);
+                String date = "Ваш ПІБ: " + user.getFullName();
+                executeEditMessageText(date, chatId, messageId);
             }
 
             if (data.equals("password")){
-                executeEditMessageText("Your password: " + user.getPassword(), chatId, messageId);
+                if (user.getPassword() == null) {
+                    executeEditMessageText("У Вас немає паролю!\nНавіщо тоді натискати цю кнопку?", chatId, messageId);
+                } else {
+                    executeEditMessageText("Your password: " + user.getPassword(), chatId, messageId);
+                }
             }
 
             if (data.equals("room")){
-                executeEditMessageText("Your room: " + user.getRoom(), chatId, messageId);
+                if (user.getRoom() == null) {
+                    executeEditMessageText(Phrases.ROOM, chatId, messageId);
+                } else {
+                    executeEditMessageText("Ви працюєте в " + user.getRoom() + " кабінеті", chatId, messageId);
+                }
             }
 
             if (data.equals("status")){
-                executeEditMessageText("Your status: " + user.getStatus(), chatId, messageId);
+                if (user.getStatus().equals(Status.WORK)){
+                    EditMessageText editMessageText = EditMessageText
+                            .builder()
+                            .chatId(chatId)
+                            .text("At the moment you are " + user.getStatus())
+                            .replyMarkup(StatusButton.getButtonsIfWork())
+                            .messageId((int) messageId)
+                            .build();
+
+                    execute(editMessageText);
+                }
+
+                if (user.getStatus().equals(Status.SICK)){
+                    EditMessageText editMessageText = EditMessageText
+                            .builder()
+                            .chatId(chatId)
+                            .text("At the moment you are " + user.getStatus())
+                            .replyMarkup(StatusButton.getButtonsIfSick())
+                            .messageId((int) messageId)
+                            .build();
+
+                    execute(editMessageText);
+                }
+
+                if (user.getStatus().equals(Status.VACATION)){
+                    EditMessageText editMessageText = EditMessageText
+                            .builder()
+                            .chatId(chatId)
+                            .text("At the moment you are " + user.getStatus())
+                            .replyMarkup(StatusButton.getButtonsIfVacation())
+                            .messageId((int) messageId)
+                            .build();
+
+                    execute(editMessageText);
+                }
             }
 
             if (data.equals("phone number")){
-                executeEditMessageText("Your phone number: " + user.getPhoneNumber(), chatId, messageId);
+                if (user.getPhoneNumber() == null) {
+                    executeEditMessageText(Phrases.PHONE_NUMBER, chatId, messageId);
+                } else {
+                    executeEditMessageText("Ваш номер телефону: " + user.getPhoneNumber(), chatId, messageId);
+                }
             }
         }
     }
