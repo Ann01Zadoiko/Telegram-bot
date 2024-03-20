@@ -38,15 +38,14 @@ import java.util.List;
 public class TelegramBot extends TelegramLongPollingBot {
 
     private final BotConfig config;
-    private final UserService service;
-    private final AtWorkService atWorkService;
+    private final UserService userService;
     private final NotificationService notificationService;
 
     @SneakyThrows
-    public TelegramBot(BotConfig config, UserService service, AtWorkService atWorkService, NotificationService notificationService) {
+    public TelegramBot(BotConfig config, UserService service, NotificationService notificationService) {
         this.config = config;
-        this.service = service;
-        this.atWorkService = atWorkService;
+        this.userService = service;
+
         this.notificationService = notificationService;
 
         this.execute(new SetMyCommands(new BotMenu().listOfCommands(), new BotCommandScopeDefault(), null));
@@ -59,7 +58,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         if (update.hasMessage() && update.getMessage().hasText()) {
             String messageText = update.getMessage().getText();
             long charId = update.getMessage().getChatId();
-            User user = service.getByChatId(charId);
+            User user = userService.getByChatId(charId);
             Long id = user.getId();
             String[] stringBuilder = messageText.split(" ");
 
@@ -71,13 +70,13 @@ public class TelegramBot extends TelegramLongPollingBot {
 
                 if (user.getFullName().equals("Хтось")) {
                     user.setFullName(messageText);
-                    service.update(user);
+                    userService.update(user);
 
                     sendMessage(charId, Phrases.FULL_NAME);
 
                 } else {
                     user.setFullName(messageText);
-                    service.update(user);
+                    userService.update(user);
 
                     sendMessage(charId, Phrases.FULL_NAME_NEW + user.getFullName().toUpperCase());
                 }
@@ -90,16 +89,21 @@ public class TelegramBot extends TelegramLongPollingBot {
 
             if (messageText.equals(Commands.AT_WORK)) {
 
-                String s = atWorkService.atWorkClick(id, LocalTime.now());
+                String s = new AtWorkService(userService).atWorkClick(id, LocalTime.now());
 
-                sendMessage(charId, s);
+                if(user.getStatus().equals(Status.WORK)){
+                    sendMessage(charId, s);
+                } else {
+                    sendMessage(charId, "Тільки не бреши мені!");
+                }
+
             }
 
             if (MessageChecker.isPassword(stringBuilder, messageText)) {
                 String password = Converter.convertPassword(messageText);
 
                 user.setPassword(password);
-                service.save(user);
+                userService.save(user);
 
                 sendMessage(charId, password);
             }
@@ -109,17 +113,17 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
 
             if (messageText.equals(Commands.LIST_OF_EMPLOYEES)) {
-                sendMessage(charId, atWorkService.print());
+                sendMessage(charId, new AtWorkService(userService).print());
             }
 
             if (MessageChecker.isARoom(messageText)) {
                 if (user.getRoom() == null) {
                     user.setRoom(Integer.parseInt(messageText));
-                    service.update(user);
+                    userService.update(user);
                     sendMessage(charId, "Буду приходити на каву");
                 } else {
                     user.setRoom(Integer.parseInt(messageText));
-                    service.update(user);
+                    userService.update(user);
                     sendMessage(charId, "Ви змінили своє місце проживання на " + user.getRoom() + " кабінет");
                 }
             }
@@ -127,11 +131,11 @@ public class TelegramBot extends TelegramLongPollingBot {
             if (MessageChecker.isPhoneNumber(messageText)) {
                 if (user.getPhoneNumber() == null) {
                     user.setPhoneNumber(messageText);
-                    service.update(user);
+                    userService.update(user);
                     sendMessage(charId, "Буду тепер тобі постійно звонити, мій друже");
                 } else {
                     user.setPhoneNumber(messageText);
-                    service.update(user);
+                    userService.update(user);
                     sendMessage(charId, "Ви змініли свій номер на " + user.getPhoneNumber());
                 }
             }
@@ -139,7 +143,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             if (messageText.contains("/send")){
                 String message = messageText.substring(6);
 
-                for(User user1: service.listAll()){
+                for(User user1: userService.listAll()){
                     sendMessage(user1.getChatId(), message + "\nВід: " + user.getFullName());
                 }
             }
@@ -149,7 +153,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 SendMessage build = SendMessage
                         .builder()
                         .chatId(charId)
-                        .text("Choose one of the list")
+                        .text("Оберить одну зі списку:")
                         .replyMarkup(SettingsButton.inlineButtonsForSettings())
                         .build();
 
@@ -157,11 +161,11 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
 
             if (messageText.equals(Commands.LIST_OF_VACATION)){
-                sendMessage(charId, new ListOfEmployees(service).printEmployeesVacation());
+                sendMessage(charId, new ListOfEmployees(userService).printEmployeesVacation());
             }
 
             if (messageText.equals(Commands.LIST_OF_SICK)){
-                sendMessage(charId, new ListOfEmployees(service).printEmployeesSick());
+                sendMessage(charId, new ListOfEmployees(userService).printEmployeesSick());
             }
 
         }
@@ -169,7 +173,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         if (update.hasCallbackQuery()) {
             String data = update.getCallbackQuery().getData();
             Long chatId = update.getCallbackQuery().getMessage().getChatId();
-            User user = service.getByChatId(chatId);
+            User user = userService.getByChatId(chatId);
             long messageId = update.getCallbackQuery().getMessage().getMessageId();
             Notification notification = notificationService.getNotificationByUser(user);
 
@@ -179,7 +183,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 notification.setTurnOn(true);
                 notificationService.save(notification);
 
-                executeEditMessageText("You change your notification at 9 am", chatId, messageId);
+                executeEditMessageText("Ви змінили своє нагадування о 9 ранку", chatId, messageId);
             }
             if (data.equals("8:00")) {
 
@@ -187,38 +191,38 @@ public class TelegramBot extends TelegramLongPollingBot {
                 notification.setTurnOn(true);
                 notificationService.save(notification);
 
-                executeEditMessageText("You change your notification at 8 am", chatId, messageId);
+                executeEditMessageText("Ви змінили своє нагадування о 8 ранку", chatId, messageId);
             }
             if (data.equals("off")) {
 
                 notification.setTurnOn(false);
                 notificationService.save(notification);
 
-                executeEditMessageText("You turned off the notification", chatId, messageId);
+                executeEditMessageText("Ви вимкнути нагадування", chatId, messageId);
             }
 
             if (data.equals("WORK")) {
 
                 user.setStatus(Status.WORK);
-                service.save(user);
+                userService.save(user);
 
-                executeEditMessageText( "Now you are " + user.getStatus(), chatId, messageId);
+                executeEditMessageText( "Заряз Ви працюєте", chatId, messageId);
             }
 
             if (data.equals("SICK")) {
 
                 user.setStatus(Status.SICK);
-                service.save(user);
+                userService.save(user);
 
-                executeEditMessageText( "Now you are " + user.getStatus(), chatId, messageId);
+                executeEditMessageText( "Заряз Ви на лікарняному" , chatId, messageId);
             }
 
             if (data.equals("VACATION")) {
 
                 user.setStatus(Status.VACATION);
-                service.save(user);
+                userService.save(user);
 
-                executeEditMessageText( "Now you are " + user.getStatus(), chatId, messageId);
+                executeEditMessageText( "Заряз Ви у відпустці", chatId, messageId);
 
             }
 
@@ -229,7 +233,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                    EditMessageText editMessageText = EditMessageText
                            .builder()
                            .chatId(chatId)
-                           .text("At the moment notification work at 9 o'clock")
+                           .text("На даний час нагадування у Вас о 9 ранку")
                            .replyMarkup(NotificationButton.getButtonsIfTurnOnAtNine())
                            .messageId((int) messageId)
                            .build();
@@ -242,7 +246,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                     EditMessageText editMessageText = EditMessageText
                             .builder()
                             .chatId(chatId)
-                            .text("At the moment notification work at 8 o'clock")
+                            .text("На даний час нагадування у Вас о 8 ранку")
                             .replyMarkup(NotificationButton.getButtonsIfTurnOnAtEight())
                             .messageId((int) messageId)
                             .build();
@@ -255,7 +259,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                     EditMessageText editMessageText = EditMessageText
                             .builder()
                             .chatId(chatId)
-                            .text("At the moment the notification is turned off")
+                            .text("На даний час нанадування вимкнено")
                             .replyMarkup(NotificationButton.getButtonsIfTurnOff())
                             .messageId((int) messageId)
                             .build();
@@ -273,7 +277,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 if (user.getPassword() == null) {
                     executeEditMessageText("У Вас немає паролю!\nНавіщо тоді натискати цю кнопку?", chatId, messageId);
                 } else {
-                    executeEditMessageText("Your password: " + user.getPassword(), chatId, messageId);
+                    executeEditMessageText( user.getPassword(), chatId, messageId);
                 }
             }
 
@@ -290,7 +294,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                     EditMessageText editMessageText = EditMessageText
                             .builder()
                             .chatId(chatId)
-                            .text("At the moment you are " + user.getStatus())
+                            .text("На даний момент Ви працюєте")
                             .replyMarkup(StatusButton.getButtonsIfWork())
                             .messageId((int) messageId)
                             .build();
@@ -302,7 +306,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                     EditMessageText editMessageText = EditMessageText
                             .builder()
                             .chatId(chatId)
-                            .text("At the moment you are " + user.getStatus())
+                            .text("На даний момент Ви на лікарняному")
                             .replyMarkup(StatusButton.getButtonsIfSick())
                             .messageId((int) messageId)
                             .build();
@@ -314,7 +318,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                     EditMessageText editMessageText = EditMessageText
                             .builder()
                             .chatId(chatId)
-                            .text("At the moment you are " + user.getStatus())
+                            .text("На даний момент Ви у відпустці")
                             .replyMarkup(StatusButton.getButtonsIfVacation())
                             .messageId((int) messageId)
                             .build();
@@ -345,19 +349,19 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @Scheduled(cron = "0 0 0 * * *")
     public void becomeNewDay() {
-        List<User> users = service.listAll();
+        List<User> users = userService.listAll();
         log.info("A new day!");
 
         for (User user : users) {
             user.setAtWork((byte) 0);
-            service.update(user);
+            userService.update(user);
         }
     }
 
     @SneakyThrows
     @Scheduled(cron = NotificationTime.NINE)
     public void dailyRememberAtNine() {
-        List<User> users = service.listAll();
+        List<User> users = userService.listAll();
 
         for (User user : users) {
             Notification notification = notificationService.getNotificationByUser(user);
@@ -372,7 +376,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     @SneakyThrows
     @Scheduled(cron = NotificationTime.EIGHT)
     public void dailyRememberAtEight() {
-        List<User> users = service.listAll();
+        List<User> users = userService.listAll();
 
         for (User user : users) {
             Notification notification = notificationService.getNotificationByUser(user);
@@ -400,12 +404,12 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @SneakyThrows
     private void registerUser(Message message) {
-        if (!service.existsByChatId(message.getChatId())) {
+        if (!userService.existsByChatId(message.getChatId())) {
             User user = new User();
             user.setChatId(message.getChatId());
             user.setFullName("Хтось");
             user.setStatus(Status.WORK);
-            service.save(user);
+            userService.save(user);
 
             Notification notification = new Notification();
             notification.setTurnOn(true);

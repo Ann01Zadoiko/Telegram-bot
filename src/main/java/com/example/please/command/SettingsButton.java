@@ -8,15 +8,17 @@ import java.util.List;
 
 public class SettingsButton {
 
+    private SettingsButton(){}
+
     public static InlineKeyboardMarkup inlineButtonsForSettings(){
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
 
-        InlineKeyboardButton button1 = InlineKeyboardButton.builder().text("notification").callbackData("notification").build();
-        InlineKeyboardButton button2 = InlineKeyboardButton.builder().text("full name").callbackData("full name").build();
-        InlineKeyboardButton button3 = InlineKeyboardButton.builder().text("password").callbackData("password").build();
-        InlineKeyboardButton button4 = InlineKeyboardButton.builder().text("room").callbackData("room").build();
-        InlineKeyboardButton button5 = InlineKeyboardButton.builder().text("phone number").callbackData("phone number").build();
-        InlineKeyboardButton button6 = InlineKeyboardButton.builder().text("status").callbackData("status").build();
+        InlineKeyboardButton button1 = InlineKeyboardButton.builder().text("Нагадування").callbackData("notification").build();
+        InlineKeyboardButton button2 = InlineKeyboardButton.builder().text("ПІБ").callbackData("full name").build();
+        InlineKeyboardButton button3 = InlineKeyboardButton.builder().text("Пароль").callbackData("password").build();
+        InlineKeyboardButton button4 = InlineKeyboardButton.builder().text("Кабінет").callbackData("room").build();
+        InlineKeyboardButton button5 = InlineKeyboardButton.builder().text("Номер телефона").callbackData("phone number").build();
+        InlineKeyboardButton button6 = InlineKeyboardButton.builder().text("Статус").callbackData("status").build();
 
         List<InlineKeyboardButton> buttons1 = new ArrayList<>();
         buttons1.add(button1);
@@ -32,9 +34,7 @@ public class SettingsButton {
         buttons3.add(button4);
         buttons3.add(button5);
 
-
         List<List<InlineKeyboardButton>> row = new ArrayList<>();
-
         row.add(buttons1);
         row.add(buttons2);
         row.add(buttons3);
@@ -43,6 +43,5 @@ public class SettingsButton {
         markup.setKeyboard(row);
 
         return markup;
-
     }
 }

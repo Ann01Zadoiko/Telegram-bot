@@ -18,11 +18,8 @@ public class ListOfEmployees {
         List<User> users = userService.listAll();
 
         StringBuilder list = new StringBuilder();
-
         int number = 1;
         DateTimeFormatter formatterDay = DateTimeFormatter.ofPattern("dd MMMM yyyy");
-        DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm");
-        //String list = formatterDay.format(LocalDate.now());
         list.append(formatterDay.format(LocalDate.now()));
 
         for (User user: users){
@@ -37,11 +34,8 @@ public class ListOfEmployees {
         List<User> users = userService.listAll();
 
         StringBuilder list = new StringBuilder();
-
         int number = 1;
         DateTimeFormatter formatterDay = DateTimeFormatter.ofPattern("dd MMMM yyyy");
-        DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm");
-        //String list = formatterDay.format(LocalDate.now());
         list.append(formatterDay.format(LocalDate.now()));
 
         for (User user: users){
