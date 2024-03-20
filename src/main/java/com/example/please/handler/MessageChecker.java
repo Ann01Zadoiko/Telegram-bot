@@ -1,6 +1,9 @@
 package com.example.please.handler;
 
 import com.example.please.constant.Commands;
+import com.example.please.notification.Notification;
+import com.example.please.user.Status;
+import com.example.please.user.User;
 
 public class MessageChecker {
 
@@ -36,6 +39,12 @@ public class MessageChecker {
 
     public static boolean isPhoneNumber(String message){
         return message.startsWith("+380");
+    }
+
+    public static boolean isNotificationAt(User user, Notification notification, String time){
+        return (user.getAtWork() == 0 && notification.getTurnOn()
+                && notification.getTimeOfNotification().contains(time)
+                && user.getStatus().equals(Status.WORK));
     }
 
 }
