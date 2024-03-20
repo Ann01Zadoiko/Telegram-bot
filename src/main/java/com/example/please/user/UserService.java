@@ -56,8 +56,5 @@ public class UserService {
         repository.save(user);
     }
 
-    public User getById(Long id){
-        return repository.findById(id).get();
-    }
 }
 

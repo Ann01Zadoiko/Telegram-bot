@@ -17,6 +17,7 @@ public class Registration {
 
     private final UserService userService;
     private final NotificationService notificationService;
+    private final BotConfig config;
 
     @SneakyThrows
     public void registerUser(Message message) {
@@ -33,9 +34,10 @@ public class Registration {
             notification.setUser(user);
             notificationService.save(notification);
 
-            new TelegramBot(new BotConfig(), userService, notificationService).sendMessage(message.getChatId(), Phrases.START_NEW_USER);
+            new TelegramBot(config, userService, notificationService).sendMessage(message.getChatId(), Phrases.START_NEW_USER);
+
         } else {
-            new TelegramBot(new BotConfig(), userService, notificationService).sendMessage(message.getChatId(), Phrases.START_OLD_USER);
+            new TelegramBot(config, userService, notificationService).sendMessage(message.getChatId(), Phrases.START_OLD_USER);
         }
     }
 }

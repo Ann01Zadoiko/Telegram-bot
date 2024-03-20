@@ -6,10 +6,10 @@ import com.example.please.atWork.ListOfEmployees;
 import com.example.please.command.*;
 import com.example.please.config.BotConfig;
 import com.example.please.constant.Commands;
-import com.example.please.constant.NotificationTime;
 import com.example.please.constant.Phrases;
 import com.example.please.convert.Converter;
 import com.example.please.handler.MessageChecker;
+
 import com.example.please.handler.Registration;
 import com.example.please.notification.Notification;
 import com.example.please.notification.NotificationService;
@@ -18,18 +18,18 @@ import com.example.please.user.UserService;
 import com.example.please.user.User;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
+
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
+import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 import java.time.LocalTime;
-import java.util.List;
 
 
 @Slf4j
@@ -47,7 +47,10 @@ public class TelegramBot extends TelegramLongPollingBot {
 
         this.notificationService = notificationService;
 
-        this.execute(new SetMyCommands(new BotMenu().listOfCommands(), new BotCommandScopeDefault(), null));
+        this.execute(new SetMyCommands(
+                new BotMenu().listOfCommands(),
+                new BotCommandScopeDefault(),
+                null));
     }
 
     @SneakyThrows
@@ -58,21 +61,19 @@ public class TelegramBot extends TelegramLongPollingBot {
             String messageText = update.getMessage().getText();
             long charId = update.getMessage().getChatId();
             User user = userService.getByChatId(charId);
-            Long id = user.getId();
             String[] stringBuilder = messageText.split(" ");
 
             if (messageText.equals(Commands.START)) {
-                new Registration(userService, notificationService).registerUser(update.getMessage());
+                new Registration(userService, notificationService, config).registerUser(update.getMessage());
             }
 
-            if (MessageChecker.isFullName(stringBuilder, messageText) && !(messageText.equals("Список за обраний день"))) {
+            if (MessageChecker.isFullName(stringBuilder, messageText)) {
 
                 if (user.getFullName().equals("Хтось")) {
                     user.setFullName(messageText);
                     userService.update(user);
 
                     sendMessage(charId, Phrases.FULL_NAME);
-
                 } else {
                     user.setFullName(messageText);
                     userService.update(user);
@@ -88,7 +89,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
             if (messageText.equals(Commands.AT_WORK)) {
 
-                String s = new AtWorkService(userService).atWorkClick(id, LocalTime.now());
+                String s = new AtWorkService(userService).atWorkClick(user, LocalTime.now());
 
                 if(user.getStatus().equals(Status.WORK)){
                     sendMessage(charId, s);
@@ -108,11 +109,11 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
 
             if (MessageChecker.isUnexpectedMessage(messageText)) {
-                sendMessage(charId, "WHAT ARE YOU DOING HERE!");
+                sendMessage(charId, Phrases.UNEXPECTED_MESSAGE);
             }
 
             if (messageText.equals(Commands.LIST_OF_EMPLOYEES)) {
-                sendMessage(charId, new AtWorkService(userService).print());
+                sendMessage(charId, new ListOfEmployees(userService).printEmployeeWork());
             }
 
             if (MessageChecker.isARoom(messageText)) {
@@ -157,6 +158,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                         .build();
 
                 execute(build);
+
             }
 
             if (messageText.equals(Commands.LIST_OF_VACATION)){
@@ -228,42 +230,15 @@ public class TelegramBot extends TelegramLongPollingBot {
             if (data.equals("notification")){
 
                 if (notification.getTurnOn() && notification.getTimeOfNotification().contains("9")){
-
-                   EditMessageText editMessageText = EditMessageText
-                           .builder()
-                           .chatId(chatId)
-                           .text("На даний час нагадування у Вас о 9 ранку")
-                           .replyMarkup(NotificationButton.getButtonsIfTurnOnAtNine())
-                           .messageId((int) messageId)
-                           .build();
-
-                   execute(editMessageText);
+                    executeEditMessageTextWithButton("На даний час нагадування у Вас о 9 ранку", chatId, messageId, NotificationButton.getButtonsIfTurnOnAtNine());
                 }
 
                 if (notification.getTurnOn() && notification.getTimeOfNotification().contains("8")){
-
-                    EditMessageText editMessageText = EditMessageText
-                            .builder()
-                            .chatId(chatId)
-                            .text("На даний час нагадування у Вас о 8 ранку")
-                            .replyMarkup(NotificationButton.getButtonsIfTurnOnAtEight())
-                            .messageId((int) messageId)
-                            .build();
-
-                    execute(editMessageText);
+                    executeEditMessageTextWithButton("На даний час нагадування у Вас о 8 ранку", chatId, messageId, NotificationButton.getButtonsIfTurnOnAtEight());
                 }
 
                 if (!notification.getTurnOn()){
-
-                    EditMessageText editMessageText = EditMessageText
-                            .builder()
-                            .chatId(chatId)
-                            .text("На даний час нанадування вимкнено")
-                            .replyMarkup(NotificationButton.getButtonsIfTurnOff())
-                            .messageId((int) messageId)
-                            .build();
-
-                    execute(editMessageText);
+                    executeEditMessageTextWithButton("На даний час нанадування вимкнено", chatId, messageId, NotificationButton.getButtonsIfTurnOff());
                 }
             }
 
@@ -290,39 +265,16 @@ public class TelegramBot extends TelegramLongPollingBot {
 
             if (data.equals("status")){
                 if (user.getStatus().equals(Status.WORK)){
-                    EditMessageText editMessageText = EditMessageText
-                            .builder()
-                            .chatId(chatId)
-                            .text("На даний момент Ви працюєте")
-                            .replyMarkup(StatusButton.getButtonsIfWork())
-                            .messageId((int) messageId)
-                            .build();
+                    executeEditMessageTextWithButton("На даний момент Ви працюєте", chatId, messageId, StatusButton.getButtonsIfWork());
 
-                    execute(editMessageText);
                 }
 
                 if (user.getStatus().equals(Status.SICK)){
-                    EditMessageText editMessageText = EditMessageText
-                            .builder()
-                            .chatId(chatId)
-                            .text("На даний момент Ви на лікарняному")
-                            .replyMarkup(StatusButton.getButtonsIfSick())
-                            .messageId((int) messageId)
-                            .build();
-
-                    execute(editMessageText);
+                    executeEditMessageTextWithButton("На даний момент Ви на лікарняному", chatId, messageId, StatusButton.getButtonsIfSick());
                 }
 
                 if (user.getStatus().equals(Status.VACATION)){
-                    EditMessageText editMessageText = EditMessageText
-                            .builder()
-                            .chatId(chatId)
-                            .text("На даний момент Ви у відпустці")
-                            .replyMarkup(StatusButton.getButtonsIfVacation())
-                            .messageId((int) messageId)
-                            .build();
-
-                    execute(editMessageText);
+                    executeEditMessageTextWithButton("На даний момент Ви у відпустці", chatId, messageId, StatusButton.getButtonsIfVacation());
                 }
             }
 
@@ -338,86 +290,41 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     @SneakyThrows
     private void executeEditMessageText(String text, Long chatId, long messageId){
-        EditMessageText messageText = new EditMessageText();
-        messageText.setChatId(String.valueOf(chatId));
-        messageText.setText(text);
-        messageText.setMessageId((int) messageId);
+        EditMessageText editMessageText = EditMessageText
+                .builder()
+                .messageId((int) messageId)
+                .chatId(chatId)
+                .text(text)
+                .build();
 
-        execute(messageText);
-    }
-
-    @Scheduled(cron = "0 0 0 * * *")
-    public void becomeNewDay() {
-        List<User> users = userService.listAll();
-        log.info("A new day!");
-
-        for (User user : users) {
-            user.setAtWork((byte) 0);
-            userService.update(user);
-        }
+        execute(editMessageText);
     }
 
     @SneakyThrows
-    @Scheduled(cron = NotificationTime.NINE)
-    public void dailyRememberAtNine() {
-        List<User> users = userService.listAll();
+    private void executeEditMessageTextWithButton(String text, Long chatId, long messageId, InlineKeyboardMarkup markup){
+        EditMessageText editMessageText = EditMessageText
+                .builder()
+                .messageId((int) messageId)
+                .chatId(chatId)
+                .text(text)
+                .replyMarkup(markup)
+                .build();
 
-        for (User user : users) {
-            Notification notification = notificationService.getNotificationByUser(user);
-            if (MessageChecker.isNotificationAt(user, notification, "9")) {
-                sendMessage(user.getChatId(), "Запізнюватись не гарно!");
-            }
-        }
+        execute(editMessageText);
     }
-
-    @SneakyThrows
-    @Scheduled(cron = NotificationTime.EIGHT)
-    public void dailyRememberAtEight() {
-        List<User> users = userService.listAll();
-
-        for (User user : users) {
-            Notification notification = notificationService.getNotificationByUser(user);
-            if (MessageChecker.isNotificationAt(user, notification, "8")) {
-                sendMessage(user.getChatId(), "Запізнюватись не гарно!");
-            }
-        }
-    }
-
 
     public void sendMessage(long chatId, String text) throws TelegramApiException {
-
-        SendMessage sendMessage = new SendMessage();
-        sendMessage.setChatId((String.valueOf(chatId)));
-        sendMessage.setText(text);
-
-        sendMessage.setReplyMarkup(Buttons.getButtons());
+        SendMessage sendMessage = SendMessage
+                .builder()
+                .chatId(chatId)
+                .text(text)
+                .replyMarkup(Buttons.getButtons())
+                .build();
 
         execute(sendMessage);
 
         log.info("Reply sent: " + sendMessage.getText() + "\nBy user: " + sendMessage.getChatId());
     }
-
-//    @SneakyThrows
-//    private void registerUser(Message message) {
-//        if (!userService.existsByChatId(message.getChatId())) {
-//            User user = new User();
-//            user.setChatId(message.getChatId());
-//            user.setFullName("Хтось");
-//            user.setStatus(Status.WORK);
-//            userService.save(user);
-//
-//            Notification notification = new Notification();
-//            notification.setTurnOn(true);
-//            notification.setTimeOfNotification("0 0 9 * * MON-FRI");
-//            notification.setUser(user);
-//            notificationService.save(notification);
-//
-//            sendMessage(message.getChatId(), Phrases.START_NEW_USER);
-//
-//        } else {
-//            sendMessage(message.getChatId(), Phrases.START_OLD_USER);
-//        }
-//    }
 
     @Override
     public String getBotUsername() {

@@ -30,7 +30,8 @@ public class MessageChecker {
         return message.equals(Commands.AT_WORK) || message.equals(Commands.START)
                 || message.equals(Commands.HELP) || message.equals(Commands.LIST_OF_EMPLOYEES)
               || message.contains("/send") || message.equals(Commands.SETTINGS)
-                || message.equals(Commands.LIST_OF_SICK) || message.equals(Commands.LIST_OF_VACATION);
+                || message.equals(Commands.LIST_OF_SICK) || message.equals(Commands.LIST_OF_VACATION)
+                || message.equals("/start");
     }
 
     public static boolean isARoom(String message){

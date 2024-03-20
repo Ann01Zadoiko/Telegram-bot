@@ -24,7 +24,11 @@ public class ListOfEmployees {
 
         for (User user: users){
             if (user.getStatus().equals(Status.SICK)){
-                list.append("\n").append(number).append(". ").append(user.getFullName());
+                list
+                        .append("\n")
+                        .append(number++)
+                        .append(". ")
+                        .append(user.getFullName());
             }
         }
 
@@ -40,10 +44,39 @@ public class ListOfEmployees {
 
         for (User user: users){
             if (user.getStatus().equals(Status.VACATION)){
-                list.append("\n").append(number).append(". ").append(user.getFullName());
+                list
+                        .append("\n")
+                        .append(number++)
+                        .append(". ")
+                        .append(user.getFullName());
             }
         }
 
+        return String.valueOf(list);
+    }
+
+    public String printEmployeeWork( ){
+        StringBuilder list = new StringBuilder();
+
+        List<User> users1 = userService.listAll();
+
+        int number = 1;
+        DateTimeFormatter formatterDay = DateTimeFormatter.ofPattern("dd MMMM yyyy");
+        DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm");
+        list.append(formatterDay.format(LocalDate.now()));
+
+        for (User user: users1){
+            if (user.getAtWork() == 1 && user.getStatus().equals(Status.WORK)){
+                list
+                        .append("\n")
+                        .append(number++)
+                        .append(". ")
+                        .append(user.getFullName())
+                        .append(" (")
+                        .append(formatterTime.format(user.getTimeComing()))
+                        .append(")");
+            }
+        }
         return String.valueOf(list);
     }
 

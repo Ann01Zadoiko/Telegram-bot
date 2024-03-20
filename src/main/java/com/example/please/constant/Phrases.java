@@ -22,4 +22,5 @@ public interface Phrases {
     String ROOM = "На даний час Ви працюєте на вулиці. Якщо ні, то введить кабинеть у якому працюєте (наприклад 666)";
     String PHONE_NUMBER = "У базі не має Вашого телефому, тому введить свой робочий номер телефону (наприклад +380663332211)";
 
+    String UNEXPECTED_MESSAGE = "WHAT ARE YOU DOING HERE!";
 }
