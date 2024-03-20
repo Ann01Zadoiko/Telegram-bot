@@ -94,7 +94,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 if(user.getStatus().equals(Status.WORK)){
                     sendMessage(charId, s);
                 } else {
-                    sendMessage(charId, "Тільки не бреши мені!");
+                    sendMessage(charId, Phrases.UNEXPECTED_MESSAGE);
                 }
 
             }
@@ -207,7 +207,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 user.setStatus(Status.WORK);
                 userService.save(user);
 
-                executeEditMessageText( "Заряз Ви працюєте", chatId, messageId);
+                executeEditMessageText( Phrases.STATUS + "працюєте", chatId, messageId);
             }
 
             if (data.equals("SICK")) {
@@ -215,7 +215,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 user.setStatus(Status.SICK);
                 userService.save(user);
 
-                executeEditMessageText( "Заряз Ви на лікарняному" , chatId, messageId);
+                executeEditMessageText( Phrases.STATUS + "на лікарняному" , chatId, messageId);
             }
 
             if (data.equals("VACATION")) {
@@ -223,22 +223,22 @@ public class TelegramBot extends TelegramLongPollingBot {
                 user.setStatus(Status.VACATION);
                 userService.save(user);
 
-                executeEditMessageText( "Заряз Ви у відпустці", chatId, messageId);
+                executeEditMessageText( Phrases.STATUS + "у відпустці", chatId, messageId);
 
             }
 
             if (data.equals("notification")){
 
                 if (notification.getTurnOn() && notification.getTimeOfNotification().contains("9")){
-                    executeEditMessageTextWithButton("На даний час нагадування у Вас о 9 ранку", chatId, messageId, NotificationButton.getButtonsIfTurnOnAtNine());
+                    executeEditMessageTextWithButton(Phrases.NOTIFICATION + "у Вас о 9 ранку", chatId, messageId, NotificationButton.getButtonsIfTurnOnAtNine());
                 }
 
                 if (notification.getTurnOn() && notification.getTimeOfNotification().contains("8")){
-                    executeEditMessageTextWithButton("На даний час нагадування у Вас о 8 ранку", chatId, messageId, NotificationButton.getButtonsIfTurnOnAtEight());
+                    executeEditMessageTextWithButton(Phrases.NOTIFICATION + "у Вас о 8 ранку", chatId, messageId, NotificationButton.getButtonsIfTurnOnAtEight());
                 }
 
                 if (!notification.getTurnOn()){
-                    executeEditMessageTextWithButton("На даний час нанадування вимкнено", chatId, messageId, NotificationButton.getButtonsIfTurnOff());
+                    executeEditMessageTextWithButton(Phrases.NOTIFICATION + "вимкнено", chatId, messageId, NotificationButton.getButtonsIfTurnOff());
                 }
             }
 

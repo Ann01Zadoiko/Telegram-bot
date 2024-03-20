@@ -23,4 +23,8 @@ public interface Phrases {
     String PHONE_NUMBER = "У базі не має Вашого телефому, тому введить свой робочий номер телефону (наприклад +380663332211)";
 
     String UNEXPECTED_MESSAGE = "WHAT ARE YOU DOING HERE!";
+
+    String NOTIFICATION = "На даний час нанадування ";
+
+    String STATUS = "Заряз Ви ";
 }
