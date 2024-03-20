@@ -18,6 +18,7 @@ public class BotMenu {
         list.add(new BotCommand(Commands.PHONE_NUMBER, "введення робочого номеру"));
         list.add(new BotCommand(Commands.NOTIFICATION, "функція нагадування"));
         list.add(new BotCommand(Commands.SETTINGS, "функція нагадування"));
+        list.add(new BotCommand(Commands.STATUS, "функція нагадування"));
 
         return list;
     }

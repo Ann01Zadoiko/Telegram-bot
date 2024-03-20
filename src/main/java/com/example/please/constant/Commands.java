@@ -14,5 +14,6 @@ public interface Commands {
     String NOTIFICATION = "/notification";
 
     String SETTINGS = "/settings";
+    String STATUS = "/mystatus";
 
 }

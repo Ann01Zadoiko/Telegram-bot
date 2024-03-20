@@ -2,16 +2,16 @@ package com.example.please.bot;
 
 
 import com.example.please.atWork.AtWorkService;
-import com.example.please.command.BotMenu;
-import com.example.please.command.Buttons;
-import com.example.please.command.NotificationButton;
+import com.example.please.command.*;
 import com.example.please.config.BotConfig;
 import com.example.please.constant.Commands;
+import com.example.please.constant.NotificationTime;
 import com.example.please.constant.Phrases;
 import com.example.please.convert.Converter;
 import com.example.please.handler.MessageChecker;
 import com.example.please.notification.Notification;
 import com.example.please.notification.NotificationService;
+import com.example.please.user.Status;
 import com.example.please.user.UserService;
 import com.example.please.user.User;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +22,7 @@ import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
@@ -38,8 +39,9 @@ public class TelegramBot extends TelegramLongPollingBot {
     private final BotConfig config;
     private final UserService service;
     private final AtWorkService atWorkService;
-    private String list;
+  //  private String list;
     private final NotificationService notificationService;
+    private String cron = "0 0 9 * * MON-FRI";
 
     @SneakyThrows
     public TelegramBot(BotConfig config, UserService service, AtWorkService atWorkService, NotificationService notificationService) {
@@ -116,7 +118,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
 
             if (messageText.equals(Commands.LIST_OF_EMPLOYEES)) {
-                sendMessage(charId, atWorkService.print(list));
+                sendMessage(charId, atWorkService.print());
             }
 
             if (messageText.equals(Commands.MY_PASSWORD)) {
@@ -170,16 +172,43 @@ public class TelegramBot extends TelegramLongPollingBot {
 
             if (messageText.equals("/notification")) {
 
-                String message = "At the moment notification work at 9 o'clock";
+                Notification notification = notificationService.getNotificationByUser(user);
 
-                SendMessage build = SendMessage
-                        .builder()
-                        .chatId(charId)
-                        .text(message)
-                        .replyMarkup(NotificationButton.inlineButtonsForNotificationIfOn())
-                        .build();
+                if (notification.getTurnOn() && notification.getTimeOfNotification().contains("9")){
 
-                execute(build);
+                    SendMessage build = SendMessage
+                            .builder()
+                            .chatId(charId)
+                            .text("At the moment notification work at 9 o'clock")
+                            .replyMarkup(NotificationButton.getButtonsIfTurnOnAtNine())
+                            .build();
+
+                    execute(build);
+                }
+
+                if (notification.getTurnOn() && notification.getTimeOfNotification().contains("8")){
+
+                    SendMessage build = SendMessage
+                            .builder()
+                            .chatId(charId)
+                            .text("At the moment notification work at 8 o'clock")
+                            .replyMarkup(NotificationButton.getButtonsIfTurnOnAtEight())
+                            .build();
+
+                    execute(build);
+                }
+
+                if (!notification.getTurnOn()){
+
+                    SendMessage build = SendMessage
+                            .builder()
+                            .chatId(charId)
+                            .text("At the moment the notification is turned off")
+                            .replyMarkup(NotificationButton.getButtonsIfTurnOff())
+                            .build();
+
+                    execute(build);
+                }
 
             }
 
@@ -193,30 +222,155 @@ public class TelegramBot extends TelegramLongPollingBot {
 
             if (messageText.equals(Commands.SETTINGS)){
 
+                SendMessage build = SendMessage
+                        .builder()
+                        .chatId(charId)
+                        .text("Choose one of the list")
+                        .replyMarkup(SettingsButton.inlineButtonsForSettings())
+                        .build();
+
+                execute(build);
+
+            }
+
+            if (messageText.equals(Commands.STATUS)){
+
+                if (user.getStatus().equals(Status.WORK)){
+                    SendMessage build = SendMessage
+                            .builder()
+                            .chatId(charId)
+                            .text("At the moment you are " + user.getStatus())
+                            .replyMarkup(StatusButton.getButtonsIfWork())
+                            .build();
+
+                    execute(build);
+                }
+
+                if (user.getStatus().equals(Status.SICK)){
+                    SendMessage build = SendMessage
+                            .builder()
+                            .chatId(charId)
+                            .text("At the moment you are " + user.getStatus())
+                            .replyMarkup(StatusButton.getButtonsIfSick())
+                            .build();
+
+                    execute(build);
+                }
+
+                if (user.getStatus().equals(Status.VACATION)){
+                    SendMessage build = SendMessage
+                            .builder()
+                            .chatId(charId)
+                            .text("At the moment you are " + user.getStatus())
+                            .replyMarkup(StatusButton.getButtonsIfVacation())
+                            .build();
+
+                    execute(build);
+                }
+
+
             }
         }
 
         if (update.hasCallbackQuery()) {
             String data = update.getCallbackQuery().getData();
             Long chatId = update.getCallbackQuery().getMessage().getChatId();
+            User user = service.getByChatId(chatId);
+            long messageId = update.getCallbackQuery().getMessage().getMessageId();
+            Notification notification = notificationService.getNotificationByUser(user);
 
-            if (data.equals("9:0")) {
-                sendMessage(chatId, "Something");
+            if (data.equals("9:00")) {
+
+                notification.setTimeOfNotification("0 0 9 * * MON-FRI");
+                notification.setTurnOn(true);
+                notificationService.save(notification);
+
+                executeEditMessageText("You change your notification at 9 am", chatId, messageId);
             }
-            if (data.equals("8:0")) {
-                sendMessage(chatId, "Something");
+            if (data.equals("8:00")) {
+
+                notification.setTimeOfNotification("0 0 8 * * MON-FRI");
+                notification.setTurnOn(true);
+                notificationService.save(notification);
+
+                executeEditMessageText("You change your notification at 8 am", chatId, messageId);
             }
             if (data.equals("off")) {
-                sendMessage(chatId, "Something");
+
+                notification.setTurnOn(false);
+                notificationService.save(notification);
+
+                executeEditMessageText("You turned off the notification", chatId, messageId);
+            }
+
+            if (data.equals("WORK")) {
+
+                user.setStatus(Status.WORK);
+                service.save(user);
+
+                //sendMessage(chatId, "Now you are " + user.getStatus());
+                executeEditMessageText( "Now you are " + user.getStatus(), chatId, messageId);
+            }
+
+            if (data.equals("SICK")) {
+
+                user.setStatus(Status.SICK);
+                service.save(user);
+
+                //sendMessage(chatId, "Now you are " + user.getStatus());
+                executeEditMessageText( "Now you are " + user.getStatus(), chatId, messageId);
+            }
+
+            if (data.equals("VACATION")) {
+
+                user.setStatus(Status.VACATION);
+                service.save(user);
+
+                //sendMessage(chatId, "Now you are " + user.getStatus());
+                executeEditMessageText( "Now you are " + user.getStatus(), chatId, messageId);
+
+            }
+
+            if (data.equals("notification")){
+
+            }
+
+            if (data.equals("full name")){
+                executeEditMessageText("Your full name: " + user.getFullName(), chatId, messageId);
+            }
+
+            if (data.equals("password")){
+                executeEditMessageText("Your password: " + user.getPassword(), chatId, messageId);
+            }
+
+            if (data.equals("room")){
+                executeEditMessageText("Your room: " + user.getRoom(), chatId, messageId);
+            }
+
+            if (data.equals("status")){
+                executeEditMessageText("Your status: " + user.getStatus(), chatId, messageId);
+            }
+
+            if (data.equals("phone number")){
+                executeEditMessageText("Your phone number: " + user.getPhoneNumber(), chatId, messageId);
             }
         }
+    }
+
+    @SneakyThrows
+    private void executeEditMessageText(String text, Long chatId, long messageId){
+        EditMessageText messageText = new EditMessageText();
+        messageText.setChatId(String.valueOf(chatId));
+        messageText.setText(text);
+        messageText.setMessageId((int) messageId);
+
+        execute(messageText);
     }
 
     @Scheduled(cron = "0 0 0 * * *")
     public void becomeNewDay() {
         List<User> users = service.listAll();
         log.info("A new day!");
-        list = "";
 
         for (User user : users) {
             user.setAtWork((byte) 0);
@@ -225,16 +379,35 @@ public class TelegramBot extends TelegramLongPollingBot {
     }
 
     @SneakyThrows
-    @Scheduled(cron = "0 0 9 * * MON-FRI")
-    public void dailyRemember() {
+    @Scheduled(cron = NotificationTime.NINE)
+    public void dailyRememberAtNine() {
         List<User> users = service.listAll();
 
         for (User user : users) {
-            if (user.getAtWork() == 0) {
+            Notification notification = notificationService.getNotificationByUser(user);
+            if (user.getAtWork() == 0 && notification.getTurnOn()
+                    && notification.getTimeOfNotification().contains("9")
+            && user.getStatus().equals(Status.WORK)) {
                 sendMessage(user.getChatId(), "Запізнюватись не гарно!");
             }
         }
     }
+
+    @SneakyThrows
+    @Scheduled(cron = NotificationTime.EIGHT)
+    public void dailyRememberAtEight() {
+        List<User> users = service.listAll();
+
+        for (User user : users) {
+            Notification notification = notificationService.getNotificationByUser(user);
+            if (user.getAtWork() == 0 && notification.getTurnOn()
+                    && notification.getTimeOfNotification().contains("8")
+                    && user.getStatus().equals(Status.WORK)) {
+                sendMessage(user.getChatId(), "Запізнюватись не гарно!");
+            }
+        }
+    }
+
 
     public void sendMessage(long chatId, String text) throws TelegramApiException {
 
@@ -255,10 +428,11 @@ public class TelegramBot extends TelegramLongPollingBot {
             User user = new User();
             user.setChatId(message.getChatId());
             user.setFullName("Хтось");
+            user.setStatus(Status.WORK);
             service.save(user);
 
             Notification notification = new Notification();
-            notification.setTurnOn(false);
+            notification.setTurnOn(true);
             notification.setTimeOfNotification("0 0 9 * * MON-FRI");
             notification.setUser(user);
             notificationService.save(notification);

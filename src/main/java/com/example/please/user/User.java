@@ -57,7 +57,6 @@ public class User {
                 ", timeComing=" + timeComing +
                 ", room=" + room +
                 ", phoneNumber='" + phoneNumber + '\'' +
-                ", notification=" + notification +
                 ", status=" + status +
                 '}';
     }

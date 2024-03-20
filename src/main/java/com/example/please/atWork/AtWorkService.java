@@ -1,6 +1,7 @@
 package com.example.please.atWork;
 
 
+import com.example.please.user.Status;
 import com.example.please.user.User;
 import com.example.please.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -33,7 +34,8 @@ public class AtWorkService {
         }
     }
 
-    public String print(String list){
+    public String print( ){
+        String list;
 
         List<User> users1 = userService.listAll();
 
@@ -43,7 +45,7 @@ public class AtWorkService {
         list = formatterDay.format(LocalDate.now());
 
         for (User user: users1){
-            if (user.getAtWork() == 1){
+            if (user.getAtWork() == 1 && user.getStatus().equals(Status.WORK)){
                list += "\n" + (number++) + ". " + user.getFullName() + " (" + formatterTime.format(user.getTimeComing()) + ")";
             }
         }

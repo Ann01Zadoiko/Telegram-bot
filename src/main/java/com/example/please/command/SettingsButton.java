@@ -12,10 +12,10 @@ public class SettingsButton {
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
 
         InlineKeyboardButton button1 = InlineKeyboardButton.builder().text("notification").callbackData("notification").build();
-        InlineKeyboardButton button2 = InlineKeyboardButton.builder().text("fullname").callbackData("fullname").build();
+        InlineKeyboardButton button2 = InlineKeyboardButton.builder().text("full name").callbackData("full name").build();
         InlineKeyboardButton button3 = InlineKeyboardButton.builder().text("password").callbackData("password").build();
         InlineKeyboardButton button4 = InlineKeyboardButton.builder().text("room").callbackData("room").build();
-        InlineKeyboardButton button5 = InlineKeyboardButton.builder().text("phonenumber").callbackData("phonenumber").build();
+        InlineKeyboardButton button5 = InlineKeyboardButton.builder().text("phone number").callbackData("phone number").build();
         InlineKeyboardButton button6 = InlineKeyboardButton.builder().text("status").callbackData("status").build();
 
         List<InlineKeyboardButton> buttons1 = new ArrayList<>();
