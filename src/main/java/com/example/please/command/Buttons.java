@@ -12,9 +12,11 @@ public class Buttons {
         KeyboardRow row = new KeyboardRow();
         row.add("На місці!");
         row.add("Список працівників");
+        row.add("Налаштування");
 
         return ReplyKeyboardMarkup
                 .builder()
+                //.resizeKeyboard(true)
                 .keyboardRow(row)
                 .build();
     }

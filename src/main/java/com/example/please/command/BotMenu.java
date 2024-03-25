@@ -12,7 +12,6 @@ public class BotMenu {
 
         List<BotCommand> list = new ArrayList<>();
         list.add(new BotCommand(Commands.HELP, "опис всіх команд"));
-        list.add(new BotCommand(Commands.SETTINGS, "налаштування"));
         list.add(new BotCommand(Commands.LIST_OF_SICK, "список тих, хто хвориє"));
         list.add(new BotCommand(Commands.LIST_OF_VACATION, "список тих, хто у відпусці"));
         return list;

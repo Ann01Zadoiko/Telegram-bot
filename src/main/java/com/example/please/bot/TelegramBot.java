@@ -8,6 +8,7 @@ import com.example.please.config.BotConfig;
 import com.example.please.constant.Commands;
 import com.example.please.constant.Phrases;
 import com.example.please.convert.Converter;
+import com.example.please.handler.BotHandlerMessage;
 import com.example.please.handler.MessageChecker;
 
 import com.example.please.handler.Registration;
@@ -68,18 +69,7 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
 
             if (MessageChecker.isFullName(stringBuilder, messageText)) {
-
-                if (user.getFullName().equals("Хтось")) {
-                    user.setFullName(messageText);
-                    userService.update(user);
-
-                    sendMessage(charId, Phrases.FULL_NAME);
-                } else {
-                    user.setFullName(messageText);
-                    userService.update(user);
-
-                    sendMessage(charId, Phrases.FULL_NAME_NEW + user.getFullName().toUpperCase());
-                }
+                new BotHandlerMessage(userService, notificationService, config).getFullName(user, messageText, charId);
 
             }
 
@@ -88,24 +78,12 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
 
             if (messageText.equals(Commands.AT_WORK)) {
-
-                String s = new AtWorkService(userService).atWorkClick(user, LocalTime.now());
-
-                if(user.getStatus().equals(Status.WORK)){
-                    sendMessage(charId, s);
-                } else {
-                    sendMessage(charId, Phrases.UNEXPECTED_MESSAGE);
-                }
+                new BotHandlerMessage(userService, notificationService, config).getAtWork(user, charId);
 
             }
 
             if (MessageChecker.isPassword(stringBuilder, messageText)) {
-                String password = Converter.convertPassword(messageText);
-
-                user.setPassword(password);
-                userService.save(user);
-
-                sendMessage(charId, password);
+                new BotHandlerMessage(userService, notificationService, config).getPassword(user, messageText, charId);
             }
 
             if (MessageChecker.isUnexpectedMessage(messageText)) {
@@ -117,35 +95,16 @@ public class TelegramBot extends TelegramLongPollingBot {
             }
 
             if (MessageChecker.isARoom(messageText)) {
-                if (user.getRoom() == null) {
-                    user.setRoom(Integer.parseInt(messageText));
-                    userService.update(user);
-                    sendMessage(charId, "Буду приходити на каву");
-                } else {
-                    user.setRoom(Integer.parseInt(messageText));
-                    userService.update(user);
-                    sendMessage(charId, "Ви змінили своє місце проживання на " + user.getRoom() + " кабінет");
-                }
+                new BotHandlerMessage(userService, notificationService, config).getRoom(user, messageText, charId);
             }
 
             if (MessageChecker.isPhoneNumber(messageText)) {
-                if (user.getPhoneNumber() == null) {
-                    user.setPhoneNumber(messageText);
-                    userService.update(user);
-                    sendMessage(charId, "Буду тепер тобі постійно звонити, мій друже");
-                } else {
-                    user.setPhoneNumber(messageText);
-                    userService.update(user);
-                    sendMessage(charId, "Ви змініли свій номер на " + user.getPhoneNumber());
-                }
+
+                new BotHandlerMessage(userService, notificationService, config).getPhoneNumber(user, messageText, charId);
             }
 
             if (messageText.contains("/send")){
-                String message = messageText.substring(6);
-
-                for(User user1: userService.listAll()){
-                    sendMessage(user1.getChatId(), message + "\nВід: " + user.getFullName());
-                }
+                new BotHandlerMessage(userService, notificationService, config).getSend(messageText, user);
             }
 
             if (messageText.equals(Commands.SETTINGS)){
