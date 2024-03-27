@@ -1,5 +1,6 @@
 package com.example.please.handler;
 
+import com.example.please.constant.Callback;
 import com.example.please.constant.Commands;
 import com.example.please.notification.Notification;
 import com.example.please.user.Status;
@@ -29,9 +30,9 @@ public class MessageChecker {
 
         return message.equals(Commands.AT_WORK) || message.equals(Commands.START)
                 || message.equals(Commands.HELP) || message.equals(Commands.LIST_OF_EMPLOYEES)
-              || message.contains("/send") || message.equals(Commands.SETTINGS)
-                || message.equals(Commands.LIST_OF_SICK) || message.equals(Commands.LIST_OF_VACATION)
-                || message.equals("/start");
+              || message.contains(Commands.SEND) || message.equals(Commands.SETTINGS)
+                || message.equals(Callback.LIST_OF_SICK) || message.equals(Callback.LIST_OF_VACATION)
+                || message.equals(Commands.START_PRIVATE);
     }
 
     public static boolean isARoom(String message){

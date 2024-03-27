@@ -29,4 +29,6 @@ public interface Phrases {
     String NOTIFICATION = "На даний час нанадування ";
 
     String STATUS = "Заряз Ви ";
+
+    String CHOOSE = "Оберить одну зі списку:";
 }

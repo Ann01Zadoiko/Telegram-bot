@@ -15,7 +15,7 @@ public class AtWorkService {
 
     private final UserService userService;
 
-    public String atWorkClick(User user, LocalTime time){
+    public String addUserAtWorkClick(User user, LocalTime time){
         if (user.getAtWork() == 1){
             return "Двічі півторювати це не буду!";
         } else {

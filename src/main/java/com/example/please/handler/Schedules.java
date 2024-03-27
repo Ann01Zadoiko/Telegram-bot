@@ -1,7 +1,6 @@
 package com.example.please.handler;
 
 import com.example.please.bot.TelegramBot;
-import com.example.please.command.Buttons;
 import com.example.please.config.BotConfig;
 import com.example.please.constant.NotificationTime;
 import com.example.please.notification.Notification;
@@ -13,9 +12,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import org.telegram.telegrambots.bots.TelegramLongPollingBot;
-import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
-import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.util.List;
 

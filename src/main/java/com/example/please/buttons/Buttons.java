@@ -1,6 +1,7 @@
-package com.example.please.command;
+package com.example.please.buttons;
 
 
+import com.example.please.constant.Commands;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.KeyboardRow;
 
@@ -10,13 +11,12 @@ public class Buttons {
     public static ReplyKeyboardMarkup getButtons(){
 
         KeyboardRow row = new KeyboardRow();
-        row.add("На місці!");
-        row.add("Список працівників");
-        row.add("Налаштування");
+        row.add(Commands.AT_WORK);
+        row.add(Commands.LIST_OF_EMPLOYEES);
+        row.add(Commands.SETTINGS);
 
         return ReplyKeyboardMarkup
                 .builder()
-                //.resizeKeyboard(true)
                 .keyboardRow(row)
                 .build();
     }

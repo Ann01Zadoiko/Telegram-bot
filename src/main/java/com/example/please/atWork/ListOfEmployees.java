@@ -14,7 +14,7 @@ public class ListOfEmployees {
 
     private final UserService userService;
 
-    public String printEmployeesSick(){
+    public String printEmployees(Status status){
         List<User> users = userService.listAll();
 
         StringBuilder list = new StringBuilder();
@@ -23,27 +23,7 @@ public class ListOfEmployees {
         list.append(formatterDay.format(LocalDate.now()));
 
         for (User user: users){
-            if (user.getStatus().equals(Status.SICK)){
-                list
-                        .append("\n")
-                        .append(number++)
-                        .append(". ")
-                        .append(user.getFullName());
-            }
-        }
-
-        return String.valueOf(list);
-    }
-    public String printEmployeesVacation(){
-        List<User> users = userService.listAll();
-
-        StringBuilder list = new StringBuilder();
-        int number = 1;
-        DateTimeFormatter formatterDay = DateTimeFormatter.ofPattern("dd MMMM yyyy");
-        list.append(formatterDay.format(LocalDate.now()));
-
-        for (User user: users){
-            if (user.getStatus().equals(Status.VACATION)){
+            if (user.getStatus().equals(status)){
                 list
                         .append("\n")
                         .append(number++)
