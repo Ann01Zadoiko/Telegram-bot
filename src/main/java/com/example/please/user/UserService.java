@@ -16,6 +16,7 @@ public class UserService {
 
     private final UserRepository repository;
 
+    //got list of users
     public List<User> listAll() {
 
         List<User> users = new ArrayList<>();
@@ -27,20 +28,24 @@ public class UserService {
         return users;
     }
 
+    //save a new user
     public void save(User user){
         repository.save(user);
 
         log.info("New user was saved: " + user);
     }
 
+    //get user by chat id
     public User getByChatId(Long id){
         return repository.findByChatId(id);
     }
 
+    //check user (exist)
     public boolean existsByChatId(Long id){
         return repository.existsByChatId(id);
     }
 
+    //update a user
     public void update(User user){
         User user1 = repository.findById(user.getId()).get();
         user1.setFullName(user.getFullName());

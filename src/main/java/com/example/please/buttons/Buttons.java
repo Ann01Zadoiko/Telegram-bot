@@ -17,6 +17,7 @@ public class Buttons {
 
         return ReplyKeyboardMarkup
                 .builder()
+                .resizeKeyboard(true)
                 .keyboardRow(row)
                 .build();
     }

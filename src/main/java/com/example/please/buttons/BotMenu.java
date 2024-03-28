@@ -9,7 +9,6 @@ import org.telegram.telegrambots.meta.api.objects.commands.BotCommand;
 public class BotMenu {
 
     public List<BotCommand> listOfCommands(){
-
         List<BotCommand> list = new ArrayList<>();
         list.add(new BotCommand(Commands.HELP, "Описння всіх можливостій у боті"));
         return list;

@@ -4,16 +4,19 @@ import com.example.please.user.Status;
 import com.example.please.user.User;
 import com.example.please.user.UserService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
+@Slf4j
 @RequiredArgsConstructor
 public class ListOfEmployees {
 
     private final UserService userService;
 
+    //print users who sick or vacation
     public String printEmployees(Status status){
         List<User> users = userService.listAll();
 
@@ -32,9 +35,11 @@ public class ListOfEmployees {
             }
         }
 
+        log.info("List of users (" + status + "): " + list);
         return String.valueOf(list);
     }
 
+    ///print users who work
     public String printEmployeeWork( ){
         StringBuilder list = new StringBuilder();
 
@@ -57,6 +62,8 @@ public class ListOfEmployees {
                         .append(")");
             }
         }
+
+        log.info("List of user (work): " + list);
         return String.valueOf(list);
     }
 

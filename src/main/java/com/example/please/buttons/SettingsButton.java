@@ -13,15 +13,41 @@ public class SettingsButton {
 
     private SettingsButton(){}
 
+
+    //list of buttons for settings
     public static InlineKeyboardMarkup inlineButtonsForSettings(){
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
 
-        InlineKeyboardButton button1 = InlineKeyboardButton.builder().text(Settings.NOTIFICATION).callbackData(Settings.NOTIFICATION).build();
-        InlineKeyboardButton button2 = InlineKeyboardButton.builder().text(Settings.FULL_NAME).callbackData(Settings.FULL_NAME).build();
-        InlineKeyboardButton button3 = InlineKeyboardButton.builder().text(Settings.PASSWORD).callbackData(Settings.PASSWORD).build();
-        InlineKeyboardButton button4 = InlineKeyboardButton.builder().text(Settings.ROOM).callbackData(Settings.ROOM).build();
-        InlineKeyboardButton button5 = InlineKeyboardButton.builder().text(Settings.PHONE_NUMBER).callbackData(Settings.PHONE_NUMBER).build();
-        InlineKeyboardButton button6 = InlineKeyboardButton.builder().text(Settings.STATUS).callbackData(Settings.STATUS).build();
+        InlineKeyboardButton button1 = InlineKeyboardButton
+                .builder()
+                .text(Settings.NOTIFICATION)
+                .callbackData(Settings.NOTIFICATION)
+                .build();
+        InlineKeyboardButton button2 = InlineKeyboardButton
+                .builder()
+                .text(Settings.FULL_NAME)
+                .callbackData(Settings.FULL_NAME)
+                .build();
+        InlineKeyboardButton button3 = InlineKeyboardButton
+                .builder()
+                .text(Settings.PASSWORD)
+                .callbackData(Settings.PASSWORD)
+                .build();
+        InlineKeyboardButton button4 = InlineKeyboardButton
+                .builder()
+                .text(Settings.ROOM)
+                .callbackData(Settings.ROOM)
+                .build();
+        InlineKeyboardButton button5 = InlineKeyboardButton
+                .builder()
+                .text(Settings.PHONE_NUMBER)
+                .callbackData(Settings.PHONE_NUMBER)
+                .build();
+        InlineKeyboardButton button6 = InlineKeyboardButton
+                .builder()
+                .text(Settings.STATUS)
+                .callbackData(Settings.STATUS)
+                .build();
 
         List<InlineKeyboardButton> buttons1 = new ArrayList<>();
         buttons1.add(button1);
@@ -48,12 +74,24 @@ public class SettingsButton {
         return markup;
     }
 
+    //list of buttons with back button
     public static InlineKeyboardMarkup getButtons(String one, String two){
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
 
-        InlineKeyboardButton button1 = InlineKeyboardButton.builder().text(one).callbackData(one).build();
-        InlineKeyboardButton button2 = InlineKeyboardButton.builder().text(two).callbackData(two).build();
-        InlineKeyboardButton button3 = InlineKeyboardButton.builder().text(Callback.BACK).callbackData(Callback.BACK_TO_SETTINGS).build();
+        InlineKeyboardButton button1 = InlineKeyboardButton
+                .builder()
+                .text(one)
+                .callbackData(one)
+                .build();
+        InlineKeyboardButton button2 = InlineKeyboardButton
+                .builder()
+                .text(two)
+                .callbackData(two)
+                .build();
+        InlineKeyboardButton button3 = InlineKeyboardButton
+                .builder().text(Callback.BACK)
+                .callbackData(Callback.BACK_TO_SETTINGS)
+                .build();
 
         List<InlineKeyboardButton> buttons1 = new ArrayList<>();
         buttons1.add(button1);

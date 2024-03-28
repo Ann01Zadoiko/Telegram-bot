@@ -11,10 +11,15 @@ public class BackButton {
 
     private BackButton(){}
 
+    //button for back to list of users
     public static InlineKeyboardMarkup getBackToList(){
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
 
-        InlineKeyboardButton button = InlineKeyboardButton.builder().text(Callback.BACK).callbackData(Callback.BACK_TO_LIST).build();
+        InlineKeyboardButton button = InlineKeyboardButton
+                .builder()
+                .text(Callback.BACK)
+                .callbackData(Callback.BACK_TO_LIST)
+                .build();
 
         List<InlineKeyboardButton> buttons = new ArrayList<>();
         buttons.add(button);
@@ -27,10 +32,15 @@ public class BackButton {
         return markup;
     }
 
+    //button for back to the settings
     public static InlineKeyboardMarkup getBackToSettings(){
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
 
-        InlineKeyboardButton button = InlineKeyboardButton.builder().text(Callback.BACK).callbackData(Callback.BACK_TO_SETTINGS).build();
+        InlineKeyboardButton button = InlineKeyboardButton
+                .builder()
+                .text(Callback.BACK)
+                .callbackData(Callback.BACK_TO_SETTINGS)
+                .build();
 
         List<InlineKeyboardButton> buttons = new ArrayList<>();
         buttons.add(button);

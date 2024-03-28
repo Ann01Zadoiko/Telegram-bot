@@ -12,6 +12,7 @@ public class NotificationService {
 
     private final NotificationRepository notificationRepository;
 
+    //save or update
     public void save(Notification notification){
 
         notificationRepository.save(notification);
@@ -19,6 +20,7 @@ public class NotificationService {
         log.info("\nNew notification: " + notification);
     }
 
+    //get the notification by the user
     public Notification getNotificationByUser(User user){
         Notification notification = notificationRepository.findNotificationByUser(user);
 

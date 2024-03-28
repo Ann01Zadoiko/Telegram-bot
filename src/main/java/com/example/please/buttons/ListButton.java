@@ -11,7 +11,8 @@ public class ListButton {
 
     private ListButton(){}
 
-    public static InlineKeyboardMarkup getButtonsIfTurnOnAtNine(){
+    //list of buttons (list of users (work, sick, vacation)
+    public static InlineKeyboardMarkup getButtonsList(){
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
 
         InlineKeyboardButton button1 =InlineKeyboardButton

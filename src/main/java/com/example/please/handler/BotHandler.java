@@ -9,6 +9,8 @@ import com.example.please.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+
+
 @RequiredArgsConstructor
 public class BotHandler {
 
@@ -16,8 +18,8 @@ public class BotHandler {
     private final NotificationService notificationService;
     private final BotConfig config;
 
+    //answer from a callback
     public void getAllCallback(Update update){
-
         String data = update.getCallbackQuery().getData();
         Long chatId = update.getCallbackQuery().getMessage().getChatId();
         User user = userService.getByChatId(chatId);
@@ -52,6 +54,7 @@ public class BotHandler {
         callback.getBackToList(data, chatId, messageId, telegramBot);
     }
 
+    //answer from user's message
     public void getAllMessage(Update update){
         String messageText = update.getMessage().getText();
         long charId = update.getMessage().getChatId();
@@ -67,7 +70,7 @@ public class BotHandler {
 
         TelegramBot telegramBot = new TelegramBot(config, userService, notificationService);
 
-        message.getStart(update, messageText);
+        message.getStart(update, messageText, telegramBot);
         message.getFullName(user,messageText, charId, stringBuilder, telegramBot);
         message.getHelp(messageText, charId, telegramBot);
         message.getAtWork(user, charId, messageText, telegramBot);

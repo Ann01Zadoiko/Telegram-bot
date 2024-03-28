@@ -24,6 +24,7 @@ public class Schedules {
     private final NotificationService notificationService;
     private final BotConfig config;
 
+    //reset the list
     @Scheduled(cron = "0 0 0 * * *")
     public void becomeNewDay() {
         List<User> users = userService.listAll();
@@ -35,6 +36,7 @@ public class Schedules {
         }
     }
 
+    //the notification at 9 am
     @SneakyThrows
     @Scheduled(cron = NotificationTime.NINE)
     public void dailyRememberAtNine() {
@@ -45,9 +47,11 @@ public class Schedules {
             if (MessageChecker.isNotificationAt(user, notification, "9")) {
                 new TelegramBot(config, userService, notificationService).sendMessage(user.getChatId(), "Запізнюватись не гарно!");
             }
+            log.info(user.getFullName() + " got the notification at 9 am");
         }
     }
 
+    //the notification at 8 am
     @SneakyThrows
     @Scheduled(cron = NotificationTime.EIGHT)
     public void dailyRememberAtEight() {
@@ -58,6 +62,7 @@ public class Schedules {
             if (MessageChecker.isNotificationAt(user, notification, "8")) {
                 new TelegramBot(config, userService, notificationService).sendMessage(user.getChatId(), "Запізнюватись не гарно!");
             }
+            log.info(user.getFullName() + " got the notification at 8 am");
         }
     }
 }

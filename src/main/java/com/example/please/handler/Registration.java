@@ -1,7 +1,6 @@
 package com.example.please.handler;
 
 import com.example.please.bot.TelegramBot;
-import com.example.please.config.BotConfig;
 import com.example.please.constant.Phrases;
 import com.example.please.notification.Notification;
 import com.example.please.notification.NotificationService;
@@ -10,17 +9,19 @@ import com.example.please.user.User;
 import com.example.please.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
+import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.objects.Message;
 
+@Slf4j
 @RequiredArgsConstructor
 public class Registration {
 
     private final UserService userService;
     private final NotificationService notificationService;
-    private final BotConfig config;
 
+    //register a new user
     @SneakyThrows
-    public void registerUser(Message message) {
+    public void registerUser(Message message, TelegramBot bot) {
         if (!userService.existsByChatId(message.getChatId())) {
             User user = new User();
             user.setChatId(message.getChatId());
@@ -34,10 +35,11 @@ public class Registration {
             notification.setUser(user);
             notificationService.save(notification);
 
-            new TelegramBot(config, userService, notificationService).sendMessage(message.getChatId(), Phrases.START_NEW_USER);
-
+            bot.sendMessage(message.getChatId(), Phrases.START_NEW_USER);
+            log.info("User (" + user.getChatId() + ") is registered");
         } else {
-            new TelegramBot(config, userService, notificationService).sendMessage(message.getChatId(), Phrases.START_OLD_USER);
+            bot.sendMessage(message.getChatId(), Phrases.START_OLD_USER);
+            log.info("User in the db");
         }
     }
 }

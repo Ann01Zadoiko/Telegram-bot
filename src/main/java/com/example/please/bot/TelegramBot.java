@@ -39,6 +39,8 @@ public class TelegramBot extends TelegramLongPollingBot {
                 null));
     }
 
+
+    //main work of bot
     @SneakyThrows
     @Override
     public void onUpdateReceived(Update update) {
@@ -51,6 +53,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
+    //send message in settings
     @SneakyThrows
     public void executeSetting(long charId, InlineKeyboardMarkup markup){
         SendMessage build = SendMessage
@@ -59,10 +62,13 @@ public class TelegramBot extends TelegramLongPollingBot {
                 .text(Phrases.CHOOSE)
                 .replyMarkup(markup)
                 .build();
-
         execute(build);
+
+        log.info("Reply sent: " + build.getText() + "\nBy user: " + build.getChatId());
     }
 
+
+    //send message where used buttons in callback
     @SneakyThrows
     public void executeEditMessageTextWithButton(String text, Long chatId, long messageId, InlineKeyboardMarkup markup){
         EditMessageText editMessageText = EditMessageText
@@ -72,10 +78,12 @@ public class TelegramBot extends TelegramLongPollingBot {
                 .text(text)
                 .replyMarkup(markup)
                 .build();
-
         execute(editMessageText);
+
+        log.info("Reply sent: " + editMessageText.getText() + "\nBy user: " + editMessageText.getChatId());
     }
 
+    //send message for user
     public void sendMessage(long chatId, String text) throws TelegramApiException {
         SendMessage sendMessage = SendMessage
                 .builder()
@@ -83,7 +91,6 @@ public class TelegramBot extends TelegramLongPollingBot {
                 .text(text)
                 .replyMarkup(Buttons.getButtons())
                 .build();
-
         execute(sendMessage);
 
         log.info("Reply sent: " + sendMessage.getText() + "\nBy user: " + sendMessage.getChatId());
