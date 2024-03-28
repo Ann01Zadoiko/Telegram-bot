@@ -1,9 +1,8 @@
 package com.example.please.bot;
 
-
-
 import com.example.please.buttons.*;
 import com.example.please.config.BotConfig;
+import com.example.please.constant.Phrases;
 import com.example.please.handler.*;
 import com.example.please.notification.NotificationService;
 import com.example.please.user.UserService;
@@ -57,7 +56,7 @@ public class TelegramBot extends TelegramLongPollingBot {
         SendMessage build = SendMessage
                 .builder()
                 .chatId(charId)
-                .text("Оберить одну зі списку:")
+                .text(Phrases.CHOOSE)
                 .replyMarkup(markup)
                 .build();
 

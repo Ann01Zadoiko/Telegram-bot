@@ -33,7 +33,6 @@ public class UserService {
         log.info("New user was saved: " + user);
     }
 
-
     public User getByChatId(Long id){
         return repository.findByChatId(id);
     }
@@ -43,7 +42,6 @@ public class UserService {
     }
 
     public void update(User user){
-
         User user1 = repository.findById(user.getId()).get();
         user1.setFullName(user.getFullName());
         user1.setPassword(user1.getPassword());

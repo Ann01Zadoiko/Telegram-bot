@@ -31,4 +31,12 @@ public interface Phrases {
     String STATUS = "Заряз Ви ";
 
     String CHOOSE = "Оберить одну зі списку:";
+
+    String ROOM_NEW = "Буду приходити на каву";
+
+    String ROOM_INFO = "Ви змінили своє місце проживання на ";
+
+    String PHONE_NUMBER_NEW = "Буду тепер тобі постійно звонити, мій друже";
+
+    String PHONE_NUMBER_INFO = "Ви змініли свій номер на ";
 }

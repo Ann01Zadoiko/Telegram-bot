@@ -17,19 +17,11 @@ public interface Callback {
 
     String EIGHT = "8:00";
 
-    String OFF = "off";
-
     String TURN_OFF = "Вимкнути";
 
-    String SICK = "SICK";
+    String WORK = "Працюю";
 
-    String VACATION = "VACATION";
+    String SICK = "На лікарняному";
 
-    String WORK = "WORK";
-
-    String IN_WORK = "Працюю";
-
-    String IN_SICK = "На лікарняному";
-
-    String IN_VACATION = "У відпустці";
+    String VACATION = "У відпустці";
 }

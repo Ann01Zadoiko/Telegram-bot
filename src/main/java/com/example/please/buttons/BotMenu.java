@@ -11,7 +11,7 @@ public class BotMenu {
     public List<BotCommand> listOfCommands(){
 
         List<BotCommand> list = new ArrayList<>();
-        list.add(new BotCommand(Commands.HELP, "описння всіх можливостій у боті"));
+        list.add(new BotCommand(Commands.HELP, "Описння всіх можливостій у боті"));
         return list;
     }
 }

@@ -84,11 +84,11 @@ public class BotHandlerMessage {
             if (user.getRoom() == null) {
                 user.setRoom(Integer.parseInt(messageText));
                 userService.update(user);
-                new TelegramBot(config, userService, notificationService).sendMessage(charId, "Буду приходити на каву");
+                new TelegramBot(config, userService, notificationService).sendMessage(charId, Phrases.ROOM_NEW);
             } else {
                 user.setRoom(Integer.parseInt(messageText));
                 userService.update(user);
-                new TelegramBot(config, userService, notificationService).sendMessage(charId, "Ви змінили своє місце проживання на " + user.getRoom() + " кабінет");
+                new TelegramBot(config, userService, notificationService).sendMessage(charId, Phrases.ROOM_INFO + user.getRoom() + " кабінет");
             }
         }
 
@@ -100,11 +100,11 @@ public class BotHandlerMessage {
             if (user.getPhoneNumber() == null) {
                 user.setPhoneNumber(messageText);
                 userService.update(user);
-                new TelegramBot(config, userService, notificationService).sendMessage(charId, "Буду тепер тобі постійно звонити, мій друже");
+                new TelegramBot(config, userService, notificationService).sendMessage(charId, Phrases.PHONE_NUMBER_NEW);
             } else {
                 user.setPhoneNumber(messageText);
                 userService.update(user);
-                new TelegramBot(config, userService, notificationService).sendMessage(charId, "Ви змініли свій номер на " + user.getPhoneNumber());
+                new TelegramBot(config, userService, notificationService).sendMessage(charId, Phrases.PHONE_NUMBER_INFO + user.getPhoneNumber());
             }
         }
     }
