@@ -1,5 +1,6 @@
 package com.example.please.handler;
 
+import com.example.please.bot.TelegramBot;
 import com.example.please.config.BotConfig;
 import com.example.please.notification.Notification;
 import com.example.please.notification.NotificationService;
@@ -30,23 +31,25 @@ public class BotHandler {
                 .config(config)
                 .build();
 
-        callback.getNine(notification, chatId, messageId, data);
-        callback.getEight(data, notification, chatId, messageId);
-        callback.getOff(data, notification, chatId, messageId);
-        callback.getWork(data, user, chatId, messageId);
-        callback.getSick(data, user, chatId, messageId);
-        callback.getVacation(data, user, chatId, messageId);
-        callback.getNotification(data, notification, chatId, messageId);
-        callback.getFullName(data, user, chatId, messageId);
-        callback.getPassword(data, user, chatId, messageId);
-        callback.getRoom(data, user, chatId, messageId);
-        callback.getStatus(data, user, chatId, messageId);
-        callback.getPhoneNumber(data,user,chatId,messageId);
-        callback.getListOfWork(data, chatId, messageId);
-        callback.getListOfSick(data, chatId, messageId);
-        callback.getListOfVacation(data, chatId, messageId);
-        callback.getBackToSettings(data, chatId, messageId);
-        callback.getBackToList(data, chatId, messageId);
+        TelegramBot telegramBot = new TelegramBot(config, userService, notificationService);
+
+        callback.getNine(notification, chatId, messageId, data, telegramBot);
+        callback.getEight(data, notification, chatId, messageId, telegramBot);
+        callback.getOff(data, notification, chatId, messageId, telegramBot);
+        callback.getWork(data, user, chatId, messageId, telegramBot);
+        callback.getSick(data, user, chatId, messageId, telegramBot);
+        callback.getVacation(data, user, chatId, messageId, telegramBot);
+        callback.getNotification(data, notification, chatId, messageId, telegramBot);
+        callback.getFullName(data, user, chatId, messageId, telegramBot);
+        callback.getPassword(data, user, chatId, messageId, telegramBot);
+        callback.getRoom(data, user, chatId, messageId, telegramBot);
+        callback.getStatus(data, user, chatId, messageId, telegramBot);
+        callback.getPhoneNumber(data,user,chatId,messageId, telegramBot);
+        callback.getListOfWork(data, chatId, messageId, telegramBot);
+        callback.getListOfSick(data, chatId, messageId, telegramBot);
+        callback.getListOfVacation(data, chatId, messageId, telegramBot);
+        callback.getBackToSettings(data, chatId, messageId, telegramBot);
+        callback.getBackToList(data, chatId, messageId, telegramBot);
     }
 
     public void getAllMessage(Update update){
@@ -62,17 +65,19 @@ public class BotHandler {
                 .config(config)
                 .build();
 
+        TelegramBot telegramBot = new TelegramBot(config, userService, notificationService);
+
         message.getStart(update, messageText);
-        message.getFullName(user,messageText, charId, stringBuilder);
-        message.getHelp(messageText, charId);
-        message.getAtWork(user, charId, messageText);
-        message.getPassword(user, messageText, charId, stringBuilder);
-        message.getUnexpectedMessage(messageText, charId);
-        message.getListOfEmployees(messageText, charId);
-        message.getRoom(user, messageText, charId);
-        message.getPhoneNumber(user, messageText, charId);
-        message.getSend(messageText, user);
-        message.getSettings(messageText, charId);
+        message.getFullName(user,messageText, charId, stringBuilder, telegramBot);
+        message.getHelp(messageText, charId, telegramBot);
+        message.getAtWork(user, charId, messageText, telegramBot);
+        message.getPassword(user, messageText, charId, stringBuilder, telegramBot);
+        message.getUnexpectedMessage(messageText, charId, telegramBot);
+        message.getListOfEmployees(messageText, charId, telegramBot);
+        message.getRoom(user, messageText, charId, telegramBot);
+        message.getPhoneNumber(user, messageText, charId, telegramBot);
+        message.getSend(messageText, user, telegramBot);
+        message.getSettings(messageText, charId, telegramBot);
     }
 
 }
