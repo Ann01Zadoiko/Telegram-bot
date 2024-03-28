@@ -31,7 +31,7 @@ public class BotHandlerMessage {
 
     //user start to use the bot
     public void getStart(Update update, String messageText, TelegramBot bot){
-        if (messageText.equals(Commands.START)) {
+        if (messageText.equals(Commands.START_PRIVATE)) {
             new Registration(userService, notificationService).registerUser(update.getMessage(), bot);
         }
     }
