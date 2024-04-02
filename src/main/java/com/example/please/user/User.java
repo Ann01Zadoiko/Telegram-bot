@@ -5,6 +5,7 @@ import com.example.please.notification.Notification;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 
@@ -45,7 +46,10 @@ public class User {
     private Notification notification;
 
     @Enumerated(EnumType.STRING)
-    private Status status;
+    private StatusEnum status;
+
+    @Column(name = "date_of_birth")
+    private LocalDate dateOfBirth;
 
     @Override
     public String toString() {
@@ -59,6 +63,7 @@ public class User {
                 ", room=" + room +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", status=" + status +
+                ", dateOfBirth=" + dateOfBirth +
                 '}';
     }
 }

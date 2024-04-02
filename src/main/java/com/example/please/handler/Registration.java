@@ -4,7 +4,7 @@ import com.example.please.bot.TelegramBot;
 import com.example.please.constant.Phrases;
 import com.example.please.notification.Notification;
 import com.example.please.notification.NotificationService;
-import com.example.please.user.Status;
+import com.example.please.user.StatusEnum;
 import com.example.please.user.User;
 import com.example.please.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -26,7 +26,7 @@ public class Registration {
             User user = new User();
             user.setChatId(message.getChatId());
             user.setFullName("Хтось");
-            user.setStatus(Status.WORK);
+            user.setStatus(StatusEnum.WORK);
             userService.save(user);
 
             Notification notification = new Notification();

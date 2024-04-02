@@ -9,7 +9,7 @@ import com.example.please.constant.Commands;
 import com.example.please.constant.Phrases;
 import com.example.please.convert.Converter;
 import com.example.please.notification.NotificationService;
-import com.example.please.user.Status;
+import com.example.please.user.StatusEnum;
 import com.example.please.user.User;
 import com.example.please.user.UserService;
 import lombok.Builder;
@@ -62,7 +62,7 @@ public class BotHandlerMessage {
 
         if (messageText.equals(Commands.AT_WORK)) {
             String s = new AtWorkService(userService).addUserToTheList(user, LocalTime.now());
-            if(user.getStatus().equals(Status.WORK)){
+            if(user.getStatus().equals(StatusEnum.WORK)){
                 log.info(user.getFullName() + " is at work");
                 bot.sendMessage(charId, s);
             } else {

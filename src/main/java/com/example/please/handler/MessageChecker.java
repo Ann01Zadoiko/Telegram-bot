@@ -3,7 +3,7 @@ package com.example.please.handler;
 import com.example.please.constant.Callback;
 import com.example.please.constant.Commands;
 import com.example.please.notification.Notification;
-import com.example.please.user.Status;
+import com.example.please.user.StatusEnum;
 import com.example.please.user.User;
 
 public class MessageChecker {
@@ -55,7 +55,7 @@ public class MessageChecker {
     public static boolean isNotificationAt(User user, Notification notification, String time){
         return (user.getAtWork() == 0 && notification.getTurnOn()
                 && notification.getTimeOfNotification().contains(time)
-                && user.getStatus().equals(Status.WORK));
+                && user.getStatus().equals(StatusEnum.WORK));
     }
 
 }

@@ -1,6 +1,6 @@
 package com.example.please.atWork;
 
-import com.example.please.user.Status;
+import com.example.please.user.StatusEnum;
 import com.example.please.user.User;
 import com.example.please.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +17,7 @@ public class ListOfEmployees {
     private final UserService userService;
 
     //print users who sick or vacation
-    public String printEmployees(Status status){
+    public String printEmployees(StatusEnum status){
         List<User> users = userService.listAll();
 
         StringBuilder list = new StringBuilder();
@@ -51,7 +51,7 @@ public class ListOfEmployees {
         list.append(formatterDay.format(LocalDate.now()));
 
         for (User user: users1){
-            if (user.getAtWork() == 1 && user.getStatus().equals(Status.WORK)){
+            if (user.getAtWork() == 1 && user.getStatus().equals(StatusEnum.WORK)){
                 list
                         .append("\n")
                         .append(number++)

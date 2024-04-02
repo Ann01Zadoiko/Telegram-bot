@@ -9,7 +9,7 @@ import com.example.please.constant.Phrases;
 import com.example.please.constant.Settings;
 import com.example.please.notification.Notification;
 import com.example.please.notification.NotificationService;
-import com.example.please.user.Status;
+import com.example.please.user.StatusEnum;
 import com.example.please.user.User;
 import com.example.please.user.UserService;
 import lombok.Builder;
@@ -57,14 +57,14 @@ public class BotHandlerCallback {
             notificationService.save(notification);
 
             log.info("User (" + chatId + ") turned off the notification");
-            bot.executeEditMessageTextWithButton("Ви вимкнути нагадування", chatId, messageId, BackButton.getBackToSettings());
+            bot.executeEditMessageTextWithButton("Ви вимкнули нагадування", chatId, messageId, BackButton.getBackToSettings());
         }
     }
 
     //the status was changed to WORK
     public void getWork(String data, User user, long chatId, long messageId, TelegramBot bot){
         if (data.equals(Callback.WORK)) {
-            user.setStatus(Status.WORK);
+            user.setStatus(StatusEnum.WORK);
             userService.save(user);
 
             log.info("User (" + chatId + ") change the status to WORK");
@@ -75,7 +75,7 @@ public class BotHandlerCallback {
     //the status was changed to SICK
     public void getSick(String data, User user, long chatId, long messageId, TelegramBot bot){
         if (data.equals(Callback.SICK)) {
-            user.setStatus(Status.SICK);
+            user.setStatus(StatusEnum.SICK);
             userService.save(user);
 
             log.info("User (" + chatId + ") change the status to SICK");
@@ -86,7 +86,7 @@ public class BotHandlerCallback {
     //the status was changed VACATION
     public void getVacation(String data, User user, long chatId, long messageId, TelegramBot bot){
         if (data.equals(Callback.VACATION)) {
-            user.setStatus(Status.VACATION);
+            user.setStatus(StatusEnum.VACATION);
             userService.save(user);
 
             log.info("User (" + chatId + ") change the status to VACATION");
@@ -151,13 +151,13 @@ public class BotHandlerCallback {
     //show user's status and ability to change to another one
     public void getStatus(String data,User user, long chatId, long messageId, TelegramBot bot){
         if (data.equals(Settings.STATUS)){
-            if (user.getStatus().equals(Status.WORK)){
+            if (user.getStatus().equals(StatusEnum.WORK)){
                 bot.executeEditMessageTextWithButton("На даний момент Ви працюєте", chatId, messageId, SettingsButton.getButtons(Callback.SICK, Callback.VACATION));
             }
-            if (user.getStatus().equals(Status.SICK)){
+            if (user.getStatus().equals(StatusEnum.SICK)){
                 bot.executeEditMessageTextWithButton("На даний момент Ви на лікарняному", chatId, messageId, SettingsButton.getButtons(Callback.WORK, Callback.VACATION));
             }
-            if (user.getStatus().equals(Status.VACATION)){
+            if (user.getStatus().equals(StatusEnum.VACATION)){
                 bot.executeEditMessageTextWithButton("На даний момент Ви у відпустці", chatId, messageId, SettingsButton.getButtons(Callback.WORK, Callback.SICK));
             }
 
@@ -192,7 +192,7 @@ public class BotHandlerCallback {
     public void getListOfSick(String data, long chatId, long messageId, TelegramBot bot){
         if (data.equals(Callback.LIST_OF_SICK)){
             log.info("Show the list of users who sick for " + chatId);
-            bot.executeEditMessageTextWithButton(new ListOfEmployees(userService).printEmployees(Status.SICK), chatId,messageId, BackButton.getBackToList());
+            bot.executeEditMessageTextWithButton(new ListOfEmployees(userService).printEmployees(StatusEnum.SICK), chatId,messageId, BackButton.getBackToList());
         }
     }
 
@@ -201,7 +201,7 @@ public class BotHandlerCallback {
     public void getListOfVacation(String data, long chatId, long messageId, TelegramBot bot){
         if (data.equals(Callback.LIST_OF_VACATION)){
             log.info("Show the list of user who in vacation for " + chatId);
-            bot.executeEditMessageTextWithButton(new ListOfEmployees(userService).printEmployees(Status.VACATION), chatId, messageId, BackButton.getBackToList());
+            bot.executeEditMessageTextWithButton(new ListOfEmployees(userService).printEmployees(StatusEnum.VACATION), chatId, messageId, BackButton.getBackToList());
         }
     }
 
