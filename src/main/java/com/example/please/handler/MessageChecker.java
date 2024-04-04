@@ -3,7 +3,7 @@ package com.example.please.handler;
 import com.example.please.constant.Callback;
 import com.example.please.constant.Commands;
 import com.example.please.notification.Notification;
-import com.example.please.user.StatusEnum;
+import com.example.please.status.StatusEnum;
 import com.example.please.user.User;
 
 public class MessageChecker {

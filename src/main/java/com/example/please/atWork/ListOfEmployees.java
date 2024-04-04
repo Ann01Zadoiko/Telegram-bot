@@ -1,6 +1,6 @@
 package com.example.please.atWork;
 
-import com.example.please.user.StatusEnum;
+import com.example.please.status.StatusEnum;
 import com.example.please.user.User;
 import com.example.please.user.UserService;
 import lombok.RequiredArgsConstructor;

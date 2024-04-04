@@ -2,6 +2,8 @@ package com.example.please.user;
 
 
 import com.example.please.notification.Notification;
+import com.example.please.status.Status;
+import com.example.please.status.StatusEnum;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -50,6 +52,9 @@ public class User {
 
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
+
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Status status1;
 
     @Override
     public String toString() {

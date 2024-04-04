@@ -1,4 +1,4 @@
-package com.example.please.user;
+package com.example.please.status;
 
 public enum StatusEnum {
     WORK, SICK, VACATION

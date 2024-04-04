@@ -4,7 +4,7 @@ import com.example.please.bot.TelegramBot;
 import com.example.please.constant.Phrases;
 import com.example.please.notification.Notification;
 import com.example.please.notification.NotificationService;
-import com.example.please.user.StatusEnum;
+import com.example.please.status.StatusEnum;
 import com.example.please.user.User;
 import com.example.please.user.UserService;
 import lombok.RequiredArgsConstructor;

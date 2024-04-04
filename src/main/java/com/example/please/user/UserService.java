@@ -53,6 +53,7 @@ public class UserService {
         user1.setAtWork(user.getAtWork());
         user1.setPhoneNumber(user.getPhoneNumber());
         user1.setRoom(user.getRoom());
+        user1.setDateOfBirth(user.getDateOfBirth());
 
         log.info(user.getFullName() + " was updated!");
 

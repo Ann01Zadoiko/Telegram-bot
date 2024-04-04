@@ -9,7 +9,7 @@ import com.example.please.constant.Commands;
 import com.example.please.constant.Phrases;
 import com.example.please.convert.Converter;
 import com.example.please.notification.NotificationService;
-import com.example.please.user.StatusEnum;
+import com.example.please.status.StatusEnum;
 import com.example.please.user.User;
 import com.example.please.user.UserService;
 import lombok.Builder;

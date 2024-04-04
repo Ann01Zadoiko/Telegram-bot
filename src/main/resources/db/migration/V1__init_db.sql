@@ -22,9 +22,9 @@ create table if not exists notifications (
 
 create table if not exists statuses(
     id bigint auto_increment primary key,
-    name enum('WORK','SICK','VACATION'),
-    start_at date,
-    end_at date,
+    status enum('WORK','SICK','VACATION'),
+    started_at date,
+    ended_at date,
     id_user bigint,
     foreign key (id_user) references users(id)
 );
