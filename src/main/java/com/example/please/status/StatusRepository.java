@@ -7,7 +7,7 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface StatusRepository extends JpaRepository<Status, Long> {
 
-    Status findByUser(User user);
-
-    Status findByStatusEnum(StatusEnum statusEnum);
+//    Status findByUser(User user);
+//
+//    Status findByStatusEnum(StatusEnum statusEnum);
 }

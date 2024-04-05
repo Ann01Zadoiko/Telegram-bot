@@ -2,6 +2,7 @@ package com.example.please.status;
 
 import com.example.please.user.User;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -11,6 +12,7 @@ import java.time.LocalDate;
 @Getter
 @Setter
 @NoArgsConstructor
+@AllArgsConstructor
 @Entity
 @Table(name = "statuses")
 public class Status {
@@ -19,8 +21,8 @@ public class Status {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Enumerated(EnumType.STRING)
-    private StatusEnum statusEnum;
+    @Column(name = "status")
+    private String status;
 
     @Column(name = "started_at")
     private LocalDate startedAt;
@@ -31,4 +33,15 @@ public class Status {
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_user")
     private User user;
+
+    @Override
+    public String toString() {
+        return "Status{" +
+                "id=" + id +
+                ", statusEnum=" + status +
+                ", startedAt=" + startedAt +
+                ", endedAt=" + endedAt +
+                ", user=" + user +
+                '}';
+    }
 }

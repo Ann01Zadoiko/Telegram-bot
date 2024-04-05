@@ -10,6 +10,7 @@ import com.example.please.constant.Settings;
 import com.example.please.notification.Notification;
 import com.example.please.notification.NotificationService;
 import com.example.please.status.StatusEnum;
+import com.example.please.status.StatusService;
 import com.example.please.user.User;
 import com.example.please.user.UserService;
 import lombok.Builder;
@@ -25,6 +26,7 @@ public class BotHandlerCallback {
     private final UserService userService;
     private final NotificationService notificationService;
     private final BotConfig config;
+    private final StatusService statusService;
 
     //the notification was changed at 9 am
     public void getNine(Notification notification, long chatId, long messageId, String data, TelegramBot bot){
@@ -64,7 +66,7 @@ public class BotHandlerCallback {
     //the status was changed to WORK
     public void getWork(String data, User user, long chatId, long messageId, TelegramBot bot){
         if (data.equals(Callback.WORK)) {
-            user.setStatus(StatusEnum.WORK);
+            user.setStatusEnum(StatusEnum.WORK);
             userService.save(user);
 
             log.info("User (" + chatId + ") change the status to WORK");
@@ -75,7 +77,7 @@ public class BotHandlerCallback {
     //the status was changed to SICK
     public void getSick(String data, User user, long chatId, long messageId, TelegramBot bot){
         if (data.equals(Callback.SICK)) {
-            user.setStatus(StatusEnum.SICK);
+            user.setStatusEnum(StatusEnum.SICK);
             userService.save(user);
 
             log.info("User (" + chatId + ") change the status to SICK");
@@ -86,7 +88,7 @@ public class BotHandlerCallback {
     //the status was changed VACATION
     public void getVacation(String data, User user, long chatId, long messageId, TelegramBot bot){
         if (data.equals(Callback.VACATION)) {
-            user.setStatus(StatusEnum.VACATION);
+            user.setStatusEnum(StatusEnum.VACATION);
             userService.save(user);
 
             log.info("User (" + chatId + ") change the status to VACATION");
@@ -151,13 +153,13 @@ public class BotHandlerCallback {
     //show user's status and ability to change to another one
     public void getStatus(String data,User user, long chatId, long messageId, TelegramBot bot){
         if (data.equals(Settings.STATUS)){
-            if (user.getStatus().equals(StatusEnum.WORK)){
+            if (user.getStatusEnum().equals(StatusEnum.WORK)){
                 bot.executeEditMessageTextWithButton("На даний момент Ви працюєте", chatId, messageId, SettingsButton.getButtons(Callback.SICK, Callback.VACATION));
             }
-            if (user.getStatus().equals(StatusEnum.SICK)){
+            if (user.getStatusEnum().equals(StatusEnum.SICK)){
                 bot.executeEditMessageTextWithButton("На даний момент Ви на лікарняному", chatId, messageId, SettingsButton.getButtons(Callback.WORK, Callback.VACATION));
             }
-            if (user.getStatus().equals(StatusEnum.VACATION)){
+            if (user.getStatusEnum().equals(StatusEnum.VACATION)){
                 bot.executeEditMessageTextWithButton("На даний момент Ви у відпустці", chatId, messageId, SettingsButton.getButtons(Callback.WORK, Callback.SICK));
             }
 

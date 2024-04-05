@@ -5,6 +5,7 @@ import com.example.please.config.BotConfig;
 import com.example.please.constant.NotificationTime;
 import com.example.please.notification.Notification;
 import com.example.please.notification.NotificationService;
+import com.example.please.status.StatusService;
 import com.example.please.user.User;
 import com.example.please.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +24,7 @@ public class Schedules {
     private final UserService userService;
     private final NotificationService notificationService;
     private final BotConfig config;
+    private final StatusService statusService;
 
     //reset the list
     @Scheduled(cron = "0 0 0 * * *")
@@ -45,7 +47,7 @@ public class Schedules {
         for (User user : users) {
             Notification notification = notificationService.getNotificationByUser(user);
             if (MessageChecker.isNotificationAt(user, notification, "9")) {
-                new TelegramBot(config, userService, notificationService).sendMessage(user.getChatId(), "Запізнюватись не гарно!");
+                new TelegramBot(config, userService, notificationService, statusService).sendMessage(user.getChatId(), "Запізнюватись не гарно!");
             }
             log.info(user.getFullName() + " got the notification at 9 am");
         }
@@ -60,7 +62,7 @@ public class Schedules {
         for (User user : users) {
             Notification notification = notificationService.getNotificationByUser(user);
             if (MessageChecker.isNotificationAt(user, notification, "8")) {
-                new TelegramBot(config, userService, notificationService).sendMessage(user.getChatId(), "Запізнюватись не гарно!");
+                new TelegramBot(config, userService, notificationService, statusService).sendMessage(user.getChatId(), "Запізнюватись не гарно!");
             }
             log.info(user.getFullName() + " got the notification at 8 am");
         }

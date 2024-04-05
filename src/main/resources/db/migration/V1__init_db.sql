@@ -22,30 +22,10 @@ create table if not exists notifications (
 
 create table if not exists statuses(
     id bigint auto_increment primary key,
-    status enum('WORK','SICK','VACATION'),
+  --  status enum('WORK','SICK','VACATION'),
+    status varchar(15),
     started_at date,
     ended_at date,
-    id_user bigint,
-    foreign key (id_user) references users(id)
-);
-
-create table if not exists work_days(
-	id bigint auto_increment primary key,
-    day date
-);
-
-create table if not exists list_users_of_the_day(
-	id bigint auto_increment primary key,
-    id_user bigint,
-    id_work_day bigint,
-    time_of_coming time,
-    foreign key (id_user) references users(id),
-    foreign key (id_work_day) references work_days(id)
-);
-
-create table if not exists counter_of_users(
-	id bigint auto_increment primary key,
-    count int,
     id_user bigint,
     foreign key (id_user) references users(id)
 );

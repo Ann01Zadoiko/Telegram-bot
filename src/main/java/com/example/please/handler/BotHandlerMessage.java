@@ -9,7 +9,9 @@ import com.example.please.constant.Commands;
 import com.example.please.constant.Phrases;
 import com.example.please.convert.Converter;
 import com.example.please.notification.NotificationService;
+import com.example.please.status.Status;
 import com.example.please.status.StatusEnum;
+import com.example.please.status.StatusService;
 import com.example.please.user.User;
 import com.example.please.user.UserService;
 import lombok.Builder;
@@ -18,6 +20,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Slf4j
@@ -28,11 +31,12 @@ public class BotHandlerMessage {
     private final UserService userService;
     private final NotificationService notificationService;
     private final BotConfig config;
+    private final StatusService statusService;
 
     //user start to use the bot
     public void getStart(Update update, String messageText, TelegramBot bot){
         if (messageText.equals(Commands.START_PRIVATE)) {
-            new Registration(userService, notificationService).registerUser(update.getMessage(), bot);
+            new Registration(userService, notificationService, statusService).registerUser(update.getMessage(), bot);
         }
     }
 
@@ -62,7 +66,7 @@ public class BotHandlerMessage {
 
         if (messageText.equals(Commands.AT_WORK)) {
             String s = new AtWorkService(userService).addUserToTheList(user, LocalTime.now());
-            if(user.getStatus().equals(StatusEnum.WORK)){
+            if(user.getStatusEnum().equals(StatusEnum.WORK)){
                 log.info(user.getFullName() + " is at work");
                 bot.sendMessage(charId, s);
             } else {
@@ -141,6 +145,16 @@ public class BotHandlerMessage {
     @SneakyThrows
     public void getHelp(String messageText, long charId, TelegramBot bot){
         if (messageText.equals(Commands.HELP)) {
+
+//            Status status = new Status();
+//            status.setStatus("WORK");
+//            status.setEndedAt(LocalDate.now());
+//            status.setStartedAt(LocalDate.now());
+//            status.setUser(userService.getByChatId(charId));
+//            statusService.save(status);
+
+            log.info("Status: " + statusService.listAll());
+
             bot.sendMessage(charId, Phrases.HELP);
             log.info("User (" + charId + ") press the help");
         }

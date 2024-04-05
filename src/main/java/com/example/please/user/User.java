@@ -48,13 +48,13 @@ public class User {
     private Notification notification;
 
     @Enumerated(EnumType.STRING)
-    private StatusEnum status;
+    private StatusEnum statusEnum;
 
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Status status1;
+    private Status status;
 
     @Override
     public String toString() {
@@ -67,7 +67,7 @@ public class User {
                 ", timeComing=" + timeComing +
                 ", room=" + room +
                 ", phoneNumber='" + phoneNumber + '\'' +
-                ", status=" + status +
+                ", status=" + statusEnum +
                 ", dateOfBirth=" + dateOfBirth +
                 '}';
     }

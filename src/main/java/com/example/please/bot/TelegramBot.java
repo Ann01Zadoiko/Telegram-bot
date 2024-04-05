@@ -5,6 +5,7 @@ import com.example.please.config.BotConfig;
 import com.example.please.constant.Phrases;
 import com.example.please.handler.*;
 import com.example.please.notification.NotificationService;
+import com.example.please.status.StatusService;
 import com.example.please.user.UserService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -27,12 +28,14 @@ public class TelegramBot extends TelegramLongPollingBot {
     private final BotConfig config;
     private final UserService userService;
     private final NotificationService notificationService;
+    private final StatusService statusService;
 
     @SneakyThrows
-    public TelegramBot(BotConfig config, UserService service, NotificationService notificationService) {
+    public TelegramBot(BotConfig config, UserService service, NotificationService notificationService, StatusService statusService) {
         this.config = config;
         this.userService = service;
         this.notificationService = notificationService;
+        this.statusService = statusService;
         this.execute(new SetMyCommands(
                 new BotMenu().listOfCommands(),
                 new BotCommandScopeDefault(),
@@ -45,11 +48,11 @@ public class TelegramBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
-            new BotHandler(userService, notificationService, config).getAllMessage(update);
+            new BotHandler(userService, notificationService, config, statusService).getAllMessage(update);
         }
 
         if (update.hasCallbackQuery()) {
-            new BotHandler(userService, notificationService, config).getAllCallback(update);
+            new BotHandler(userService, notificationService, config, statusService).getAllCallback(update);
         }
     }
 

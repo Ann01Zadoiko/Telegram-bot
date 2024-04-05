@@ -55,7 +55,7 @@ public class MessageChecker {
     public static boolean isNotificationAt(User user, Notification notification, String time){
         return (user.getAtWork() == 0 && notification.getTurnOn()
                 && notification.getTimeOfNotification().contains(time)
-                && user.getStatus().equals(StatusEnum.WORK));
+                && user.getStatusEnum().equals(StatusEnum.WORK));
     }
 
 }

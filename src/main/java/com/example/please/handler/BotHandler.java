@@ -4,6 +4,7 @@ import com.example.please.bot.TelegramBot;
 import com.example.please.config.BotConfig;
 import com.example.please.notification.Notification;
 import com.example.please.notification.NotificationService;
+import com.example.please.status.StatusService;
 import com.example.please.user.User;
 import com.example.please.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ public class BotHandler {
     private final UserService userService;
     private final NotificationService notificationService;
     private final BotConfig config;
+    private final StatusService statusService;
 
     //answer from a callback
     public void getAllCallback(Update update){
@@ -33,7 +35,7 @@ public class BotHandler {
                 .config(config)
                 .build();
 
-        TelegramBot telegramBot = new TelegramBot(config, userService, notificationService);
+        TelegramBot telegramBot = new TelegramBot(config, userService, notificationService, statusService);
 
         callback.getNine(notification, chatId, messageId, data, telegramBot);
         callback.getEight(data, notification, chatId, messageId, telegramBot);
@@ -68,7 +70,7 @@ public class BotHandler {
                 .config(config)
                 .build();
 
-        TelegramBot telegramBot = new TelegramBot(config, userService, notificationService);
+        TelegramBot telegramBot = new TelegramBot(config, userService, notificationService, statusService);
 
         message.getStart(update, messageText, telegramBot);
         message.getFullName(user,messageText, charId, stringBuilder, telegramBot);
