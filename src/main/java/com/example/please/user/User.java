@@ -2,10 +2,11 @@ package com.example.please.user;
 
 
 import com.example.please.notification.Notification;
-import com.example.please.status.Status;
-import com.example.please.status.StatusEnum;
 import jakarta.persistence.*;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -44,7 +45,7 @@ public class User {
     @Column(name = "phone_number")
     private String phoneNumber;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL,  orphanRemoval = true)
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private Notification notification;
 
     @Enumerated(EnumType.STRING)
@@ -53,8 +54,6 @@ public class User {
     @Column(name = "date_of_birth")
     private LocalDate dateOfBirth;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Status status;
 
     @Override
     public String toString() {
@@ -71,4 +70,5 @@ public class User {
                 ", dateOfBirth=" + dateOfBirth +
                 '}';
     }
+
 }

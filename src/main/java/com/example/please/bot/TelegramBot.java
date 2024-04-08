@@ -5,10 +5,10 @@ import com.example.please.config.BotConfig;
 import com.example.please.constant.Phrases;
 import com.example.please.handler.*;
 import com.example.please.notification.NotificationService;
-import com.example.please.status.StatusService;
 import com.example.please.user.UserService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
@@ -21,6 +21,8 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMa
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 
+
+@Configurable
 @Slf4j
 @Component
 public class TelegramBot extends TelegramLongPollingBot {
@@ -28,14 +30,13 @@ public class TelegramBot extends TelegramLongPollingBot {
     private final BotConfig config;
     private final UserService userService;
     private final NotificationService notificationService;
-    private final StatusService statusService;
 
     @SneakyThrows
-    public TelegramBot(BotConfig config, UserService service, NotificationService notificationService, StatusService statusService) {
+    public TelegramBot(BotConfig config, UserService userService, NotificationService notificationService) {
         this.config = config;
-        this.userService = service;
+        this.userService = userService;
         this.notificationService = notificationService;
-        this.statusService = statusService;
+
         this.execute(new SetMyCommands(
                 new BotMenu().listOfCommands(),
                 new BotCommandScopeDefault(),
@@ -48,21 +49,21 @@ public class TelegramBot extends TelegramLongPollingBot {
     @Override
     public void onUpdateReceived(Update update) {
         if (update.hasMessage() && update.getMessage().hasText()) {
-            new BotHandler(userService, notificationService, config, statusService).getAllMessage(update);
+            new BotHandler(userService, notificationService, config).getAllMessage(update);
         }
 
         if (update.hasCallbackQuery()) {
-            new BotHandler(userService, notificationService, config, statusService).getAllCallback(update);
+            new BotHandler(userService, notificationService, config).getAllCallback(update);
         }
     }
 
     //send message in settings
     @SneakyThrows
-    public void executeSetting(long charId, InlineKeyboardMarkup markup){
+    public void executeSetting(long charId, InlineKeyboardMarkup markup, String text){
         SendMessage build = SendMessage
                 .builder()
                 .chatId(charId)
-                .text(Phrases.CHOOSE)
+                .text(text)
                 .replyMarkup(markup)
                 .build();
         execute(build);

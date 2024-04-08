@@ -1,7 +1,7 @@
 create table if not exists users(
     id bigint auto_increment primary key,
     chat_id int not null,
-    full_name varchar(150) not null,
+    full_name varchar(150),
     password varchar(20),
     at_work bit(1) default 0,
     time_of_coming time,
@@ -15,17 +15,6 @@ create table if not exists notifications (
     id bigint auto_increment primary key,
     time_of_notification varchar(20),
     turn_on bit(1) default 1,
-    id_user bigint,
-    foreign key (id_user) references users(id)
-);
-
-
-create table if not exists statuses(
-    id bigint auto_increment primary key,
-  --  status enum('WORK','SICK','VACATION'),
-    status varchar(15),
-    started_at date,
-    ended_at date,
     id_user bigint,
     foreign key (id_user) references users(id)
 );

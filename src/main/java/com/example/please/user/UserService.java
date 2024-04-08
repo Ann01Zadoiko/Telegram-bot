@@ -46,19 +46,19 @@ public class UserService {
     }
 
     //update a user
-    public void update(User user){
-        User user1 = repository.findById(user.getId()).get();
-        user1.setFullName(user.getFullName());
-        user1.setPassword(user1.getPassword());
-        user1.setAtWork(user.getAtWork());
-        user1.setPhoneNumber(user.getPhoneNumber());
-        user1.setRoom(user.getRoom());
-        user1.setDateOfBirth(user.getDateOfBirth());
-
-        log.info(user.getFullName() + " was updated!");
-
-        repository.save(user);
-    }
+//    public void update(User user){
+//        User user1 = repository.findById(user.getId()).get();
+//        user1.setFullName(user.getFullName());
+//        user1.setPassword(user1.getPassword());
+//        user1.setAtWork(user.getAtWork());
+//        user1.setPhoneNumber(user.getPhoneNumber());
+//        user1.setRoom(user.getRoom());
+//        user1.setDateOfBirth(user.getDateOfBirth());
+//
+//        log.info(user.getFullName() + " was updated!");
+//
+//        repository.save(user);
+//    }
 
 }
 

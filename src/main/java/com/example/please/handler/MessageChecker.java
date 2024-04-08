@@ -1,9 +1,8 @@
 package com.example.please.handler;
 
-import com.example.please.constant.Callback;
 import com.example.please.constant.Commands;
 import com.example.please.notification.Notification;
-import com.example.please.status.StatusEnum;
+import com.example.please.user.StatusEnum;
 import com.example.please.user.User;
 
 public class MessageChecker {
@@ -22,7 +21,10 @@ public class MessageChecker {
 
     //check for unexpected message
     public static boolean isUnexpectedMessage(String messageText){
-        return !(isCyrillic(messageText.replaceAll("\\s",""))) && !isACommand(messageText) && !isPhoneNumber(messageText);
+        return !(isCyrillic(messageText.replaceAll("\\s","")))
+                && !isACommand(messageText)
+                && !isPhoneNumber(messageText)
+                && !isDateOfBirth(messageText);
     }
 
     //check for cyrillic
@@ -36,7 +38,6 @@ public class MessageChecker {
         return message.equals(Commands.AT_WORK) || message.equals(Commands.START)
                 || message.equals(Commands.HELP) || message.equals(Commands.LIST_OF_EMPLOYEES)
               || message.contains(Commands.SEND) || message.equals(Commands.SETTINGS)
-                || message.equals(Callback.LIST_OF_SICK) || message.equals(Callback.LIST_OF_VACATION)
                 || message.equals(Commands.START_PRIVATE);
     }
 
@@ -56,6 +57,10 @@ public class MessageChecker {
         return (user.getAtWork() == 0 && notification.getTurnOn()
                 && notification.getTimeOfNotification().contains(time)
                 && user.getStatusEnum().equals(StatusEnum.WORK));
+    }
+
+    public static boolean isDateOfBirth(String message){
+        return message.contains("-");
     }
 
 }

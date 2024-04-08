@@ -22,7 +22,7 @@ public class AtWorkService {
         } else {
             user.setAtWork((byte) 1);
             user.setTimeComing(time);
-            userService.update(user);
+            userService.save(user);
             log.info(user.getFullName() + " was added to the list");
             return "Бажаю гарного робочого дня!";
         }

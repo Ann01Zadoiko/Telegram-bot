@@ -4,13 +4,10 @@ import com.example.please.bot.TelegramBot;
 import com.example.please.config.BotConfig;
 import com.example.please.notification.Notification;
 import com.example.please.notification.NotificationService;
-import com.example.please.status.StatusService;
 import com.example.please.user.User;
 import com.example.please.user.UserService;
 import lombok.RequiredArgsConstructor;
 import org.telegram.telegrambots.meta.api.objects.Update;
-
-
 
 @RequiredArgsConstructor
 public class BotHandler {
@@ -18,7 +15,6 @@ public class BotHandler {
     private final UserService userService;
     private final NotificationService notificationService;
     private final BotConfig config;
-    private final StatusService statusService;
 
     //answer from a callback
     public void getAllCallback(Update update){
@@ -35,7 +31,7 @@ public class BotHandler {
                 .config(config)
                 .build();
 
-        TelegramBot telegramBot = new TelegramBot(config, userService, notificationService, statusService);
+        TelegramBot telegramBot = new TelegramBot(config, userService, notificationService);
 
         callback.getNine(notification, chatId, messageId, data, telegramBot);
         callback.getEight(data, notification, chatId, messageId, telegramBot);
@@ -49,11 +45,8 @@ public class BotHandler {
         callback.getRoom(data, user, chatId, messageId, telegramBot);
         callback.getStatus(data, user, chatId, messageId, telegramBot);
         callback.getPhoneNumber(data,user,chatId,messageId, telegramBot);
-        callback.getListOfWork(data, chatId, messageId, telegramBot);
-        callback.getListOfSick(data, chatId, messageId, telegramBot);
-        callback.getListOfVacation(data, chatId, messageId, telegramBot);
         callback.getBackToSettings(data, chatId, messageId, telegramBot);
-        callback.getBackToList(data, chatId, messageId, telegramBot);
+        callback.getDateOfBirth(data, user, chatId, messageId, telegramBot);
     }
 
     //answer from user's message
@@ -70,7 +63,7 @@ public class BotHandler {
                 .config(config)
                 .build();
 
-        TelegramBot telegramBot = new TelegramBot(config, userService, notificationService, statusService);
+        TelegramBot telegramBot = new TelegramBot(config, userService, notificationService);
 
         message.getStart(update, messageText, telegramBot);
         message.getFullName(user,messageText, charId, stringBuilder, telegramBot);
@@ -83,6 +76,7 @@ public class BotHandler {
         message.getPhoneNumber(user, messageText, charId, telegramBot);
         message.getSend(messageText, user, telegramBot);
         message.getSettings(messageText, charId, telegramBot);
+        message.getDateOfBirth(messageText, user, telegramBot, charId, update.getMessage().getMessageId());
     }
 
 }

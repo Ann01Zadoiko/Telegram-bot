@@ -4,9 +4,7 @@ import com.example.please.bot.TelegramBot;
 import com.example.please.constant.Phrases;
 import com.example.please.notification.Notification;
 import com.example.please.notification.NotificationService;
-import com.example.please.status.Status;
-import com.example.please.status.StatusEnum;
-import com.example.please.status.StatusService;
+import com.example.please.user.StatusEnum;
 import com.example.please.user.User;
 import com.example.please.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +20,7 @@ public class Registration {
 
     private final UserService userService;
     private final NotificationService notificationService;
-    private final StatusService statusService;
+
 
     //register a new user
     @SneakyThrows
@@ -30,8 +28,7 @@ public class Registration {
         if (!userService.existsByChatId(message.getChatId())) {
             User user = new User();
             user.setChatId(message.getChatId());
-            user.setFullName("Хтось");
-            user.setStatusEnum(StatusEnum.WORK);
+            user.setDateOfBirth(LocalDate.parse("1900-01-01"));
             userService.save(user);
 
             Notification notification = new Notification();
@@ -40,14 +37,7 @@ public class Registration {
             notification.setUser(user);
             notificationService.save(notification);
 
-//            Status status = new Status();
-//            status.setStatus(StatusEnum.WORK);
-//            status.setEndedAt(LocalDate.now());
-//            status.setStartedAt(LocalDate.now());
-//            status.setUser(user);
-//            statusService.save(status);
-
-            bot.sendMessage(message.getChatId(), Phrases.START_NEW_USER);
+            bot.sendMessage(message.getChatId(), Phrases.START);
             log.info("User (" + user.getChatId() + ") is registered");
         } else {
             bot.sendMessage(message.getChatId(), Phrases.START_OLD_USER);

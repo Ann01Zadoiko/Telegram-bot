@@ -1,6 +1,6 @@
 package com.example.please.atWork;
 
-import com.example.please.status.StatusEnum;
+import com.example.please.user.StatusEnum;
 import com.example.please.user.User;
 import com.example.please.user.UserService;
 import lombok.RequiredArgsConstructor;
@@ -16,42 +16,19 @@ public class ListOfEmployees {
 
     private final UserService userService;
 
-    //print users who sick or vacation
-    public String printEmployees(StatusEnum status){
+    public String printAllUsers(){
+        StringBuilder list = new StringBuilder();
+
         List<User> users = userService.listAll();
-
-        StringBuilder list = new StringBuilder();
-        int number = 1;
-        DateTimeFormatter formatterDay = DateTimeFormatter.ofPattern("dd MMMM yyyy");
-        list.append(formatterDay.format(LocalDate.now()));
-
-        for (User user: users){
-            if (user.getStatus().equals(status)){
-                list
-                        .append("\n")
-                        .append(number++)
-                        .append(". ")
-                        .append(user.getFullName());
-            }
-        }
-
-        log.info("List of users (" + status + "): " + list);
-        return String.valueOf(list);
-    }
-
-    ///print users who work
-    public String printEmployeeWork( ){
-        StringBuilder list = new StringBuilder();
-
-        List<User> users1 = userService.listAll();
 
         int number = 1;
         DateTimeFormatter formatterDay = DateTimeFormatter.ofPattern("dd MMMM yyyy");
         DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm");
         list.append(formatterDay.format(LocalDate.now()));
 
-        for (User user: users1){
-            if (user.getAtWork() == 1 && user.getStatus().equals(StatusEnum.WORK)){
+        list.append("\nНа роботі:");
+        for (User user: users){
+            if (user.getAtWork() == 1 && user.getStatusEnum().equals(StatusEnum.WORK)){
                 list
                         .append("\n")
                         .append(number++)
@@ -63,8 +40,28 @@ public class ListOfEmployees {
             }
         }
 
-        log.info("List of user (work): " + list);
+        list.append("\nНа лікарняному:");
+        for (User user: users){
+            if (user.getStatusEnum().equals(StatusEnum.SICK)){
+                list
+                        .append("\n")
+                        .append(number++)
+                        .append(user.getFullName());
+            }
+        }
+
+        list.append("\nУ відпустці:");
+        for (User user: users){
+            if (user.getStatusEnum().equals(StatusEnum.VACATION)){
+                list
+                        .append("\n")
+                        .append(number++)
+                        .append(user.getFullName());
+            }
+        }
         return String.valueOf(list);
     }
+
+
 
 }

@@ -41,7 +41,7 @@ public class Converter {
             }
         }
 
-        log.info("Input: " + password + "  Output: " + String.valueOf(inEnglish));
+        log.info("Input: " + password + "  \nOutput: " + String.valueOf(inEnglish));
         return String.valueOf(inEnglish);
     }
 

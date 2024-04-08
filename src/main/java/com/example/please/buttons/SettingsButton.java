@@ -7,7 +7,6 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKe
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 public class SettingsButton {
 
@@ -48,26 +47,34 @@ public class SettingsButton {
                 .text(Settings.STATUS)
                 .callbackData(Settings.STATUS)
                 .build();
+        InlineKeyboardButton button7 = InlineKeyboardButton
+                .builder()
+                .text(Settings.DATE_OF_BIRTH)
+                .callbackData(Settings.DATE_OF_BIRTH)
+                .build();
 
         List<InlineKeyboardButton> buttons1 = new ArrayList<>();
         buttons1.add(button1);
+        buttons1.add(button6);
 
         List<InlineKeyboardButton> buttons2 = new ArrayList<>();
-        buttons2.add(button6);
+        buttons2.add(button2);
+        buttons2.add(button3);
 
         List<InlineKeyboardButton> buttons3 = new ArrayList<>();
-        buttons3.add(button2);
-        buttons3.add(button3);
-
-        List<InlineKeyboardButton> buttons4 = new ArrayList<>();
         buttons3.add(button4);
         buttons3.add(button5);
+        buttons3.add(button7);
+
+//        List<InlineKeyboardButton> buttons4 = new ArrayList<>();
+//        buttons3.add(button4);
+//        buttons3.add(button5);
 
         List<List<InlineKeyboardButton>> row = new ArrayList<>();
         row.add(buttons1);
         row.add(buttons2);
         row.add(buttons3);
-        row.add(buttons4);
+ //       row.add(buttons4);
 
         markup.setKeyboard(row);
 
@@ -75,7 +82,7 @@ public class SettingsButton {
     }
 
     //list of buttons with back button
-    public static InlineKeyboardMarkup getButtons(String one, String two){
+    public static InlineKeyboardMarkup getButtons(String one, String two, String three){
         InlineKeyboardMarkup markup = new InlineKeyboardMarkup();
 
         InlineKeyboardButton button1 = InlineKeyboardButton
@@ -89,8 +96,9 @@ public class SettingsButton {
                 .callbackData(two)
                 .build();
         InlineKeyboardButton button3 = InlineKeyboardButton
-                .builder().text(Callback.BACK)
-                .callbackData(Callback.BACK_TO_SETTINGS)
+                .builder()
+                .text(three)
+                .callbackData(three)
                 .build();
 
         List<InlineKeyboardButton> buttons1 = new ArrayList<>();

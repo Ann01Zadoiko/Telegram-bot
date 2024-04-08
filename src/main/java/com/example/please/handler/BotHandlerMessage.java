@@ -1,17 +1,17 @@
 package com.example.please.handler;
 
 import com.example.please.atWork.AtWorkService;
+import com.example.please.atWork.ListOfEmployees;
 import com.example.please.bot.TelegramBot;
-import com.example.please.buttons.ListButton;
+import com.example.please.buttons.Buttons;
 import com.example.please.buttons.SettingsButton;
 import com.example.please.config.BotConfig;
+import com.example.please.constant.Callback;
 import com.example.please.constant.Commands;
 import com.example.please.constant.Phrases;
 import com.example.please.convert.Converter;
 import com.example.please.notification.NotificationService;
-import com.example.please.status.Status;
-import com.example.please.status.StatusEnum;
-import com.example.please.status.StatusService;
+import com.example.please.user.StatusEnum;
 import com.example.please.user.User;
 import com.example.please.user.UserService;
 import lombok.Builder;
@@ -31,12 +31,11 @@ public class BotHandlerMessage {
     private final UserService userService;
     private final NotificationService notificationService;
     private final BotConfig config;
-    private final StatusService statusService;
 
     //user start to use the bot
     public void getStart(Update update, String messageText, TelegramBot bot){
         if (messageText.equals(Commands.START_PRIVATE)) {
-            new Registration(userService, notificationService, statusService).registerUser(update.getMessage(), bot);
+            new Registration(userService, notificationService).registerUser(update.getMessage(), bot);
         }
     }
 
@@ -44,14 +43,14 @@ public class BotHandlerMessage {
     @SneakyThrows
     public void getFullName(User user, String messageText, long charId, String [] stringBuilder, TelegramBot bot){
         if (MessageChecker.isFullName(stringBuilder, messageText)) {
-            if (user.getFullName().equals("Хтось")) {
+            if (user.getFullName() == null) {
                 user.setFullName(messageText);
-                userService.update(user);
+                userService.save(user);
 
-                bot.sendMessage(charId, Phrases.FULL_NAME);
+                bot.sendMessage(charId, Phrases.STEP_1);
             } else {
                 user.setFullName(messageText);
-                userService.update(user);
+                userService.save(user);
 
                 bot.sendMessage(charId, Phrases.FULL_NAME_NEW + user.getFullName().toUpperCase());
             }
@@ -97,11 +96,11 @@ public class BotHandlerMessage {
         if (MessageChecker.isARoom(messageText)) {
             if (user.getRoom() == null) {
                 user.setRoom(Integer.parseInt(messageText));
-                userService.update(user);
-                bot.sendMessage(charId, Phrases.ROOM_NEW);
+                userService.save(user);
+                bot.sendMessage(charId, Phrases.STEP_3);
             } else {
                 user.setRoom(Integer.parseInt(messageText));
-                userService.update(user);
+                userService.save(user);
                 bot.sendMessage(charId, Phrases.ROOM_INFO + user.getRoom() + " кабінет");
             }
             log.info(user.getFullName() + " set a new room");
@@ -115,16 +114,31 @@ public class BotHandlerMessage {
         if (MessageChecker.isPhoneNumber(messageText)) {
             if (user.getPhoneNumber() == null) {
                 user.setPhoneNumber(messageText);
-                userService.update(user);
-                bot.sendMessage(charId, Phrases.PHONE_NUMBER_NEW);
+                userService.save(user);
+                bot.sendMessage(charId, Phrases.STEP_2);
             } else {
                 user.setPhoneNumber(messageText);
-                userService.update(user);
+                userService.save(user);
                 bot.sendMessage(charId, Phrases.PHONE_NUMBER_INFO + user.getPhoneNumber());
             }
             log.info(user.getFullName() + " set a new phone number");
         }
 
+    }
+
+    @SneakyThrows
+    public void getDateOfBirth(String messageText, User user, TelegramBot bot, long chatId, long messageId){
+        if (MessageChecker.isDateOfBirth(messageText)){
+            if (user.getDateOfBirth().equals(LocalDate.parse("1900-01-01"))){
+                user.setDateOfBirth(LocalDate.parse(messageText));
+                userService.save(user);
+                bot.executeSetting(chatId, SettingsButton.getButtons(Callback.WORK, Callback.SICK, Callback.VACATION), Phrases.STEP_4);
+            } else {
+                user.setDateOfBirth(LocalDate.parse(messageText));
+                userService.save(user);
+                bot.sendMessage(chatId, "Ви змінили свій день народження");
+            }
+        }
     }
 
     //user send message for everyone
@@ -145,16 +159,6 @@ public class BotHandlerMessage {
     @SneakyThrows
     public void getHelp(String messageText, long charId, TelegramBot bot){
         if (messageText.equals(Commands.HELP)) {
-
-//            Status status = new Status();
-//            status.setStatus("WORK");
-//            status.setEndedAt(LocalDate.now());
-//            status.setStartedAt(LocalDate.now());
-//            status.setUser(userService.getByChatId(charId));
-//            statusService.save(status);
-
-            log.info("Status: " + statusService.listAll());
-
             bot.sendMessage(charId, Phrases.HELP);
             log.info("User (" + charId + ") press the help");
         }
@@ -173,7 +177,7 @@ public class BotHandlerMessage {
     @SneakyThrows
     public void getListOfEmployees(String messageText, long charId, TelegramBot bot){
         if (messageText.equals(Commands.LIST_OF_EMPLOYEES)) {
-            bot.executeSetting(charId, ListButton.getButtonsList());
+            bot.sendMessage(charId, new ListOfEmployees(userService).printAllUsers());
             log.info("User (" + charId + ") pressed  the button (list of employees)");
         }
     }
@@ -182,7 +186,7 @@ public class BotHandlerMessage {
     @SneakyThrows
     public void getSettings(String messageText, long charId, TelegramBot bot){
         if (messageText.equals(Commands.SETTINGS)){
-            bot.executeSetting(charId, SettingsButton.inlineButtonsForSettings());
+            bot.executeSetting(charId, SettingsButton.inlineButtonsForSettings(), Phrases.CHOOSE);
             log.info("User (" + charId + ") pressed the button (the settings)");
         }
     }

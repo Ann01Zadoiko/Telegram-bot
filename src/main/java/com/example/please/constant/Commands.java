@@ -9,4 +9,5 @@ public interface Commands {
     String SETTINGS = "Налаштування";
     String SEND = "/send";
     String START = "/start";
+
 }

@@ -8,4 +8,5 @@ public interface Settings {
     String ROOM = "Кабінет";
     String PHONE_NUMBER = "Номер телефона";
     String STATUS = "Статус";
+    String DATE_OF_BIRTH = "День народження";
 }
