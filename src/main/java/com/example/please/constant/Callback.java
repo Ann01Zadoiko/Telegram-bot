@@ -2,8 +2,6 @@ package com.example.please.constant;
 
 public interface Callback {
 
-   // String BACK_TO_SETTINGS = "BACK_TO_SETTINGS";
-
     String BACK = "Назад";
 
     String NINE = "9:00";

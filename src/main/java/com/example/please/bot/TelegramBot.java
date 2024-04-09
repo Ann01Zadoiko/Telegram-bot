@@ -2,13 +2,11 @@ package com.example.please.bot;
 
 import com.example.please.buttons.*;
 import com.example.please.config.BotConfig;
-import com.example.please.constant.Phrases;
 import com.example.please.handler.*;
 import com.example.please.notification.NotificationService;
 import com.example.please.user.UserService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.stereotype.Component;
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
@@ -22,7 +20,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 
 
-@Configurable
+
 @Slf4j
 @Component
 public class TelegramBot extends TelegramLongPollingBot {
@@ -43,11 +41,11 @@ public class TelegramBot extends TelegramLongPollingBot {
                 null));
     }
 
-
     //main work of bot
     @SneakyThrows
     @Override
     public void onUpdateReceived(Update update) {
+
         if (update.hasMessage() && update.getMessage().hasText()) {
             new BotHandler(userService, notificationService, config).getAllMessage(update);
         }
@@ -57,9 +55,10 @@ public class TelegramBot extends TelegramLongPollingBot {
         }
     }
 
-    //send message in settings
+    //send buttons after user's message
     @SneakyThrows
     public void executeSetting(long charId, InlineKeyboardMarkup markup, String text){
+
         SendMessage build = SendMessage
                 .builder()
                 .chatId(charId)
@@ -71,10 +70,10 @@ public class TelegramBot extends TelegramLongPollingBot {
         log.info("Reply sent: " + build.getText() + "\nBy user: " + build.getChatId());
     }
 
-
     //send message where used buttons in callback
     @SneakyThrows
     public void executeEditMessageTextWithButton(String text, Long chatId, long messageId, InlineKeyboardMarkup markup){
+
         EditMessageText editMessageText = EditMessageText
                 .builder()
                 .messageId((int) messageId)
@@ -89,6 +88,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
     //send message for user
     public void sendMessage(long chatId, String text) throws TelegramApiException {
+
         SendMessage sendMessage = SendMessage
                 .builder()
                 .chatId(chatId)

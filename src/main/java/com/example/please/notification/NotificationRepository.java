@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
+
     @Query("select n from Notification n where n.user = :user")
     Notification findNotificationByUser(User user);
 }

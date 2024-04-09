@@ -3,7 +3,6 @@ package com.example.please.handler;
 import com.example.please.atWork.AtWorkService;
 import com.example.please.atWork.ListOfEmployees;
 import com.example.please.bot.TelegramBot;
-import com.example.please.buttons.Buttons;
 import com.example.please.buttons.SettingsButton;
 import com.example.please.config.BotConfig;
 import com.example.please.constant.Callback;
@@ -42,7 +41,9 @@ public class BotHandlerMessage {
     //user enter or change his full name
     @SneakyThrows
     public void getFullName(User user, String messageText, long charId, String [] stringBuilder, TelegramBot bot){
+
         if (MessageChecker.isFullName(stringBuilder, messageText)) {
+
             if (user.getFullName() == null) {
                 user.setFullName(messageText);
                 userService.save(user);
@@ -65,6 +66,7 @@ public class BotHandlerMessage {
 
         if (messageText.equals(Commands.AT_WORK)) {
             String s = new AtWorkService(userService).addUserToTheList(user, LocalTime.now());
+
             if(user.getStatusEnum().equals(StatusEnum.WORK)){
                 log.info(user.getFullName() + " is at work");
                 bot.sendMessage(charId, s);
@@ -74,10 +76,10 @@ public class BotHandlerMessage {
         }
     }
 
-
     //user enter or change his password
     @SneakyThrows
     public void getPassword(User user, String messageText, long charId, String [] stringBuilder, TelegramBot bot){
+
         if (MessageChecker.isPassword(stringBuilder, messageText)) {
             String password = Converter.convertPassword(messageText);
 
@@ -94,6 +96,7 @@ public class BotHandlerMessage {
     public void getRoom(User user, String messageText, long charId, TelegramBot bot){
 
         if (MessageChecker.isARoom(messageText)) {
+
             if (user.getRoom() == null) {
                 user.setRoom(Integer.parseInt(messageText));
                 userService.save(user);
@@ -103,15 +106,17 @@ public class BotHandlerMessage {
                 userService.save(user);
                 bot.sendMessage(charId, Phrases.ROOM_INFO + user.getRoom() + " кабінет");
             }
+
             log.info(user.getFullName() + " set a new room");
         }
-
     }
 
     //user enter or change his phone number
     @SneakyThrows
     public void getPhoneNumber(User user, String messageText, long charId, TelegramBot bot){
+
         if (MessageChecker.isPhoneNumber(messageText)) {
+
             if (user.getPhoneNumber() == null) {
                 user.setPhoneNumber(messageText);
                 userService.save(user);
@@ -121,14 +126,17 @@ public class BotHandlerMessage {
                 userService.save(user);
                 bot.sendMessage(charId, Phrases.PHONE_NUMBER_INFO + user.getPhoneNumber());
             }
+
             log.info(user.getFullName() + " set a new phone number");
         }
-
     }
 
+    //user enter or change his date of birth
     @SneakyThrows
     public void getDateOfBirth(String messageText, User user, TelegramBot bot, long chatId, long messageId){
+
         if (MessageChecker.isDateOfBirth(messageText)){
+
             if (user.getDateOfBirth().equals(LocalDate.parse("1900-01-01"))){
                 user.setDateOfBirth(LocalDate.parse(messageText));
                 userService.save(user);
@@ -138,26 +146,30 @@ public class BotHandlerMessage {
                 userService.save(user);
                 bot.sendMessage(chatId, "Ви змінили свій день народження");
             }
+
+            log.info(user.getFullName() + "'s birthday is " + user.getDateOfBirth());
         }
     }
 
     //user send message for everyone
     @SneakyThrows
     public void getSend(String messageText, User user, TelegramBot bot){
+
         if (messageText.contains(Commands.SEND)){
             String message = messageText.substring(6);
 
             for(User user1: userService.listAll()){
                 bot.sendMessage(user1.getChatId(), message + "\nВід: " + user.getFullName());
             }
+
             log.info(user.getFullName() + " send message for everyone");
         }
-
     }
 
     //show all commands
     @SneakyThrows
     public void getHelp(String messageText, long charId, TelegramBot bot){
+
         if (messageText.equals(Commands.HELP)) {
             bot.sendMessage(charId, Phrases.HELP);
             log.info("User (" + charId + ") press the help");
@@ -167,15 +179,17 @@ public class BotHandlerMessage {
     //show unexpected message
     @SneakyThrows
     public void getUnexpectedMessage(String messageText, long charId, TelegramBot bot){
+
         if (MessageChecker.isUnexpectedMessage(messageText)) {
             bot.sendMessage(charId, Phrases.UNEXPECTED_MESSAGE);
             log.info("User (" + charId + ") entered incorrect message");
         }
     }
 
-    //press the button (lists of users)
+    //press the button (list of users)
     @SneakyThrows
     public void getListOfEmployees(String messageText, long charId, TelegramBot bot){
+
         if (messageText.equals(Commands.LIST_OF_EMPLOYEES)) {
             bot.sendMessage(charId, new ListOfEmployees(userService).printAllUsers());
             log.info("User (" + charId + ") pressed  the button (list of employees)");
@@ -185,6 +199,7 @@ public class BotHandlerMessage {
     //press the button (the settings)
     @SneakyThrows
     public void getSettings(String messageText, long charId, TelegramBot bot){
+
         if (messageText.equals(Commands.SETTINGS)){
             bot.executeSetting(charId, SettingsButton.inlineButtonsForSettings(), Phrases.CHOOSE);
             log.info("User (" + charId + ") pressed the button (the settings)");

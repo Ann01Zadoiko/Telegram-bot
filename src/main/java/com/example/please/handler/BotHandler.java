@@ -16,7 +16,7 @@ public class BotHandler {
     private final NotificationService notificationService;
     private final BotConfig config;
 
-    //answer from a callback
+    //answer to a callback
     public void getAllCallback(Update update){
         String data = update.getCallbackQuery().getData();
         Long chatId = update.getCallbackQuery().getMessage().getChatId();
@@ -49,7 +49,7 @@ public class BotHandler {
         callback.getDateOfBirth(data, user, chatId, messageId, telegramBot);
     }
 
-    //answer from user's message
+    //answer to user's message
     public void getAllMessage(Update update){
         String messageText = update.getMessage().getText();
         long charId = update.getMessage().getChatId();

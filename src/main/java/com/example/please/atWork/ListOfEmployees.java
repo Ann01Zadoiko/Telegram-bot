@@ -16,6 +16,7 @@ public class ListOfEmployees {
 
     private final UserService userService;
 
+    //print all users of the day
     public String printAllUsers(){
         StringBuilder list = new StringBuilder();
 
@@ -40,28 +41,47 @@ public class ListOfEmployees {
             }
         }
 
-        list.append("\nНа лікарняному:");
-        for (User user: users){
-            if (user.getStatusEnum().equals(StatusEnum.SICK)){
-                list
-                        .append("\n")
-                        .append(number++)
-                        .append(user.getFullName());
-            }
-        }
+        list.append(printList(StatusEnum.SICK, "На лікарняному:", users, countUsers(StatusEnum.SICK, users)));
+        list.append(printList(StatusEnum.VACATION, "У відпустці:", users, countUsers(StatusEnum.VACATION, users)));
 
-        list.append("\nУ відпустці:");
-        for (User user: users){
-            if (user.getStatusEnum().equals(StatusEnum.VACATION)){
-                list
-                        .append("\n")
-                        .append(number++)
-                        .append(user.getFullName());
-            }
-        }
+        log.info(list.toString());
+
         return String.valueOf(list);
     }
 
+    //count users
+    public int countUsers(StatusEnum statusEnum, List<User> users){
+        int count = 0;
 
+        for (User user: users){
+            if (user.getStatusEnum().equals(statusEnum)){
+                count++;
+            }
+        }
+        return count;
+    }
+
+    //print list of user (entered status)
+    public StringBuilder printList(StatusEnum statusEnum, String text, List<User> users, int count){
+        StringBuilder list = new StringBuilder();
+        int number = 1;
+
+        if (count == 0){
+            return list.append("");
+        }
+
+        list.append("\n\n" + text);
+        for (User user: users){
+            if (user.getStatusEnum().equals(statusEnum)){
+                list
+                        .append("\n")
+                        .append(number++)
+                        .append(". ")
+                        .append(user.getFullName());
+            }
+        }
+
+        return list;
+    }
 
 }

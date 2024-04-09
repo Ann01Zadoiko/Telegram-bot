@@ -4,8 +4,6 @@ package com.example.please.user;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
 import java.util.List;
 
 
@@ -19,9 +17,7 @@ public class UserService {
     //got list of users
     public List<User> listAll() {
 
-        List<User> users = new ArrayList<>();
-        Iterable<User> iterable = repository.findAll();
-        iterable.forEach(users::add);
+        List<User> users = repository.findAll();
 
         log.info("List all: " + users);
 
@@ -44,21 +40,6 @@ public class UserService {
     public boolean existsByChatId(Long id){
         return repository.existsByChatId(id);
     }
-
-    //update a user
-//    public void update(User user){
-//        User user1 = repository.findById(user.getId()).get();
-//        user1.setFullName(user.getFullName());
-//        user1.setPassword(user1.getPassword());
-//        user1.setAtWork(user.getAtWork());
-//        user1.setPhoneNumber(user.getPhoneNumber());
-//        user1.setRoom(user.getRoom());
-//        user1.setDateOfBirth(user.getDateOfBirth());
-//
-//        log.info(user.getFullName() + " was updated!");
-//
-//        repository.save(user);
-//    }
 
 }
 

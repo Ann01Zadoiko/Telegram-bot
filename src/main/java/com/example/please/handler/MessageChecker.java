@@ -41,7 +41,6 @@ public class MessageChecker {
                 || message.equals(Commands.START_PRIVATE);
     }
 
-
     //check for room (user enter number of room)
     public static boolean isARoom(String message){
         return message.toCharArray().length == 3;
@@ -59,6 +58,7 @@ public class MessageChecker {
                 && user.getStatusEnum().equals(StatusEnum.WORK));
     }
 
+    //check for date of birth
     public static boolean isDateOfBirth(String message){
         return message.contains("-");
     }

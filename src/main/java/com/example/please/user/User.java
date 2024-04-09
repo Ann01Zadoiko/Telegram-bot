@@ -3,18 +3,12 @@ package com.example.please.user;
 
 import com.example.please.notification.Notification;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 
-@Getter
-@Setter
-@AllArgsConstructor
 @NoArgsConstructor
 @Entity
 @Table(name = "users")
@@ -71,4 +65,91 @@ public class User {
                 '}';
     }
 
+    public Long getId() {
+        return this.id;
+    }
+
+    public Long getChatId() {
+        return this.chatId;
+    }
+
+    public String getFullName() {
+        return this.fullName;
+    }
+
+    public String getPassword() {
+        return this.password;
+    }
+
+    public byte getAtWork() {
+        return this.atWork;
+    }
+
+    public LocalTime getTimeComing() {
+        return this.timeComing;
+    }
+
+    public Integer getRoom() {
+        return this.room;
+    }
+
+    public String getPhoneNumber() {
+        return this.phoneNumber;
+    }
+
+    public Notification getNotification() {
+        return this.notification;
+    }
+
+    public StatusEnum getStatusEnum() {
+        return this.statusEnum;
+    }
+
+    public LocalDate getDateOfBirth() {
+        return this.dateOfBirth;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public void setChatId(Long chatId) {
+        this.chatId = chatId;
+    }
+
+    public void setFullName(String fullName) {
+        this.fullName = fullName;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setAtWork(byte atWork) {
+        this.atWork = atWork;
+    }
+
+    public void setTimeComing(LocalTime timeComing) {
+        this.timeComing = timeComing;
+    }
+
+    public void setRoom(Integer room) {
+        this.room = room;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setNotification(Notification notification) {
+        this.notification = notification;
+    }
+
+    public void setStatusEnum(StatusEnum statusEnum) {
+        this.statusEnum = statusEnum;
+    }
+
+    public void setDateOfBirth(LocalDate dateOfBirth) {
+        this.dateOfBirth = dateOfBirth;
+    }
 }

@@ -1,6 +1,5 @@
 package com.example.please.buttons;
 
-import com.example.please.constant.Callback;
 import com.example.please.constant.Settings;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
@@ -66,15 +65,10 @@ public class SettingsButton {
         buttons3.add(button5);
         buttons3.add(button7);
 
-//        List<InlineKeyboardButton> buttons4 = new ArrayList<>();
-//        buttons3.add(button4);
-//        buttons3.add(button5);
-
         List<List<InlineKeyboardButton>> row = new ArrayList<>();
         row.add(buttons1);
         row.add(buttons2);
         row.add(buttons3);
- //       row.add(buttons4);
 
         markup.setKeyboard(row);
 
