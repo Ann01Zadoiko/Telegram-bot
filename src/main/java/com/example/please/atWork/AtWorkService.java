@@ -16,14 +16,19 @@ public class AtWorkService {
 
     //user is added to the list
     public String addUserToTheList(User user, LocalTime time){
+
         if (user.getAtWork() == 1){
             log.info(user.getFullName() + " repeatedly pressed AT WORK");
+
             return "Двічі півторювати це не буду!";
+
         } else {
+
             user.setAtWork((byte) 1);
             user.setTimeComing(time);
             userService.save(user);
             log.info(user.getFullName() + " was added to the list");
+
             return "Бажаю гарного робочого дня!";
         }
     }

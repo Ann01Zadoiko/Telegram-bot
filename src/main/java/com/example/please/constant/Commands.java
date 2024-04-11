@@ -6,8 +6,6 @@ public interface Commands {
 
     String START_PRIVATE = "/start private-bot";
 
-    String HELP = "/help";
-
     String LIST_OF_EMPLOYEES = "Список працівників";
 
     String SETTINGS = "Налаштування";

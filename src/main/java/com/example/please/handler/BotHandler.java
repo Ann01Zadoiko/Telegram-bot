@@ -46,7 +46,7 @@ public class BotHandler {
         callback.getStatus(data, user, chatId, messageId, telegramBot);
         callback.getPhoneNumber(data,user,chatId,messageId, telegramBot);
         callback.getBackToSettings(data, chatId, messageId, telegramBot);
-        callback.getDateOfBirth(data, user, chatId, messageId, telegramBot);
+
     }
 
     //answer to user's message
@@ -67,7 +67,6 @@ public class BotHandler {
 
         message.getStart(update, messageText, telegramBot);
         message.getFullName(user,messageText, charId, stringBuilder, telegramBot);
-        message.getHelp(messageText, charId, telegramBot);
         message.getAtWork(user, charId, messageText, telegramBot);
         message.getPassword(user, messageText, charId, stringBuilder, telegramBot);
         message.getUnexpectedMessage(messageText, charId, telegramBot);
@@ -76,7 +75,7 @@ public class BotHandler {
         message.getPhoneNumber(user, messageText, charId, telegramBot);
         message.getSend(messageText, user, telegramBot);
         message.getSettings(messageText, charId, telegramBot);
-        message.getDateOfBirth(messageText, user, telegramBot, charId, update.getMessage().getMessageId());
+
     }
 
 }

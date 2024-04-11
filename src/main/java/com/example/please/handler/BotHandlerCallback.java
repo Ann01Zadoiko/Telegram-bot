@@ -6,6 +6,7 @@ import com.example.please.config.BotConfig;
 import com.example.please.constant.Callback;
 import com.example.please.constant.Phrases;
 import com.example.please.constant.Settings;
+import com.example.please.constant.Steps;
 import com.example.please.notification.Notification;
 import com.example.please.notification.NotificationService;
 import com.example.please.user.StatusEnum;
@@ -16,9 +17,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
-
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 
 @Slf4j
 @Builder
@@ -76,7 +74,7 @@ public class BotHandlerCallback {
 
         if (data.equals(Callback.WORK)) {
 
-            if (user.getStatusEnum() == null){
+            if (user.getStatusEnum().equals(StatusEnum.NOTHING)){
                 user.setStatusEnum(StatusEnum.WORK);
                 userService.save(user);
 
@@ -84,17 +82,20 @@ public class BotHandlerCallback {
                         .builder()
                         .chatId(chatId)
                         .messageId((int) messageId)
-                        .text(Phrases.STEP_5)
+                        .text(Steps.THE_END)
                         .build());
+
+                bot.sendMessage(chatId, Steps.STEP_4);
+
             } else {
 
                 user.setStatusEnum(StatusEnum.WORK);
                 userService.save(user);
 
-                log.info("User (" + chatId + ") change the status to WORK");
-
                 bot.executeEditMessageTextWithButton( Phrases.STATUS + "працюєте", chatId, messageId, BackButton.getBackToSettings());
             }
+
+            log.info("User (" + chatId + ") change the status to WORK");
         }
     }
 
@@ -104,7 +105,7 @@ public class BotHandlerCallback {
 
         if (data.equals(Callback.SICK)) {
 
-            if (user.getStatusEnum() == null){
+            if (user.getStatusEnum().equals(StatusEnum.NOTHING)){
                 user.setStatusEnum(StatusEnum.SICK);
                 userService.save(user);
 
@@ -112,16 +113,19 @@ public class BotHandlerCallback {
                         .builder()
                         .chatId(chatId)
                         .messageId((int) messageId)
-                        .text(Phrases.STEP_5)
+                        .text(Steps.THE_END)
                         .build());
+
+                bot.sendMessage(chatId, Steps.STEP_4);
+
             } else {
                 user.setStatusEnum(StatusEnum.SICK);
                 userService.save(user);
 
-                log.info("User (" + chatId + ") change the status to SICK");
-
                 bot.executeEditMessageTextWithButton( Phrases.STATUS + "на лікарняному" , chatId, messageId, BackButton.getBackToSettings());
             }
+
+            log.info("User (" + chatId + ") change the status to SICK");
         }
     }
 
@@ -131,24 +135,27 @@ public class BotHandlerCallback {
 
         if (data.equals(Callback.VACATION)) {
 
-            if (user.getStatusEnum() == null){
+            if (user.getStatusEnum().equals(StatusEnum.NOTHING)){
                 user.setStatusEnum(StatusEnum.VACATION);
                 userService.save(user);
 
                 bot.execute(EditMessageText
                         .builder()
-                                .chatId(chatId)
-                                .messageId((int) messageId)
-                                .text(Phrases.STEP_5)
+                        .chatId(chatId)
+                        .messageId((int) messageId)
+                        .text(Steps.THE_END)
                         .build());
+
+                bot.sendMessage(chatId, Steps.STEP_4);
+
             } else {
                 user.setStatusEnum(StatusEnum.VACATION);
                 userService.save(user);
 
-                log.info("User (" + chatId + ") change the status to VACATION");
-
                 bot.executeEditMessageTextWithButton( Phrases.STATUS + "у відпустці", chatId, messageId, BackButton.getBackToSettings());
             }
+
+            log.info("User (" + chatId + ") change the status to VACATION");
         }
     }
 
@@ -174,7 +181,7 @@ public class BotHandlerCallback {
         }
     }
 
-    ///show user's full name
+    //show user's full name
     public void getFullName(String data, User user, long chatId, long messageId, TelegramBot bot){
 
         if (data.equals(Settings.FULL_NAME)){
@@ -211,21 +218,6 @@ public class BotHandlerCallback {
             } else {
                 log.info("Show the room for " + user.getFullName());
                 bot.executeEditMessageTextWithButton("Ви працюєте в " + user.getRoom() + " кабінеті", chatId, messageId, BackButton.getBackToSettings());
-            }
-        }
-    }
-
-    public void getDateOfBirth(String data, User user, long chatId, long messageText, TelegramBot bot){
-
-        if (data.equals(Settings.DATE_OF_BIRTH)){
-
-            if (user.getDateOfBirth().equals(LocalDate.parse("1900-01-01"))){
-                bot.executeEditMessageTextWithButton("ARE YOU KIDDING ME!", chatId, messageText, BackButton.getBackToSettings());
-            } else {
-                log.info("Show user's birthday");
-
-                DateTimeFormatter formatterDay = DateTimeFormatter.ofPattern("dd MMMM yyyy");
-                bot.executeEditMessageTextWithButton(formatterDay.format(user.getDateOfBirth()), chatId, messageText, BackButton.getBackToSettings());
             }
         }
     }

@@ -8,6 +8,7 @@ import com.example.please.config.BotConfig;
 import com.example.please.constant.Callback;
 import com.example.please.constant.Commands;
 import com.example.please.constant.Phrases;
+import com.example.please.constant.Steps;
 import com.example.please.convert.Converter;
 import com.example.please.notification.NotificationService;
 import com.example.please.user.StatusEnum;
@@ -19,7 +20,6 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
-import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Slf4j
@@ -33,8 +33,9 @@ public class BotHandlerMessage {
 
     //user start to use the bot
     public void getStart(Update update, String messageText, TelegramBot bot){
+
         if (messageText.equals(Commands.START_PRIVATE)) {
-            new Registration(userService, notificationService).registerUser(update.getMessage(), bot);
+            new Registration(userService, notificationService).start(update.getMessage(), bot);
         }
     }
 
@@ -44,15 +45,13 @@ public class BotHandlerMessage {
 
         if (MessageChecker.isFullName(stringBuilder, messageText)) {
 
-            if (user.getFullName() == null) {
+            if (user.getFullName() == null){
                 user.setFullName(messageText);
                 userService.save(user);
-
-                bot.sendMessage(charId, Phrases.STEP_1);
+                bot.sendMessageRegistration(charId, Steps.STEP_1);
             } else {
                 user.setFullName(messageText);
                 userService.save(user);
-
                 bot.sendMessage(charId, Phrases.FULL_NAME_NEW + user.getFullName().toUpperCase());
             }
 
@@ -97,10 +96,11 @@ public class BotHandlerMessage {
 
         if (MessageChecker.isARoom(messageText)) {
 
-            if (user.getRoom() == null) {
+            if (user.getRoom() == null){
                 user.setRoom(Integer.parseInt(messageText));
                 userService.save(user);
-                bot.sendMessage(charId, Phrases.STEP_3);
+
+                bot.executeSetting(charId, SettingsButton.getButtons(Callback.WORK, Callback.SICK, Callback.VACATION), Steps.STEP_3);
             } else {
                 user.setRoom(Integer.parseInt(messageText));
                 userService.save(user);
@@ -117,10 +117,11 @@ public class BotHandlerMessage {
 
         if (MessageChecker.isPhoneNumber(messageText)) {
 
-            if (user.getPhoneNumber() == null) {
+            if (user.getPhoneNumber() == null){
                 user.setPhoneNumber(messageText);
                 userService.save(user);
-                bot.sendMessage(charId, Phrases.STEP_2);
+
+                bot.sendMessageRegistration(charId, Steps.STEP_2);
             } else {
                 user.setPhoneNumber(messageText);
                 userService.save(user);
@@ -128,26 +129,6 @@ public class BotHandlerMessage {
             }
 
             log.info(user.getFullName() + " set a new phone number");
-        }
-    }
-
-    //user enter or change his date of birth
-    @SneakyThrows
-    public void getDateOfBirth(String messageText, User user, TelegramBot bot, long chatId, long messageId){
-
-        if (MessageChecker.isDateOfBirth(messageText)){
-
-            if (user.getDateOfBirth().equals(LocalDate.parse("1900-01-01"))){
-                user.setDateOfBirth(LocalDate.parse(messageText));
-                userService.save(user);
-                bot.executeSetting(chatId, SettingsButton.getButtons(Callback.WORK, Callback.SICK, Callback.VACATION), Phrases.STEP_4);
-            } else {
-                user.setDateOfBirth(LocalDate.parse(messageText));
-                userService.save(user);
-                bot.sendMessage(chatId, "Ви змінили свій день народження");
-            }
-
-            log.info(user.getFullName() + "'s birthday is " + user.getDateOfBirth());
         }
     }
 
@@ -163,16 +144,6 @@ public class BotHandlerMessage {
             }
 
             log.info(user.getFullName() + " send message for everyone");
-        }
-    }
-
-    //show all commands
-    @SneakyThrows
-    public void getHelp(String messageText, long charId, TelegramBot bot){
-
-        if (messageText.equals(Commands.HELP)) {
-            bot.sendMessage(charId, Phrases.HELP);
-            log.info("User (" + charId + ") press the help");
         }
     }
 

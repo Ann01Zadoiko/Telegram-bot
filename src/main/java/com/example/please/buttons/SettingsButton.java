@@ -46,11 +46,7 @@ public class SettingsButton {
                 .text(Settings.STATUS)
                 .callbackData(Settings.STATUS)
                 .build();
-        InlineKeyboardButton button7 = InlineKeyboardButton
-                .builder()
-                .text(Settings.DATE_OF_BIRTH)
-                .callbackData(Settings.DATE_OF_BIRTH)
-                .build();
+
 
         List<InlineKeyboardButton> buttons1 = new ArrayList<>();
         buttons1.add(button1);
@@ -63,7 +59,6 @@ public class SettingsButton {
         List<InlineKeyboardButton> buttons3 = new ArrayList<>();
         buttons3.add(button4);
         buttons3.add(button5);
-        buttons3.add(button7);
 
         List<List<InlineKeyboardButton>> row = new ArrayList<>();
         row.add(buttons1);

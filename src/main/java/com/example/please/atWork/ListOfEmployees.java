@@ -50,7 +50,7 @@ public class ListOfEmployees {
     }
 
     //count users
-    public int countUsers(StatusEnum statusEnum, List<User> users){
+    private int countUsers(StatusEnum statusEnum, List<User> users){
         int count = 0;
 
         for (User user: users){
@@ -62,15 +62,18 @@ public class ListOfEmployees {
     }
 
     //print list of user (entered status)
-    public StringBuilder printList(StatusEnum statusEnum, String text, List<User> users, int count){
+    private StringBuilder printList(StatusEnum statusEnum, String text, List<User> users, int count){
         StringBuilder list = new StringBuilder();
         int number = 1;
 
         if (count == 0){
-            return list.append("");
+            return list;
         }
 
-        list.append("\n\n" + text);
+        list
+                .append("\n\n")
+                .append(text);
+
         for (User user: users){
             if (user.getStatusEnum().equals(statusEnum)){
                 list

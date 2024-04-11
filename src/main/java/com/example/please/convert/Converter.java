@@ -33,6 +33,7 @@ public class Converter {
     public static String convertPassword(String password){
         char [] inRussian = password.toCharArray();
         char [] inEnglish = new char[inRussian.length];
+
         for (int i = 0; i < lettersInEnglish.length; i++) {
             for (int j = 0; j < inRussian.length; j++) {
                 if (inRussian[j] == lettersInRussian[i]){
@@ -42,6 +43,7 @@ public class Converter {
         }
 
         log.info("Input: " + password + "  \nOutput: " + String.valueOf(inEnglish));
+
         return String.valueOf(inEnglish);
     }
 

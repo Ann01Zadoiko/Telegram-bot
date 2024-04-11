@@ -23,8 +23,7 @@ public class MessageChecker {
     public static boolean isUnexpectedMessage(String messageText){
         return !(isCyrillic(messageText.replaceAll("\\s","")))
                 && !isACommand(messageText)
-                && !isPhoneNumber(messageText)
-                && !isDateOfBirth(messageText);
+                && !isPhoneNumber(messageText);
     }
 
     //check for cyrillic
@@ -36,9 +35,8 @@ public class MessageChecker {
     public static boolean isACommand(String message){
 
         return message.equals(Commands.AT_WORK) || message.equals(Commands.START)
-                || message.equals(Commands.HELP) || message.equals(Commands.LIST_OF_EMPLOYEES)
-              || message.contains(Commands.SEND) || message.equals(Commands.SETTINGS)
-                || message.equals(Commands.START_PRIVATE);
+                 || message.equals(Commands.LIST_OF_EMPLOYEES) || message.contains(Commands.SEND)
+                || message.equals(Commands.SETTINGS) || message.equals(Commands.START_PRIVATE);
     }
 
     //check for room (user enter number of room)
@@ -57,10 +55,4 @@ public class MessageChecker {
                 && notification.getTimeOfNotification().contains(time)
                 && user.getStatusEnum().equals(StatusEnum.WORK));
     }
-
-    //check for date of birth
-    public static boolean isDateOfBirth(String message){
-        return message.contains("-");
-    }
-
 }

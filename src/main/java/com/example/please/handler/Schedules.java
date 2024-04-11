@@ -3,6 +3,7 @@ package com.example.please.handler;
 import com.example.please.bot.TelegramBot;
 import com.example.please.config.BotConfig;
 import com.example.please.constant.NotificationTime;
+import com.example.please.constant.Phrases;
 import com.example.please.notification.Notification;
 import com.example.please.notification.NotificationService;
 
@@ -46,9 +47,11 @@ public class Schedules {
 
         for (User user : users) {
             Notification notification = notificationService.getNotificationByUser(user);
+
             if (MessageChecker.isNotificationAt(user, notification, "9")) {
-                new TelegramBot(config, userService, notificationService).sendMessage(user.getChatId(), "Запізнюватись не гарно!");
+                new TelegramBot(config, userService, notificationService).sendMessage(user.getChatId(), Phrases.LATE);
             }
+
             log.info(user.getFullName() + " got the notification at 9 am");
         }
     }
@@ -61,9 +64,11 @@ public class Schedules {
 
         for (User user : users) {
             Notification notification = notificationService.getNotificationByUser(user);
+
             if (MessageChecker.isNotificationAt(user, notification, "8")) {
-                new TelegramBot(config, userService, notificationService).sendMessage(user.getChatId(), "Запізнюватись не гарно!");
+                new TelegramBot(config, userService, notificationService).sendMessage(user.getChatId(), Phrases.LATE);
             }
+
             log.info(user.getFullName() + " got the notification at 8 am");
         }
     }

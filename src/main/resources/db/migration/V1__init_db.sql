@@ -7,8 +7,7 @@ create table if not exists users(
     time_of_coming time,
     room int,
     phone_number varchar(15),
-    status enum('WORK','SICK','VACATION'),
-    date_of_birth date
+    status enum('WORK','SICK','VACATION','NOTHING')
 );
 
 create table if not exists notifications (
