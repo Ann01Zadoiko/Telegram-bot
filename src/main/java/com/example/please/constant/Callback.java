@@ -15,4 +15,6 @@ public interface Callback {
     String SICK = "На лікарняному";
 
     String VACATION = "У відпустці";
+
+    String BUSINESS_TRIP = "У відрядженні";
 }

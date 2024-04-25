@@ -46,6 +46,7 @@ public class BotHandler {
         callback.getStatus(data, user, chatId, messageId, telegramBot);
         callback.getPhoneNumber(data,user,chatId,messageId, telegramBot);
         callback.getBackToSettings(data, chatId, messageId, telegramBot);
+        callback.getBusinessTrip(data, user, chatId, messageId, telegramBot);
 
     }
 

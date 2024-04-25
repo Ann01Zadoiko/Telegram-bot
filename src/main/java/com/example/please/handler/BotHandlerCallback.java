@@ -159,6 +159,35 @@ public class BotHandlerCallback {
         }
     }
 
+    @SneakyThrows
+    public void getBusinessTrip(String data, User user, long chatId, long messageId, TelegramBot bot){
+
+        if (data.equals(Callback.BUSINESS_TRIP)) {
+
+            if (user.getStatusEnum().equals(StatusEnum.NOTHING)){
+                user.setStatusEnum(StatusEnum.BUSINESS_TRIP);
+                userService.save(user);
+
+                bot.execute(EditMessageText
+                        .builder()
+                        .chatId(chatId)
+                        .messageId((int) messageId)
+                        .text(Steps.THE_END)
+                        .build());
+
+                bot.sendMessage(chatId, Steps.STEP_4);
+
+            } else {
+                user.setStatusEnum(StatusEnum.BUSINESS_TRIP);
+                userService.save(user);
+
+                bot.executeEditMessageTextWithButton( Phrases.STATUS + "у відрядженні", chatId, messageId, BackButton.getBackToSettings());
+            }
+
+            log.info("User (" + chatId + ") change the status to BUSINESS TRIP");
+        }
+    }
+
     //show user's notification and ability to change to another one
     public void getNotification(String data, Notification notification, long chatId, long messageId, TelegramBot bot){
 
@@ -228,15 +257,19 @@ public class BotHandlerCallback {
         if (data.equals(Settings.STATUS)){
 
             if (user.getStatusEnum().equals(StatusEnum.WORK)){
-                bot.executeEditMessageTextWithButton("На даний момент Ви працюєте", chatId, messageId, SettingsButton.getButtons(Callback.SICK, Callback.VACATION, Callback.BACK));
+                bot.executeEditMessageTextWithButton("На даний момент Ви працюєте", chatId, messageId, SettingsButton.getButtonsStatus(Callback.SICK, Callback.VACATION, Callback.BUSINESS_TRIP, Callback.BACK));
             }
 
             if (user.getStatusEnum().equals(StatusEnum.SICK)){
-                bot.executeEditMessageTextWithButton("На даний момент Ви на лікарняному", chatId, messageId, SettingsButton.getButtons(Callback.WORK, Callback.VACATION, Callback.BACK));
+                bot.executeEditMessageTextWithButton("На даний момент Ви на лікарняному", chatId, messageId, SettingsButton.getButtonsStatus(Callback.WORK, Callback.VACATION, Callback.BUSINESS_TRIP, Callback.BACK));
             }
 
             if (user.getStatusEnum().equals(StatusEnum.VACATION)){
-                bot.executeEditMessageTextWithButton("На даний момент Ви у відпустці", chatId, messageId, SettingsButton.getButtons(Callback.WORK, Callback.SICK, Callback.BACK));
+                bot.executeEditMessageTextWithButton("На даний момент Ви у відпустці", chatId, messageId, SettingsButton.getButtonsStatus(Callback.WORK, Callback.SICK, Callback.BUSINESS_TRIP, Callback.BACK));
+            }
+
+            if (user.getStatusEnum().equals(StatusEnum.BUSINESS_TRIP)){
+                bot.executeEditMessageTextWithButton("На даний момент Ви у відрядженні", chatId, messageId, SettingsButton.getButtonsStatus(Callback.WORK, Callback.SICK, Callback.VACATION, Callback.BACK));
             }
 
             log.info("Show the status for " + user.getFullName());
