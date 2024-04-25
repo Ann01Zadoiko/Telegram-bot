@@ -43,6 +43,7 @@ public class ListOfEmployees {
 
         list.append(printList(StatusEnum.SICK, "На лікарняному:", users, countUsers(StatusEnum.SICK, users)));
         list.append(printList(StatusEnum.VACATION, "У відпустці:", users, countUsers(StatusEnum.VACATION, users)));
+        list.append(printList(StatusEnum.BUSINESS_TRIP, "У відряженні:", users, countUsers(StatusEnum.BUSINESS_TRIP, users)));
 
         log.info(list.toString());
 

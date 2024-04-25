@@ -100,7 +100,7 @@ public class BotHandlerMessage {
                 user.setRoom(Integer.parseInt(messageText));
                 userService.save(user);
 
-                bot.executeSetting(charId, SettingsButton.getButtons(Callback.WORK, Callback.SICK, Callback.VACATION), Steps.STEP_3);
+                bot.executeSetting(charId, SettingsButton.getButtonsStatus(Callback.WORK, Callback.SICK, Callback.VACATION, Callback.BUSINESS_TRIP), Steps.STEP_3);
             } else {
                 user.setRoom(Integer.parseInt(messageText));
                 userService.save(user);
