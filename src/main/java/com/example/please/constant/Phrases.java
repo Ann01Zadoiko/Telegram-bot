@@ -6,21 +6,20 @@ public interface Phrases {
 
     String START_OLD_USER = "Дорогуша, Ви вже зареєстровані!";
 
-    String ROOM = "На даний час Ви працюєте на вулиці. Якщо ні, то введить кабинеть у якому працюєте (наприклад 666)";
-
     String PHONE_NUMBER = "У базі не має Вашого телефому, тому введить свой робочий номер телефону (наприклад +380663332211)";
 
-    String UNEXPECTED_MESSAGE = "WHAT ARE YOU DOING HERE!";
+    String UNEXPECTED_MESSAGE = "Введіть правильно свої дані!";
 
-    String NOTIFICATION = "На даний час нанадування ";
+    String NOTIFICATION = "На даний час нагадування ";
 
-    String STATUS = "Заряз Ви ";
+    String STATUS = "Зараз Ви ";
 
     String CHOOSE = "Оберить одну зі списку:";
-
-    String ROOM_INFO = "Ви змінили своє місце проживання на ";
 
     String PHONE_NUMBER_INFO = "Ви змініли свій номер на ";
 
     String LATE = "Запізнюватись не гарно!";
+
+    String REMEMBER = "Ви вже на роботі?";
+
 }

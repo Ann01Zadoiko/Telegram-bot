@@ -3,10 +3,7 @@ package com.example.please.handler;
 import com.example.please.bot.TelegramBot;
 import com.example.please.buttons.*;
 import com.example.please.config.BotConfig;
-import com.example.please.constant.Callback;
-import com.example.please.constant.Phrases;
-import com.example.please.constant.Settings;
-import com.example.please.constant.Steps;
+import com.example.please.constant.*;
 import com.example.please.notification.Notification;
 import com.example.please.notification.NotificationService;
 import com.example.please.user.StatusEnum;
@@ -18,6 +15,9 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Slf4j
 @Builder
 @RequiredArgsConstructor
@@ -27,35 +27,78 @@ public class BotHandlerCallback {
     private final NotificationService notificationService;
     private final BotConfig config;
 
-    //the notification was changed at 9 am
-    public void getNine(Notification notification, long chatId, long messageId, String data, TelegramBot bot){
-
-        if (data.equals(Callback.NINE)) {
-            notification.setTimeOfNotification("0 0 9 * * MON-FRI");
-            notification.setTurnOn(true);
-            notificationService.save(notification);
-
-            log.info("User (" + chatId + ") change the notification at 9 am");
-
-            bot.executeEditMessageTextWithButton("Ви змінили своє нагадування о 9 ранку", chatId, messageId, BackButton.getBackToSettings());
-        }
-    }
-
     //the notification was changed at 8 am
     public void getEight(String data, Notification notification, long chatId, long messageId, TelegramBot bot){
 
         if (data.equals(Callback.EIGHT)) {
-            notification.setTimeOfNotification("0 0 8 * * MON-FRI");
+            notification.setTimeOfNotification("8:00");
             notification.setTurnOn(true);
             notificationService.save(notification);
 
             log.info("User (" + chatId + ") change the notification at 8 am");
 
-            bot.executeEditMessageTextWithButton("Ви змінили своє нагадування о 8 ранку", chatId, messageId, BackButton.getBackToSettings());
+            bot.executeEditMessage("Ви змінили своє нагадування о 8 ранку", chatId, messageId);
+        }
+    }
+
+    //the notification was changed at 8 40
+    public void getEightForty(String data, Notification notification, long chatId, long messageId, TelegramBot bot){
+
+        if (data.equals(Callback.EIGHT_FORTY)) {
+            notification.setTimeOfNotification("8:40");
+            notification.setTurnOn(true);
+            notificationService.save(notification);
+
+            log.info("User (" + chatId + ") change the notification at 8:40");
+
+            bot.executeEditMessage("Ви змінили своє нагадування о 8:40", chatId, messageId);
+        }
+    }
+
+    //the notification was changed at 8 50
+    public void getEightFifty(String data, Notification notification, long chatId, long messageId, TelegramBot bot){
+
+        if (data.equals(Callback.EIGHT_FIFTY)) {
+            notification.setTimeOfNotification("8:50");
+            notification.setTurnOn(true);
+            notificationService.save(notification);
+
+            log.info("User (" + chatId + ") change the notification at 8:50");
+
+            bot.executeEditMessage("Ви змінили своє нагадування о 8:50", chatId, messageId);
+        }
+    }
+
+    //the notification was changed at 8 45
+    public void getEightFortyFive(String data, Notification notification, long chatId, long messageId, TelegramBot bot){
+
+        if (data.equals(Callback.EIGHT_FORTY_FIVE)) {
+            notification.setTimeOfNotification("8:45");
+            notification.setTurnOn(true);
+            notificationService.save(notification);
+
+            log.info("User (" + chatId + ") change the notification at 8:45");
+
+            bot.executeEditMessage("Ви змінили своє нагадування о 8:45", chatId, messageId);
+        }
+    }
+
+    //the notification was changed at 8 55
+    public void getEightFiftyFive(String data, Notification notification, long chatId, long messageId, TelegramBot bot){
+
+        if (data.equals(Callback.EIGHT_FIFTY_FIVE)) {
+            notification.setTimeOfNotification("8:55");
+            notification.setTurnOn(true);
+            notificationService.save(notification);
+
+            log.info("User (" + chatId + ") change the notification at 8:55");
+
+            bot.executeEditMessage("Ви змінили своє нагадування о 8:55", chatId, messageId);
         }
     }
 
     //the notification was turned off
+    @SneakyThrows
     public void getOff(String data, Notification notification, long chatId, long messageId, TelegramBot bot){
 
         if (data.equals(Callback.TURN_OFF)) {
@@ -64,7 +107,7 @@ public class BotHandlerCallback {
 
             log.info("User (" + chatId + ") turned off the notification");
 
-            bot.executeEditMessageTextWithButton("Ви вимкнули нагадування", chatId, messageId, BackButton.getBackToSettings());
+            bot.executeEditMessage("Ви вимкнули нагадування", chatId, messageId);
         }
     }
 
@@ -85,7 +128,7 @@ public class BotHandlerCallback {
                         .text(Steps.THE_END)
                         .build());
 
-                bot.sendMessage(chatId, Steps.STEP_4);
+                bot.sendMessage(chatId, Steps.STEP_3);
 
             } else {
 
@@ -116,7 +159,7 @@ public class BotHandlerCallback {
                         .text(Steps.THE_END)
                         .build());
 
-                bot.sendMessage(chatId, Steps.STEP_4);
+                bot.sendMessage(chatId, Steps.STEP_3);
 
             } else {
                 user.setStatusEnum(StatusEnum.SICK);
@@ -146,7 +189,7 @@ public class BotHandlerCallback {
                         .text(Steps.THE_END)
                         .build());
 
-                bot.sendMessage(chatId, Steps.STEP_4);
+                bot.sendMessage(chatId, Steps.STEP_3);
 
             } else {
                 user.setStatusEnum(StatusEnum.VACATION);
@@ -175,7 +218,7 @@ public class BotHandlerCallback {
                         .text(Steps.THE_END)
                         .build());
 
-                bot.sendMessage(chatId, Steps.STEP_4);
+                bot.sendMessage(chatId, Steps.STEP_3);
 
             } else {
                 user.setStatusEnum(StatusEnum.BUSINESS_TRIP);
@@ -188,24 +231,95 @@ public class BotHandlerCallback {
         }
     }
 
+    @SneakyThrows
+    public void getRemote(String data, User user, long chatId, long messageId, TelegramBot bot){
+
+        if (data.equals(Callback.REMOTE)) {
+
+            if (user.getStatusEnum().equals(StatusEnum.NOTHING)){
+                user.setStatusEnum(StatusEnum.REMOTE);
+                userService.save(user);
+
+                bot.execute(EditMessageText
+                        .builder()
+                        .chatId(chatId)
+                        .messageId((int) messageId)
+                        .text(Steps.THE_END)
+                        .build());
+
+                bot.sendMessage(chatId, Steps.STEP_3);
+
+            } else {
+                user.setStatusEnum(StatusEnum.REMOTE);
+                userService.save(user);
+
+                bot.executeEditMessageTextWithButton( Phrases.STATUS + "на дистанційній роботі", chatId, messageId, BackButton.getBackToSettings());
+            }
+
+            log.info("User (" + chatId + ") change the status to REMOTE");
+        }
+    }
+
     //show user's notification and ability to change to another one
     public void getNotification(String data, Notification notification, long chatId, long messageId, TelegramBot bot){
 
-        if (data.equals(Settings.NOTIFICATION)){
+        List<String> list = new ArrayList<>();
+        list.add(Callback.EIGHT);
+        list.add(Callback.EIGHT_FORTY);
+        list.add(Callback.EIGHT_FORTY_FIVE);
+        list.add(Callback.EIGHT_FIFTY);
+        list.add(Callback.EIGHT_FIFTY_FIVE);
+        list.add(Callback.TURN_OFF);
+        list.add(Callback.BACK);
 
-            if (notification.getTurnOn() && notification.getTimeOfNotification().contains("9")){
-                log.info("User (" + chatId + ") with notification (9)");
-                bot.executeEditMessageTextWithButton(Phrases.NOTIFICATION + "у Вас о 9 ранку", chatId, messageId, SettingsButton.getButtons(Callback.EIGHT, Callback.TURN_OFF, Callback.BACK));
-            }
+        if (data.equals(Commands.NOTIFICATION)){
 
             if (notification.getTurnOn() && notification.getTimeOfNotification().contains("8")){
                 log.info("User (" + chatId + ") with notification (8)");
-                bot.executeEditMessageTextWithButton(Phrases.NOTIFICATION + "у Вас о 8 ранку", chatId, messageId, SettingsButton.getButtons(Callback.NINE, Callback.TURN_OFF, Callback.BACK));
+
+                List<String> listTime = list;
+                listTime.remove(Callback.EIGHT);
+                bot.executeEditMessageTextWithButton(Phrases.NOTIFICATION + "у Вас о 8 ранку", chatId, messageId, SettingsButton.getButtonsDifferentCount(listTime));
             }
 
             if (!notification.getTurnOn()){
                 log.info("User (" + chatId + ") with notification which off");
-                bot.executeEditMessageTextWithButton(Phrases.NOTIFICATION + "вимкнено", chatId, messageId, SettingsButton.getButtons(Callback.NINE, Callback.EIGHT, Callback.BACK));
+
+                List<String> listTime = list;
+                listTime.remove(Callback.TURN_OFF);
+                bot.executeEditMessageTextWithButton(Phrases.NOTIFICATION + "вимкнено", chatId, messageId, SettingsButton.getButtonsDifferentCount(listTime));
+            }
+
+            if (notification.getTurnOn() && notification.getTimeOfNotification().contains("8:40")){
+                log.info("User (" + chatId + ") with notification (8 40)");
+
+                List<String> listTime = list;
+                listTime.remove(Callback.EIGHT_FORTY);
+                bot.executeEditMessageTextWithButton(Phrases.NOTIFICATION + "у Вас о 8:40", chatId, messageId, SettingsButton.getButtonsDifferentCount(listTime));
+            }
+
+            if (notification.getTurnOn() && notification.getTimeOfNotification().contains("8:45")){
+                log.info("User (" + chatId + ") with notification (8 45)");
+
+                List<String> listTime = list;
+                listTime.remove(Callback.EIGHT_FORTY_FIVE);
+                bot.executeEditMessageTextWithButton(Phrases.NOTIFICATION + "у Вас о 8:45", chatId, messageId, SettingsButton.getButtonsDifferentCount(listTime));
+            }
+
+            if (notification.getTurnOn() && notification.getTimeOfNotification().contains("8:50")){
+                log.info("User (" + chatId + ") with notification (8 50)");
+
+                List<String> listTime = list;
+                listTime.remove(Callback.EIGHT_FIFTY);
+                bot.executeEditMessageTextWithButton(Phrases.NOTIFICATION + "у Вас о 8:50", chatId, messageId, SettingsButton.getButtonsDifferentCount(listTime));
+            }
+
+            if (notification.getTurnOn() && notification.getTimeOfNotification().contains("8:55")){
+                log.info("User (" + chatId + ") with notification (8 55)");
+
+                List<String> listTime = list;
+                listTime.remove(Callback.EIGHT_FIFTY_FIVE);
+                bot.executeEditMessageTextWithButton(Phrases.NOTIFICATION + "у Вас о 8:55", chatId, messageId, SettingsButton.getButtonsDifferentCount(listTime));
             }
         }
     }
@@ -221,55 +335,48 @@ public class BotHandlerCallback {
         }
     }
 
-    //show user's password
-    public void getPassword(String data, User user, long chatId, long messageId, TelegramBot bot){
-
-        if (data.equals(Settings.PASSWORD)){
-
-            if (user.getPassword() == null) {
-                log.info(user.getFullName() + " doesn't have a password");
-                bot.executeEditMessageTextWithButton("У Вас немає паролю!\nНавіщо тоді натискати цю кнопку?", chatId, messageId, BackButton.getBackToSettings());
-            } else {
-                log.info("Show the password for " + user.getFullName());
-                bot.executeEditMessageTextWithButton( user.getPassword(), chatId, messageId, BackButton.getBackToSettings());
-            }
-        }
-    }
-
-    //show user's room
-    public void getRoom(String data, User user, long chatId, long messageId, TelegramBot bot){
-
-        if (data.equals(Settings.ROOM)){
-
-            if (user.getRoom() == null) {
-                log.info(user.getFullName() + " doesn't have a room");
-                bot.executeEditMessageTextWithButton(Phrases.ROOM, chatId, messageId, BackButton.getBackToSettings());
-            } else {
-                log.info("Show the room for " + user.getFullName());
-                bot.executeEditMessageTextWithButton("Ви працюєте в " + user.getRoom() + " кабінеті", chatId, messageId, BackButton.getBackToSettings());
-            }
-        }
-    }
-
     //show user's status and ability to change to another one
     public void getStatus(String data,User user, long chatId, long messageId, TelegramBot bot){
+
+        List<String> list = new ArrayList<>();
+        list.add(Callback.WORK);
+        list.add(Callback.REMOTE);
+        list.add(Callback.SICK);
+        list.add(Callback.VACATION);
+        list.add(Callback.BUSINESS_TRIP);
+        list.add(Callback.BACK);
+
 
         if (data.equals(Settings.STATUS)){
 
             if (user.getStatusEnum().equals(StatusEnum.WORK)){
-                bot.executeEditMessageTextWithButton("На даний момент Ви працюєте", chatId, messageId, SettingsButton.getButtonsStatus(Callback.SICK, Callback.VACATION, Callback.BUSINESS_TRIP, Callback.BACK));
+                List<String> listWork = list;
+                listWork.remove(Callback.WORK);
+                bot.executeEditMessageTextWithButton("На даний момент Ви працюєте", chatId, messageId, SettingsButton.getButtonsDifferentCount(listWork));
             }
 
             if (user.getStatusEnum().equals(StatusEnum.SICK)){
-                bot.executeEditMessageTextWithButton("На даний момент Ви на лікарняному", chatId, messageId, SettingsButton.getButtonsStatus(Callback.WORK, Callback.VACATION, Callback.BUSINESS_TRIP, Callback.BACK));
+                List<String> listWork = list;
+                listWork.remove(Callback.SICK);
+                bot.executeEditMessageTextWithButton("На даний момент Ви на лікарняному", chatId, messageId, SettingsButton.getButtonsDifferentCount(listWork));
             }
 
             if (user.getStatusEnum().equals(StatusEnum.VACATION)){
-                bot.executeEditMessageTextWithButton("На даний момент Ви у відпустці", chatId, messageId, SettingsButton.getButtonsStatus(Callback.WORK, Callback.SICK, Callback.BUSINESS_TRIP, Callback.BACK));
+                List<String> listWork = list;
+                listWork.remove(Callback.VACATION);
+                bot.executeEditMessageTextWithButton("На даний момент Ви у відпустці", chatId, messageId, SettingsButton.getButtonsDifferentCount(listWork));
             }
 
             if (user.getStatusEnum().equals(StatusEnum.BUSINESS_TRIP)){
-                bot.executeEditMessageTextWithButton("На даний момент Ви у відрядженні", chatId, messageId, SettingsButton.getButtonsStatus(Callback.WORK, Callback.SICK, Callback.VACATION, Callback.BACK));
+                List<String> listWork = list;
+                listWork.remove(Callback.BUSINESS_TRIP);
+                bot.executeEditMessageTextWithButton("На даний момент Ви у відрядженні", chatId, messageId, SettingsButton.getButtonsDifferentCount(listWork));
+            }
+
+            if (user.getStatusEnum().equals(StatusEnum.REMOTE)){
+                List<String> listWork = list;
+                listWork.remove(Callback.REMOTE);
+                bot.executeEditMessageTextWithButton("На даний момент Ви на дистанційній роботі", chatId, messageId, SettingsButton.getButtonsDifferentCount(listWork));
             }
 
             log.info("Show the status for " + user.getFullName());

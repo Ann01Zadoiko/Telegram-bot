@@ -29,7 +29,7 @@ public class ListOfEmployees {
 
         list.append("\nНа роботі:");
         for (User user: users){
-            if (user.getAtWork() == 1 && user.getStatusEnum().equals(StatusEnum.WORK)){
+            if (user.getAtWork() == 1 && (user.getStatusEnum().equals(StatusEnum.WORK))){
                 list
                         .append("\n")
                         .append(number++)
@@ -41,6 +41,7 @@ public class ListOfEmployees {
             }
         }
 
+        list.append(printList(StatusEnum.REMOTE, "На дистанційній роботі:", users, countUsers(StatusEnum.REMOTE, users)));
         list.append(printList(StatusEnum.SICK, "На лікарняному:", users, countUsers(StatusEnum.SICK, users)));
         list.append(printList(StatusEnum.VACATION, "У відпустці:", users, countUsers(StatusEnum.VACATION, users)));
         list.append(printList(StatusEnum.BUSINESS_TRIP, "У відряженні:", users, countUsers(StatusEnum.BUSINESS_TRIP, users)));

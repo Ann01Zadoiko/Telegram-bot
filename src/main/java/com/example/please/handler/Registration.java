@@ -34,7 +34,7 @@ public class Registration {
 
             Notification notification = new Notification();
             notification.setTurnOn(true);
-            notification.setTimeOfNotification("0 0 9 * * MON-FRI");
+            notification.setTimeOfNotification("8:55");
             notification.setUser(user);
             notificationService.save(notification);
 

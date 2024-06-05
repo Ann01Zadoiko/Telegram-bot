@@ -1,13 +1,11 @@
 create table if not exists users(
     id bigint auto_increment primary key,
-    chat_id int not null,
+    chat_id bigint not null,
     full_name varchar(150),
-    password varchar(20),
     at_work bit(1) default 0,
     time_of_coming time,
-    room int,
     phone_number varchar(15),
-    status enum('WORK','SICK','VACATION','NOTHING', 'BUSINESS_TRIP')
+    status enum('WORK','SICK','VACATION','NOTHING', 'BUSINESS_TRIP', 'REMOTE')
 );
 
 create table if not exists notifications (

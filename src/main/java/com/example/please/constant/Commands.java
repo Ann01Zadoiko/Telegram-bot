@@ -14,4 +14,6 @@ public interface Commands {
 
     String START = "/start";
 
+    String NOTIFICATION = "Нагадування";
+
 }

@@ -27,17 +27,11 @@ public class User {
     @Column(name = "full_name")
     private String fullName;
 
-    @Column(name = "password")
-    private String password;
-
     @Column(name = "at_work")
     private byte atWork;
 
     @Column(name = "time_of_coming")
     private LocalTime timeComing;
-
-    @Column(name = "room")
-    private Integer room;
 
     @Column(name = "phone_number")
     private String phoneNumber;
@@ -54,10 +48,8 @@ public class User {
                 "id=" + id +
                 ", chatId=" + chatId +
                 ", fullName='" + fullName + '\'' +
-                ", password='" + password + '\'' +
                 ", atWork=" + atWork +
                 ", timeComing=" + timeComing +
-                ", room=" + room +
                 ", phoneNumber='" + phoneNumber + '\'' +
                 ", status=" + statusEnum +
                 '}';

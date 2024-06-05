@@ -9,7 +9,7 @@ import com.example.please.constant.Callback;
 import com.example.please.constant.Commands;
 import com.example.please.constant.Phrases;
 import com.example.please.constant.Steps;
-import com.example.please.convert.Converter;
+import com.example.please.notification.Notification;
 import com.example.please.notification.NotificationService;
 import com.example.please.user.StatusEnum;
 import com.example.please.user.User;
@@ -21,6 +21,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
 
 @Slf4j
 @Builder
@@ -66,7 +68,7 @@ public class BotHandlerMessage {
         if (messageText.equals(Commands.AT_WORK)) {
             String s = new AtWorkService(userService).addUserToTheList(user, LocalTime.now());
 
-            if(user.getStatusEnum().equals(StatusEnum.WORK)){
+            if(user.getStatusEnum().equals(StatusEnum.WORK) || user.getStatusEnum().equals(StatusEnum.REMOTE)){
                 log.info(user.getFullName() + " is at work");
                 bot.sendMessage(charId, s);
             } else {
@@ -75,45 +77,15 @@ public class BotHandlerMessage {
         }
     }
 
-    //user enter or change his password
-    @SneakyThrows
-    public void getPassword(User user, String messageText, long charId, String [] stringBuilder, TelegramBot bot){
-
-        if (MessageChecker.isPassword(stringBuilder, messageText)) {
-            String password = Converter.convertPassword(messageText);
-
-            user.setPassword(password);
-            userService.save(user);
-
-            bot.sendMessage(charId, password);
-            log.info(user.getFullName() + " set a new password");
-        }
-    }
-
-    //user enter or change his room
-    @SneakyThrows
-    public void getRoom(User user, String messageText, long charId, TelegramBot bot){
-
-        if (MessageChecker.isARoom(messageText)) {
-
-            if (user.getRoom() == null){
-                user.setRoom(Integer.parseInt(messageText));
-                userService.save(user);
-
-                bot.executeSetting(charId, SettingsButton.getButtonsStatus(Callback.WORK, Callback.SICK, Callback.VACATION, Callback.BUSINESS_TRIP), Steps.STEP_3);
-            } else {
-                user.setRoom(Integer.parseInt(messageText));
-                userService.save(user);
-                bot.sendMessage(charId, Phrases.ROOM_INFO + user.getRoom() + " кабінет");
-            }
-
-            log.info(user.getFullName() + " set a new room");
-        }
-    }
-
     //user enter or change his phone number
     @SneakyThrows
     public void getPhoneNumber(User user, String messageText, long charId, TelegramBot bot){
+        List<String> list = new ArrayList<>();
+        list.add(Callback.WORK);
+        list.add(Callback.REMOTE);
+        list.add(Callback.SICK);
+        list.add(Callback.VACATION);
+        list.add(Callback.BUSINESS_TRIP);
 
         if (MessageChecker.isPhoneNumber(messageText)) {
 
@@ -121,7 +93,7 @@ public class BotHandlerMessage {
                 user.setPhoneNumber(messageText);
                 userService.save(user);
 
-                bot.sendMessageRegistration(charId, Steps.STEP_2);
+                bot.executeSetting(charId, SettingsButton.getButtonsDifferentCount(list), Steps.STEP_2);
             } else {
                 user.setPhoneNumber(messageText);
                 userService.save(user);
@@ -149,9 +121,9 @@ public class BotHandlerMessage {
 
     //show unexpected message
     @SneakyThrows
-    public void getUnexpectedMessage(String messageText, long charId, TelegramBot bot){
+    public void getUnexpectedMessage(String messageText, String [] stringBuilder, long charId, TelegramBot bot){
 
-        if (MessageChecker.isUnexpectedMessage(messageText)) {
+        if (MessageChecker.isUnexpectedMessage(messageText, stringBuilder)) {
             bot.sendMessage(charId, Phrases.UNEXPECTED_MESSAGE);
             log.info("User (" + charId + ") entered incorrect message");
         }
@@ -174,6 +146,70 @@ public class BotHandlerMessage {
         if (messageText.equals(Commands.SETTINGS)){
             bot.executeSetting(charId, SettingsButton.inlineButtonsForSettings(), Phrases.CHOOSE);
             log.info("User (" + charId + ") pressed the button (the settings)");
+        }
+    }
+
+    @SneakyThrows
+    public void getNotification(String messageText, User user, long chatId, TelegramBot bot){
+        Notification notification = notificationService.getNotificationByUser(user);
+
+        List<String> list = new ArrayList<>();
+        list.add(Callback.EIGHT);
+        list.add(Callback.EIGHT_FORTY);
+        list.add(Callback.EIGHT_FORTY_FIVE);
+        list.add(Callback.EIGHT_FIFTY);
+        list.add(Callback.EIGHT_FIFTY_FIVE);
+        list.add(Callback.TURN_OFF);
+
+        if (messageText.equals(Commands.NOTIFICATION)){
+
+            if (notification.getTurnOn() && notification.getTimeOfNotification().contains("8:00")){
+                log.info("User (" + chatId + ") with notification (8)");
+
+                List<String> listTime = list;
+                listTime.remove(Callback.EIGHT);
+                bot.executeSetting(chatId, SettingsButton.getButtonsDifferentCount(listTime), Phrases.NOTIFICATION + "у Вас о 8 ранку");
+            }
+
+            if (!notification.getTurnOn()){
+                log.info("User (" + chatId + ") with notification which off");
+
+                List<String> listTime = list;
+                listTime.remove(Callback.TURN_OFF);
+                bot.executeSetting(chatId, SettingsButton.getButtonsDifferentCount(listTime), Phrases.NOTIFICATION + "вимкнено");
+            }
+
+            if (notification.getTurnOn() && notification.getTimeOfNotification().contains("8:40")){
+                log.info("User (" + chatId + ") with notification (8 40)");
+
+                List<String> listTime = list;
+                listTime.remove(Callback.EIGHT_FORTY);
+                bot.executeSetting(chatId, SettingsButton.getButtonsDifferentCount(listTime), Phrases.NOTIFICATION + "у Вас о 8:40");
+            }
+
+            if (notification.getTurnOn() && notification.getTimeOfNotification().contains("8:45")){
+                log.info("User (" + chatId + ") with notification (8 45)");
+
+                List<String> listTime = list;
+                listTime.remove(Callback.EIGHT_FORTY_FIVE);
+                bot.executeSetting(chatId, SettingsButton.getButtonsDifferentCount(listTime), Phrases.NOTIFICATION + "у Вас о 8:45");
+            }
+
+            if (notification.getTurnOn() && notification.getTimeOfNotification().contains("8:50")){
+                log.info("User (" + chatId + ") with notification (8 50)");
+
+                List<String> listTime = list;
+                listTime.remove(Callback.EIGHT_FIFTY);
+                bot.executeSetting(chatId, SettingsButton.getButtonsDifferentCount(listTime), Phrases.NOTIFICATION + "у Вас о 8:50");
+            }
+
+            if (notification.getTurnOn() && notification.getTimeOfNotification().contains("8:55")){
+                log.info("User (" + chatId + ") with notification (8 55)");
+
+                List<String> listTime = list;
+                listTime.remove(Callback.EIGHT_FIFTY_FIVE);
+                bot.executeSetting( chatId, SettingsButton.getButtonsDifferentCount(listTime), Phrases.NOTIFICATION + "у Вас о 8:55");
+            }
         }
     }
 }
