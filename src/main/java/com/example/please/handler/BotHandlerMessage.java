@@ -11,6 +11,7 @@ import com.example.please.constant.Phrases;
 import com.example.please.constant.Steps;
 import com.example.please.notification.Notification;
 import com.example.please.notification.NotificationService;
+import com.example.please.status.StatusOfTheDay;
 import com.example.please.user.StatusEnum;
 import com.example.please.user.User;
 import com.example.please.user.UserService;
@@ -20,6 +21,7 @@ import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.objects.Update;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -35,9 +37,19 @@ public class BotHandlerMessage {
 
     //user start to use the bot
     public void getStart(Update update, String messageText, TelegramBot bot){
-
         if (messageText.equals(Commands.START_PRIVATE)) {
             new Registration(userService, notificationService).start(update.getMessage(), bot);
+        }
+    }
+
+    @SneakyThrows
+    public void getStatusOfTheDay(String messageText, long chatId, TelegramBot bot){
+
+        StatusOfTheDay statusOfTheDay = new StatusOfTheDay();
+        List<User> users = userService.listAll();
+
+        if (messageText.equals(Commands.STATUS)){
+            bot.sendMessage(chatId, statusOfTheDay.printStatus(LocalDate.now(), users));
         }
     }
 
@@ -104,25 +116,9 @@ public class BotHandlerMessage {
         }
     }
 
-    //user send message for everyone
-    @SneakyThrows
-    public void getSend(String messageText, User user, TelegramBot bot){
-
-        if (messageText.contains(Commands.SEND)){
-            String message = messageText.substring(6);
-
-            for(User user1: userService.listAll()){
-                bot.sendMessage(user1.getChatId(), message + "\nВід: " + user.getFullName());
-            }
-
-            log.info(user.getFullName() + " send message for everyone");
-        }
-    }
-
     //show unexpected message
     @SneakyThrows
     public void getUnexpectedMessage(String messageText, String [] stringBuilder, long charId, TelegramBot bot){
-
         if (MessageChecker.isUnexpectedMessage(messageText, stringBuilder)) {
             bot.sendMessage(charId, Phrases.UNEXPECTED_MESSAGE);
             log.info("User (" + charId + ") entered incorrect message");
@@ -132,7 +128,6 @@ public class BotHandlerMessage {
     //press the button (list of users)
     @SneakyThrows
     public void getListOfEmployees(String messageText, long charId, TelegramBot bot){
-
         if (messageText.equals(Commands.LIST_OF_EMPLOYEES)) {
             bot.sendMessage(charId, new ListOfEmployees(userService).printAllUsers());
             log.info("User (" + charId + ") pressed  the button (list of employees)");
@@ -142,7 +137,6 @@ public class BotHandlerMessage {
     //press the button (the settings)
     @SneakyThrows
     public void getSettings(String messageText, long charId, TelegramBot bot){
-
         if (messageText.equals(Commands.SETTINGS)){
             bot.executeSetting(charId, SettingsButton.inlineButtonsForSettings(), Phrases.CHOOSE);
             log.info("User (" + charId + ") pressed the button (the settings)");

@@ -74,9 +74,9 @@ public class BotHandler {
         message.getUnexpectedMessage(messageText, stringBuilder, charId, telegramBot);
         message.getListOfEmployees(messageText, charId, telegramBot);
         message.getPhoneNumber(user, messageText, charId, telegramBot);
-        message.getSend(messageText, user, telegramBot);
         message.getSettings(messageText, charId, telegramBot);
         message.getNotification(messageText, user, charId, telegramBot);
+        message.getStatusOfTheDay(messageText, charId, telegramBot);
     }
 
 }

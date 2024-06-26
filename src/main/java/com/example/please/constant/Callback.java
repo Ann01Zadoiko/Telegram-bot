@@ -26,5 +26,5 @@ public interface Callback {
 
     String BUSINESS_TRIP = "У відрядженні";
 
-    String REMOTE = "Дистанційно працюєте";
+    String REMOTE = "Дистанційно працюю";
 }

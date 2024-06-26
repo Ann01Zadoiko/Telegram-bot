@@ -24,9 +24,9 @@ public class MessageChecker {
     public static boolean isACommand(String message){
 
         return message.equals(Commands.AT_WORK) || message.equals(Commands.START)
-                 || message.equals(Commands.LIST_OF_EMPLOYEES) || message.contains(Commands.SEND)
-                || message.equals(Commands.SETTINGS) || message.equals(Commands.START_PRIVATE)
-                || message.equals(Commands.NOTIFICATION);
+                 || message.equals(Commands.LIST_OF_EMPLOYEES) ||  message.equals(Commands.SETTINGS)
+                || message.equals(Commands.START_PRIVATE) || message.equals(Commands.NOTIFICATION)
+                || message.equals(Commands.STATUS);
     }
 
     //check for phone number (user enter phone number)
@@ -37,7 +37,7 @@ public class MessageChecker {
     //check for notification
     public static boolean isNotificationAt(User user, Notification notification, String time){
         return (user.getAtWork() == 0 && notification.getTurnOn()
-                && notification.getTimeOfNotification().equals(time)
-                && user.getStatusEnum().equals(StatusEnum.WORK));
+                && notification.getTimeOfNotification().equals(time) &&
+                (user.getStatusEnum().equals(StatusEnum.WORK) || user.getStatusEnum().equals(StatusEnum.REMOTE)));
     }
 }

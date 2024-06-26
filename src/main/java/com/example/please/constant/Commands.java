@@ -10,10 +10,9 @@ public interface Commands {
 
     String SETTINGS = "Налаштування";
 
-    String SEND = "/send";
-
     String START = "/start";
 
     String NOTIFICATION = "Нагадування";
 
+    String STATUS = "/status";
 }
