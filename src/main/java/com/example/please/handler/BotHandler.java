@@ -33,23 +33,13 @@ public class BotHandler {
 
         TelegramBot telegramBot = new TelegramBot(config, userService, notificationService);
 
-        callback.getEight(data, notification, chatId, messageId, telegramBot);
-        callback.getOff(data, notification, chatId, messageId, telegramBot);
-        callback.getWork(data, user, chatId, messageId, telegramBot);
-        callback.getSick(data, user, chatId, messageId, telegramBot);
-        callback.getVacation(data, user, chatId, messageId, telegramBot);
         callback.getNotification(data, notification, chatId, messageId, telegramBot);
         callback.getFullName(data, user, chatId, messageId, telegramBot);
         callback.getStatus(data, user, chatId, messageId, telegramBot);
         callback.getPhoneNumber(data,user,chatId,messageId, telegramBot);
         callback.getBackToSettings(data, chatId, messageId, telegramBot);
-        callback.getBusinessTrip(data, user, chatId, messageId, telegramBot);
-        callback.getRemote(data, user, chatId, messageId, telegramBot);
-
-        callback.getEightForty(data, notification, chatId, messageId, telegramBot);
-        callback.getEightFortyFive(data, notification, chatId, messageId, telegramBot);
-        callback.getEightFifty(data, notification, chatId, messageId, telegramBot);
-        callback.getEightFiftyFive(data, notification, chatId, messageId, telegramBot);
+        callback.commandsForCallbackOfNotifications(data, notification, chatId, messageId, telegramBot);
+        callback.commandsForStatuses(data, user, chatId, messageId, telegramBot);
     }
 
     //answer to user's message
@@ -68,15 +58,12 @@ public class BotHandler {
 
         TelegramBot telegramBot = new TelegramBot(config, userService, notificationService);
 
-        message.getStart(update, messageText, telegramBot);
         message.getFullName(user,messageText, charId, stringBuilder, telegramBot);
-        message.getAtWork(user, charId, messageText, telegramBot);
         message.getUnexpectedMessage(messageText, stringBuilder, charId, telegramBot);
-        message.getListOfEmployees(messageText, charId, telegramBot);
         message.getPhoneNumber(user, messageText, charId, telegramBot);
         message.getSettings(messageText, charId, telegramBot);
         message.getNotification(messageText, user, charId, telegramBot);
-        message.getStatusOfTheDay(messageText, charId, telegramBot);
+        message.commandForMessage(update, messageText,telegramBot, charId, user);
     }
 
 }

@@ -27,236 +27,158 @@ public class BotHandlerCallback {
     private final NotificationService notificationService;
     private final BotConfig config;
 
-    //the notification was changed at 8 am
-    public void getEight(String data, Notification notification, long chatId, long messageId, TelegramBot bot){
+    public void commandsForCallbackOfNotifications(String data, Notification notification, long chatId, long messageId, TelegramBot bot){
+        switch (data) {
 
-        if (data.equals(Callback.EIGHT)) {
-            notification.setTimeOfNotification("8:00");
-            notification.setTurnOn(true);
-            notificationService.save(notification);
-
-            log.info("User (" + chatId + ") change the notification at 8 am");
-
-            bot.executeEditMessage("Ви змінили своє нагадування о 8 ранку", chatId, messageId);
-        }
-    }
-
-    //the notification was changed at 8 40
-    public void getEightForty(String data, Notification notification, long chatId, long messageId, TelegramBot bot){
-
-        if (data.equals(Callback.EIGHT_FORTY)) {
-            notification.setTimeOfNotification("8:40");
-            notification.setTurnOn(true);
-            notificationService.save(notification);
-
-            log.info("User (" + chatId + ") change the notification at 8:40");
-
-            bot.executeEditMessage("Ви змінили своє нагадування о 8:40", chatId, messageId);
-        }
-    }
-
-    //the notification was changed at 8 50
-    public void getEightFifty(String data, Notification notification, long chatId, long messageId, TelegramBot bot){
-
-        if (data.equals(Callback.EIGHT_FIFTY)) {
-            notification.setTimeOfNotification("8:50");
-            notification.setTurnOn(true);
-            notificationService.save(notification);
-
-            log.info("User (" + chatId + ") change the notification at 8:50");
-
-            bot.executeEditMessage("Ви змінили своє нагадування о 8:50", chatId, messageId);
-        }
-    }
-
-    //the notification was changed at 8 45
-    public void getEightFortyFive(String data, Notification notification, long chatId, long messageId, TelegramBot bot){
-
-        if (data.equals(Callback.EIGHT_FORTY_FIVE)) {
-            notification.setTimeOfNotification("8:45");
-            notification.setTurnOn(true);
-            notificationService.save(notification);
-
-            log.info("User (" + chatId + ") change the notification at 8:45");
-
-            bot.executeEditMessage("Ви змінили своє нагадування о 8:45", chatId, messageId);
-        }
-    }
-
-    //the notification was changed at 8 55
-    public void getEightFiftyFive(String data, Notification notification, long chatId, long messageId, TelegramBot bot){
-
-        if (data.equals(Callback.EIGHT_FIFTY_FIVE)) {
-            notification.setTimeOfNotification("8:55");
-            notification.setTurnOn(true);
-            notificationService.save(notification);
-
-            log.info("User (" + chatId + ") change the notification at 8:55");
-
-            bot.executeEditMessage("Ви змінили своє нагадування о 8:55", chatId, messageId);
-        }
-    }
-
-    //the notification was turned off
-    @SneakyThrows
-    public void getOff(String data, Notification notification, long chatId, long messageId, TelegramBot bot){
-
-        if (data.equals(Callback.TURN_OFF)) {
-            notification.setTurnOn(false);
-            notificationService.save(notification);
-
-            log.info("User (" + chatId + ") turned off the notification");
-
-            bot.executeEditMessage("Ви вимкнули нагадування", chatId, messageId);
-        }
-    }
-
-    //the status was changed to WORK
-    @SneakyThrows
-    public void getWork(String data, User user, long chatId, long messageId, TelegramBot bot){
-
-        if (data.equals(Callback.WORK)) {
-
-            if (user.getStatusEnum().equals(StatusEnum.NOTHING)){
-                user.setStatusEnum(StatusEnum.WORK);
-                userService.save(user);
-
-                bot.execute(EditMessageText
-                        .builder()
-                        .chatId(chatId)
-                        .messageId((int) messageId)
-                        .text(Steps.THE_END)
-                        .build());
-
-                bot.sendMessage(chatId, Steps.STEP_3);
-
-            } else {
-
-                user.setStatusEnum(StatusEnum.WORK);
-                userService.save(user);
-
-                bot.executeEditMessageTextWithButton( Phrases.STATUS + "працюєте", chatId, messageId, BackButton.getBackToSettings());
+            case Callback.EIGHT -> {
+                notification.setTimeOfNotification("8:00");
+                notification.setTurnOn(true);
+                notificationService.save(notification);
+                log.info("User (" + chatId + ") change the notification at 8 am");
+                bot.executeEditMessage("Ви змінили своє нагадування о 8 ранку", chatId, messageId);
             }
 
-            log.info("User (" + chatId + ") change the status to WORK");
-        }
-    }
-
-    //the status was changed to SICK
-    @SneakyThrows
-    public void getSick(String data, User user, long chatId, long messageId, TelegramBot bot){
-
-        if (data.equals(Callback.SICK)) {
-
-            if (user.getStatusEnum().equals(StatusEnum.NOTHING)){
-                user.setStatusEnum(StatusEnum.SICK);
-                userService.save(user);
-
-                bot.execute(EditMessageText
-                        .builder()
-                        .chatId(chatId)
-                        .messageId((int) messageId)
-                        .text(Steps.THE_END)
-                        .build());
-
-                bot.sendMessage(chatId, Steps.STEP_3);
-
-            } else {
-                user.setStatusEnum(StatusEnum.SICK);
-                userService.save(user);
-
-                bot.executeEditMessageTextWithButton( Phrases.STATUS + "на лікарняному" , chatId, messageId, BackButton.getBackToSettings());
+            case Callback.EIGHT_FORTY -> {
+                notification.setTimeOfNotification("8:40");
+                notification.setTurnOn(true);
+                notificationService.save(notification);
+                log.info("User (" + chatId + ") change the notification at 8:40");
+                bot.executeEditMessage("Ви змінили своє нагадування о 8:40", chatId, messageId);
             }
 
-            log.info("User (" + chatId + ") change the status to SICK");
-        }
-    }
-
-    //the status was changed VACATION
-    @SneakyThrows
-    public void getVacation(String data, User user, long chatId, long messageId, TelegramBot bot){
-
-        if (data.equals(Callback.VACATION)) {
-
-            if (user.getStatusEnum().equals(StatusEnum.NOTHING)){
-                user.setStatusEnum(StatusEnum.VACATION);
-                userService.save(user);
-
-                bot.execute(EditMessageText
-                        .builder()
-                        .chatId(chatId)
-                        .messageId((int) messageId)
-                        .text(Steps.THE_END)
-                        .build());
-
-                bot.sendMessage(chatId, Steps.STEP_3);
-
-            } else {
-                user.setStatusEnum(StatusEnum.VACATION);
-                userService.save(user);
-
-                bot.executeEditMessageTextWithButton( Phrases.STATUS + "у відпустці", chatId, messageId, BackButton.getBackToSettings());
+            case Callback.EIGHT_FORTY_FIVE -> {
+                notification.setTimeOfNotification("8:45");
+                notification.setTurnOn(true);
+                notificationService.save(notification);
+                log.info("User (" + chatId + ") change the notification at 8:45");
+                bot.executeEditMessage("Ви змінили своє нагадування о 8:45", chatId, messageId);
             }
 
-            log.info("User (" + chatId + ") change the status to VACATION");
+            case Callback.EIGHT_FIFTY -> {
+                notification.setTimeOfNotification("8:50");
+                notification.setTurnOn(true);
+                notificationService.save(notification);
+                log.info("User (" + chatId + ") change the notification at 8:50");
+                bot.executeEditMessage("Ви змінили своє нагадування о 8:50", chatId, messageId);
+            }
+
+            case Callback.EIGHT_FIFTY_FIVE -> {
+                notification.setTimeOfNotification("8:55");
+                notification.setTurnOn(true);
+                notificationService.save(notification);
+                log.info("User (" + chatId + ") change the notification at 8:55");
+                bot.executeEditMessage("Ви змінили своє нагадування о 8:55", chatId, messageId);
+            }
+
+            case Callback.TURN_OFF -> {
+                notification.setTurnOn(false);
+                notificationService.save(notification);
+                log.info("User (" + chatId + ") turned off the notification");
+                bot.executeEditMessage("Ви вимкнули нагадування", chatId, messageId);
+            }
         }
     }
 
     @SneakyThrows
-    public void getBusinessTrip(String data, User user, long chatId, long messageId, TelegramBot bot){
+    public void commandsForStatuses(String data, User user, long chatId, long messageId, TelegramBot bot){
+        switch (data) {
 
-        if (data.equals(Callback.BUSINESS_TRIP)) {
-
-            if (user.getStatusEnum().equals(StatusEnum.NOTHING)){
-                user.setStatusEnum(StatusEnum.BUSINESS_TRIP);
-                userService.save(user);
-
-                bot.execute(EditMessageText
-                        .builder()
-                        .chatId(chatId)
-                        .messageId((int) messageId)
-                        .text(Steps.THE_END)
-                        .build());
-
-                bot.sendMessage(chatId, Steps.STEP_3);
-
-            } else {
-                user.setStatusEnum(StatusEnum.BUSINESS_TRIP);
-                userService.save(user);
-
-                bot.executeEditMessageTextWithButton( Phrases.STATUS + "у відрядженні", chatId, messageId, BackButton.getBackToSettings());
+            case Callback.WORK -> {
+                if (user.getStatusEnum().equals(StatusEnum.NOTHING)){
+                    user.setStatusEnum(StatusEnum.WORK);
+                    userService.save(user);
+                    bot.execute(EditMessageText
+                            .builder()
+                            .chatId(chatId)
+                            .messageId((int) messageId)
+                            .text(Steps.THE_END)
+                            .build());
+                    bot.sendMessage(chatId, Steps.STEP_3);
+                } else {
+                    user.setStatusEnum(StatusEnum.WORK);
+                    userService.save(user);
+                    bot.executeEditMessageTextWithButton( Phrases.STATUS + "працюєте", chatId, messageId, BackButton.getBackToSettings());
+                }
+                log.info("User (" + chatId + ") change the status to WORK");
             }
 
-            log.info("User (" + chatId + ") change the status to BUSINESS TRIP");
-        }
-    }
-
-    @SneakyThrows
-    public void getRemote(String data, User user, long chatId, long messageId, TelegramBot bot){
-
-        if (data.equals(Callback.REMOTE)) {
-
-            if (user.getStatusEnum().equals(StatusEnum.NOTHING)){
-                user.setStatusEnum(StatusEnum.REMOTE);
-                userService.save(user);
-
-                bot.execute(EditMessageText
-                        .builder()
-                        .chatId(chatId)
-                        .messageId((int) messageId)
-                        .text(Steps.THE_END)
-                        .build());
-
-                bot.sendMessage(chatId, Steps.STEP_3);
-
-            } else {
-                user.setStatusEnum(StatusEnum.REMOTE);
-                userService.save(user);
-
-                bot.executeEditMessageTextWithButton( Phrases.STATUS + "на дистанційній роботі", chatId, messageId, BackButton.getBackToSettings());
+            case Callback.SICK -> {
+                if (user.getStatusEnum().equals(StatusEnum.NOTHING)){
+                    user.setStatusEnum(StatusEnum.SICK);
+                    userService.save(user);
+                    bot.execute(EditMessageText
+                            .builder()
+                            .chatId(chatId)
+                            .messageId((int) messageId)
+                            .text(Steps.THE_END)
+                            .build());
+                    bot.sendMessage(chatId, Steps.STEP_3);
+                } else {
+                    user.setStatusEnum(StatusEnum.SICK);
+                    userService.save(user);
+                    bot.executeEditMessageTextWithButton( Phrases.STATUS + "на лікарняному" , chatId, messageId, BackButton.getBackToSettings());
+                }
+                log.info("User (" + chatId + ") change the status to SICK");
             }
 
-            log.info("User (" + chatId + ") change the status to REMOTE");
+            case Callback.VACATION -> {
+                if (user.getStatusEnum().equals(StatusEnum.NOTHING)){
+                    user.setStatusEnum(StatusEnum.VACATION);
+                    userService.save(user);
+                    bot.execute(EditMessageText
+                            .builder()
+                            .chatId(chatId)
+                            .messageId((int) messageId)
+                            .text(Steps.THE_END)
+                            .build());
+                    bot.sendMessage(chatId, Steps.STEP_3);
+                } else {
+                    user.setStatusEnum(StatusEnum.VACATION);
+                    userService.save(user);
+                    bot.executeEditMessageTextWithButton( Phrases.STATUS + "у відпустці", chatId, messageId, BackButton.getBackToSettings());
+                }
+                log.info("User (" + chatId + ") change the status to VACATION");
+            }
+
+            case Callback.BUSINESS_TRIP -> {
+                if (user.getStatusEnum().equals(StatusEnum.NOTHING)){
+                    user.setStatusEnum(StatusEnum.BUSINESS_TRIP);
+                    userService.save(user);
+                    bot.execute(EditMessageText
+                            .builder()
+                            .chatId(chatId)
+                            .messageId((int) messageId)
+                            .text(Steps.THE_END)
+                            .build());
+                    bot.sendMessage(chatId, Steps.STEP_3);
+                } else {
+                    user.setStatusEnum(StatusEnum.BUSINESS_TRIP);
+                    userService.save(user);
+
+                    bot.executeEditMessageTextWithButton( Phrases.STATUS + "у відрядженні", chatId, messageId, BackButton.getBackToSettings());
+                }
+                log.info("User (" + chatId + ") change the status to BUSINESS TRIP");
+            }
+
+            case Callback.REMOTE -> {
+                if (user.getStatusEnum().equals(StatusEnum.NOTHING)){
+                    user.setStatusEnum(StatusEnum.REMOTE);
+                    userService.save(user);
+                    bot.execute(EditMessageText
+                            .builder()
+                            .chatId(chatId)
+                            .messageId((int) messageId)
+                            .text(Steps.THE_END)
+                            .build());
+                    bot.sendMessage(chatId, Steps.STEP_3);
+                } else {
+                    user.setStatusEnum(StatusEnum.REMOTE);
+                    userService.save(user);
+
+                    bot.executeEditMessageTextWithButton( Phrases.STATUS + "на дистанційній роботі", chatId, messageId, BackButton.getBackToSettings());
+                }
+                log.info("User (" + chatId + ") change the status to REMOTE");
+            }
         }
     }
 
@@ -401,9 +323,15 @@ public class BotHandlerCallback {
     //turn back to settings
     public void getBackToSettings(String data, long chatId, long messageId, TelegramBot bot){
 
+        List<String> list = new ArrayList<>();
+        list.add(Settings.FULL_NAME);
+        list.add(Settings.PHONE_NUMBER);
+        list.add(Settings.STATUS);
+
         if (data.equals(Callback.BACK)){
             log.info("User (" + chatId + ") pressed button to back at the settings");
-            bot.executeEditMessageTextWithButton(Phrases.CHOOSE, chatId,messageId, SettingsButton.inlineButtonsForSettings());
+
+            bot.executeEditMessageTextWithButton(Phrases.CHOOSE, chatId,messageId, SettingsButton.getButtonsDifferentCount(list));
         }
     }
 }

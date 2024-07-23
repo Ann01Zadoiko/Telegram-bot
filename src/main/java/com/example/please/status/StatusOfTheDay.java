@@ -16,16 +16,20 @@ public class StatusOfTheDay {
                 countOfUsersWithStatus(users, StatusEnum.WORK) -
                 countOfUsersWithStatus(users, StatusEnum.REMOTE);
 
+        int countOfUsersAreAtWork =
+                countOfUsersWithStatus(users, StatusEnum.WORK) +
+                countOfUsersWithStatus(users, StatusEnum.REMOTE);
+
         DateTimeFormatter formatterDay = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
         status.append("КП ОІАЦ станом на ").append(formatterDay.format(date)).append("\n")
-                .append("По штату: 33;")
-                .append("\n").append("Некомплект: ").append(33-users.size())
-                .append(";\n\n").append("По списку всього: ").append(users.size())
-                .append(";\n")
-                .append("ПРИСУТНІ: ").append(countOfUsersWithStatus(users, StatusEnum.WORK)).append(";\n")
+                .append("По штату: 33;").append("\n")
+                .append("Некомплект: ").append(33-users.size()).append(";\n\n")
+                .append("По списку всього: ").append(users.size()).append(";\n")
+                .append("ПРИСУТНІ: ").append(countOfUsersAreAtWork).append(";\n")
                 .append("ВІДСУТНІ: ").append(countOfUsersAreNotAtWork).append(";\n")
-                .append("З них:\n").append(printCountAndList(users, StatusEnum.SICK, "Лікарняний"))
+                .append("З них:\n")
+                .append(printCountAndList(users, StatusEnum.SICK, "Лікарняний"))
                 .append(printCountAndList(users, StatusEnum.VACATION, "Відпуска"))
                 .append(printCountAndList(users, StatusEnum.BUSINESS_TRIP, "Відряждення"))
                 .append("Інше:\n")

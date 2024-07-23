@@ -31,6 +31,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     private final UserService userService;
     private final NotificationService notificationService;
 
+    @SneakyThrows
     public TelegramBot(BotConfig config, UserService userService, NotificationService notificationService) {
         this.config = config;
         this.userService = userService;
@@ -38,12 +39,7 @@ public class TelegramBot extends TelegramLongPollingBot {
 
         List<BotCommand> listofCommands = new ArrayList<>();
         listofCommands.add(new BotCommand("/status", "Інформація за день"));
-
-        try {
-            this.execute(new SetMyCommands(listofCommands, new BotCommandScopeDefault(), null));
-        } catch (TelegramApiException e) {
-            log.error("Error setting bot's command list: " + e.getMessage());
-        }
+        this.execute(new SetMyCommands(listofCommands, new BotCommandScopeDefault(), null));
     }
 
     //main work of bot

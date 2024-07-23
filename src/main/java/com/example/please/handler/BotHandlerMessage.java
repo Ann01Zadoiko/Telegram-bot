@@ -5,10 +5,7 @@ import com.example.please.atWork.ListOfEmployees;
 import com.example.please.bot.TelegramBot;
 import com.example.please.buttons.SettingsButton;
 import com.example.please.config.BotConfig;
-import com.example.please.constant.Callback;
-import com.example.please.constant.Commands;
-import com.example.please.constant.Phrases;
-import com.example.please.constant.Steps;
+import com.example.please.constant.*;
 import com.example.please.notification.Notification;
 import com.example.please.notification.NotificationService;
 import com.example.please.status.StatusOfTheDay;
@@ -35,22 +32,28 @@ public class BotHandlerMessage {
     private final NotificationService notificationService;
     private final BotConfig config;
 
-    //user start to use the bot
-    public void getStart(Update update, String messageText, TelegramBot bot){
-        if (messageText.equals(Commands.START_PRIVATE)) {
-            new Registration(userService, notificationService).start(update.getMessage(), bot);
-        }
-    }
-
     @SneakyThrows
-    public void getStatusOfTheDay(String messageText, long chatId, TelegramBot bot){
+    public void commandForMessage(Update update, String messageText, TelegramBot bot, long chatId, User user){
 
         StatusOfTheDay statusOfTheDay = new StatusOfTheDay();
         List<User> users = userService.listAll();
 
-        if (messageText.equals(Commands.STATUS)){
-            bot.sendMessage(chatId, statusOfTheDay.printStatus(LocalDate.now(), users));
+        switch (messageText){
+
+            case Commands.START_PRIVATE -> new Registration(userService, notificationService).start(update.getMessage(), bot);
+            case Commands.STATUS -> bot.sendMessage(chatId, statusOfTheDay.printStatus(LocalDate.now(), users));
+            case Commands.AT_WORK -> {
+                String s = new AtWorkService(userService).addUserToTheList(user, LocalTime.now());
+                if(user.getStatusEnum().equals(StatusEnum.WORK) || user.getStatusEnum().equals(StatusEnum.REMOTE)){
+                    log.info(user.getFullName() + " is at work");
+                    bot.sendMessage(chatId, s);
+                } else {
+                    bot.sendMessage(chatId, "Ти не маєшь права натискати на цю кнопку!");
+                }
+            }
+            case Commands.LIST_OF_EMPLOYEES -> bot.sendMessage(chatId, new ListOfEmployees(userService).showAllUsersOfTheDay());
         }
+
     }
 
     //user enter or change his full name
@@ -70,22 +73,6 @@ public class BotHandlerMessage {
             }
 
             log.info("User set new full name: " + user.getFullName());
-        }
-    }
-
-    //user is added to the list (work)
-    @SneakyThrows
-    public void getAtWork(User user, long charId, String messageText, TelegramBot bot){
-
-        if (messageText.equals(Commands.AT_WORK)) {
-            String s = new AtWorkService(userService).addUserToTheList(user, LocalTime.now());
-
-            if(user.getStatusEnum().equals(StatusEnum.WORK) || user.getStatusEnum().equals(StatusEnum.REMOTE)){
-                log.info(user.getFullName() + " is at work");
-                bot.sendMessage(charId, s);
-            } else {
-                bot.sendMessage(charId, "Ти не маєшь права натискати на цю кнопку!");
-            }
         }
     }
 
@@ -125,20 +112,17 @@ public class BotHandlerMessage {
         }
     }
 
-    //press the button (list of users)
-    @SneakyThrows
-    public void getListOfEmployees(String messageText, long charId, TelegramBot bot){
-        if (messageText.equals(Commands.LIST_OF_EMPLOYEES)) {
-            bot.sendMessage(charId, new ListOfEmployees(userService).printAllUsers());
-            log.info("User (" + charId + ") pressed  the button (list of employees)");
-        }
-    }
-
     //press the button (the settings)
     @SneakyThrows
     public void getSettings(String messageText, long charId, TelegramBot bot){
+
+        List<String> list = new ArrayList<>();
+        list.add(Settings.FULL_NAME);
+        list.add(Settings.PHONE_NUMBER);
+        list.add(Settings.STATUS);
+
         if (messageText.equals(Commands.SETTINGS)){
-            bot.executeSetting(charId, SettingsButton.inlineButtonsForSettings(), Phrases.CHOOSE);
+            bot.executeSetting(charId, SettingsButton.getButtonsDifferentCount(list), Phrases.CHOOSE);
             log.info("User (" + charId + ") pressed the button (the settings)");
         }
     }
