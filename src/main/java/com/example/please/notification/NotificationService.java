@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class NotificationService {
+public class NotificationService implements INotificationService{
 
     private final NotificationRepository notificationRepository;
 

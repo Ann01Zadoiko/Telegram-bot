@@ -10,7 +10,7 @@ import java.util.List;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class UserService {
+public class UserService implements IUserService{
 
     private final UserRepository repository;
 
