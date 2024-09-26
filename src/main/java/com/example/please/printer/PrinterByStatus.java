@@ -1,4 +1,4 @@
-package com.example.please.status;
+package com.example.please.printer;
 
 import com.example.please.counter.CounterOfUsersForStatus;
 import com.example.please.user.StatusEnum;
@@ -8,11 +8,12 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-public class StatusOfTheDay {
+public class PrinterByStatus {
 
     public String printStatus(LocalDate date, List<User> users){
         StringBuilder status = new StringBuilder();
         CounterOfUsersForStatus counter = new CounterOfUsersForStatus();
+        PrinterStatusWithCount printer = new PrinterStatusWithCount();
 
         int countOfUsersAreNotAtWork = users.size() -
                 counter.countOfUsers(users, StatusEnum.WORK) -
@@ -20,7 +21,7 @@ public class StatusOfTheDay {
 
         int countOfUsersAreAtWork =
                 counter.countOfUsers(users, StatusEnum.WORK) +
-                counter.countOfUsers(users, StatusEnum.REMOTE);
+                        counter.countOfUsers(users, StatusEnum.REMOTE);
 
         DateTimeFormatter formatterDay = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
@@ -31,26 +32,12 @@ public class StatusOfTheDay {
                 .append("ПРИСУТНІ: ").append(countOfUsersAreAtWork).append(";\n")
                 .append("ВІДСУТНІ: ").append(countOfUsersAreNotAtWork).append(";\n")
                 .append("З них:\n")
-                .append(printCountAndList(users, StatusEnum.SICK, "Лікарняний"))
-                .append(printCountAndList(users, StatusEnum.VACATION, "Відпуска"))
-                .append(printCountAndList(users, StatusEnum.BUSINESS_TRIP, "Відряждення"))
+                .append(printer.printCountAndList(users, StatusEnum.SICK, "Лікарняний"))
+                .append(printer.printCountAndList(users, StatusEnum.VACATION, "Відпуска"))
+                .append(printer.printCountAndList(users, StatusEnum.BUSINESS_TRIP, "Відряждення"))
                 .append("Інше:\n")
-                .append(printCountAndList(users, StatusEnum.REMOTE, "Віддалена робота"));
+                .append(printer.printCountAndList(users, StatusEnum.REMOTE, "Віддалена робота"));
 
         return String.valueOf(status);
-    }
-
-    private StringBuilder printCountAndList(List<User> users, StatusEnum statusEnum, String text){
-        StringBuilder stringBuilder = new StringBuilder();
-        CounterOfUsersForStatus counter = new CounterOfUsersForStatus();
-
-        stringBuilder.append(text).append(": ").append(counter.countOfUsers(users, statusEnum)).append("\n");
-        for (User user: users){
-            if (user.getStatusEnum().equals(statusEnum) && counter.countOfUsers(users, statusEnum) != 0){
-                stringBuilder.append(user.getFullName()).append("\n");
-            }
-        }
-
-        return stringBuilder;
     }
 }

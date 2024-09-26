@@ -2,6 +2,7 @@ package com.example.please.handler;
 
 import com.example.please.bot.TelegramBot;
 import com.example.please.config.BotConfig;
+import com.example.please.handler.message.*;
 import com.example.please.notification.Notification;
 import com.example.please.notification.NotificationService;
 import com.example.please.user.User;
@@ -49,21 +50,14 @@ public class BotHandler {
         User user = userService.getByChatId(charId);
         String[] stringBuilder = messageText.split(" ");
 
-        BotHandlerMessage message = BotHandlerMessage
-                .builder()
-                .userService(userService)
-                .notificationService(notificationService)
-                .config(config)
-                .build();
-
         TelegramBot telegramBot = new TelegramBot(config, userService, notificationService);
 
-        message.getFullName(user,messageText, charId, stringBuilder, telegramBot);
-        message.getUnexpectedMessage(messageText, stringBuilder, charId, telegramBot);
-        message.getPhoneNumber(user, messageText, charId, telegramBot);
-        message.getSettings(messageText, charId, telegramBot);
-        message.getNotification(messageText, user, charId, telegramBot);
-        message.commandForMessage(update, messageText,telegramBot, charId, user);
+        new MessageForFullName(userService).getFullName(user,messageText, charId, stringBuilder, telegramBot);
+        new MessageForUnexpectedMessage().getUnexpectedMessage(messageText, stringBuilder, charId, telegramBot);
+        new MessageForPhoneNumber(userService).getPhoneNumber(user, messageText, charId, telegramBot);
+        new MessageForSettings().getSettings(messageText, charId, telegramBot);
+        new MessageForNotification(notificationService).getNotification(messageText, user, charId, telegramBot);
+        new MessageForOthers(userService, notificationService).commandForMessage(update, messageText,telegramBot, charId, user);
     }
 
 }

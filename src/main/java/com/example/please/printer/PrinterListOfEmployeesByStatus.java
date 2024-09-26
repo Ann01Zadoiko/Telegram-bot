@@ -1,4 +1,4 @@
-package com.example.please.atWork;
+package com.example.please.printer;
 
 import com.example.please.counter.CounterOfUsersForList;
 import com.example.please.user.StatusEnum;
@@ -7,35 +7,16 @@ import com.example.please.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
-public class ListOfEmployees {
+public class PrinterListOfEmployeesByStatus {
 
     private final UserService userService;
 
-    public String showAllUsersOfTheDay(){
-        StringBuilder list = new StringBuilder();
-
-        List<User> users = userService.listAll();
-
-        DateTimeFormatter formatterDay = DateTimeFormatter.ofPattern("dd MMMM yyyy");
-        list.append(formatterDay.format(LocalDate.now()));
-
-        list.append(getListOfTheStatus(StatusEnum.WORK, "На роботі:", users));
-        list.append(getListOfTheStatus(StatusEnum.REMOTE, "На дистанційній роботі:", users));
-        list.append(getListOfTheStatus(StatusEnum.SICK, "На лікарняному:", users));
-        list.append(getListOfTheStatus(StatusEnum.VACATION, "У відпустці:", users));
-        list.append(getListOfTheStatus(StatusEnum.BUSINESS_TRIP, "У відряженні:", users));
-
-        return String.valueOf(list);
-    }
-
-
-    private StringBuilder getListOfTheStatus(StatusEnum statusEnum, String text, List<User> users){
+    public StringBuilder printListByTheStatus(StatusEnum statusEnum, String text, List<User> users){
         StringBuilder list = new StringBuilder();
         CounterOfUsersForList counter = new CounterOfUsersForList();
 
@@ -59,7 +40,7 @@ public class ListOfEmployees {
                         .append(user.getFullName());
 
                 if ( (user.getStatusEnum().equals(StatusEnum.REMOTE) || user.getStatusEnum().equals(StatusEnum.WORK))
-                && user.getAtWork() == 1){
+                        && user.getAtWork() == 1){
                     list.append(" (")
                             .append(formatterTime.format(user.getTimeComing()))
                             .append(")");
@@ -69,5 +50,4 @@ public class ListOfEmployees {
         }
         return list;
     }
-
 }
