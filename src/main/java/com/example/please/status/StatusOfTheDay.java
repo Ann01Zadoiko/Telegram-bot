@@ -1,5 +1,6 @@
 package com.example.please.status;
 
+import com.example.please.counter.CounterOfUsersForStatus;
 import com.example.please.user.StatusEnum;
 import com.example.please.user.User;
 
@@ -11,14 +12,15 @@ public class StatusOfTheDay {
 
     public String printStatus(LocalDate date, List<User> users){
         StringBuilder status = new StringBuilder();
+        CounterOfUsersForStatus counter = new CounterOfUsersForStatus();
 
         int countOfUsersAreNotAtWork = users.size() -
-                countOfUsersWithStatus(users, StatusEnum.WORK) -
-                countOfUsersWithStatus(users, StatusEnum.REMOTE);
+                counter.countOfUsers(users, StatusEnum.WORK) -
+                counter.countOfUsers(users, StatusEnum.REMOTE);
 
         int countOfUsersAreAtWork =
-                countOfUsersWithStatus(users, StatusEnum.WORK) +
-                countOfUsersWithStatus(users, StatusEnum.REMOTE);
+                counter.countOfUsers(users, StatusEnum.WORK) +
+                counter.countOfUsers(users, StatusEnum.REMOTE);
 
         DateTimeFormatter formatterDay = DateTimeFormatter.ofPattern("dd.MM.yyyy");
 
@@ -38,24 +40,13 @@ public class StatusOfTheDay {
         return String.valueOf(status);
     }
 
-    private int countOfUsersWithStatus(List<User> users, StatusEnum statusEnum){
-        int count = 0;
-
-        for (User user: users){
-            if (user.getStatusEnum().equals(statusEnum)){
-                count++;
-            }
-        }
-
-        return count;
-    }
-
     private StringBuilder printCountAndList(List<User> users, StatusEnum statusEnum, String text){
         StringBuilder stringBuilder = new StringBuilder();
+        CounterOfUsersForStatus counter = new CounterOfUsersForStatus();
 
-        stringBuilder.append(text).append(": ").append(countOfUsersWithStatus(users, statusEnum)).append("\n");
+        stringBuilder.append(text).append(": ").append(counter.countOfUsers(users, statusEnum)).append("\n");
         for (User user: users){
-            if (user.getStatusEnum().equals(statusEnum) && countOfUsersWithStatus(users, statusEnum) != 0){
+            if (user.getStatusEnum().equals(statusEnum) && counter.countOfUsers(users, statusEnum) != 0){
                 stringBuilder.append(user.getFullName()).append("\n");
             }
         }

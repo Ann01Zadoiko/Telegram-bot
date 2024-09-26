@@ -1,5 +1,6 @@
 package com.example.please.atWork;
 
+import com.example.please.counter.CounterOfUsersForList;
 import com.example.please.user.StatusEnum;
 import com.example.please.user.User;
 import com.example.please.user.UserService;
@@ -36,11 +37,12 @@ public class ListOfEmployees {
 
     private StringBuilder getListOfTheStatus(StatusEnum statusEnum, String text, List<User> users){
         StringBuilder list = new StringBuilder();
+        CounterOfUsersForList counter = new CounterOfUsersForList();
 
         int number = 1;
         DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm");
 
-        if (countUsers(statusEnum, users) == 0){
+        if (counter.countOfUsers(users, statusEnum) == 0){
             return list;
         }
 
@@ -68,15 +70,4 @@ public class ListOfEmployees {
         return list;
     }
 
-    //count users
-    private int countUsers(StatusEnum statusEnum, List<User> users){
-        int count = 0;
-
-        for (User user: users){
-            if (user.getStatusEnum().equals(statusEnum)){
-                count++;
-            }
-        }
-        return count;
-    }
 }
