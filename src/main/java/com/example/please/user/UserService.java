@@ -16,19 +16,15 @@ public class UserService implements IUserService{
 
     //got list of users
     public List<User> listAll() {
-
         List<User> users = repository.findAll();
-
-        log.info("List all: " + users);
-
+        log.info("List all: {}", users);
         return users;
     }
 
     //save a new user
     public void save(User user){
         repository.save(user);
-
-        log.info("New user was saved: " + user);
+        log.info("New user was saved: {}", user);
     }
 
     //get user by chat id
@@ -39,6 +35,16 @@ public class UserService implements IUserService{
     //check user (exist)
     public boolean existsByChatId(Long id){
         return repository.existsByChatId(id);
+    }
+
+    @Override
+    public void setNewDay() {
+        List<User> users = listAll();
+
+        for (User user : users) {
+            user.setAtWork((byte) 0);
+            save(user);
+        }
     }
 
 }

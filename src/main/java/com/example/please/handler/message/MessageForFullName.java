@@ -6,7 +6,6 @@ import com.example.please.constant.Steps;
 import com.example.please.handler.MessageChecker;
 import com.example.please.user.User;
 import com.example.please.user.UserService;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -32,7 +31,7 @@ public class MessageForFullName {
                 bot.sendMessage(charId, Phrases.FULL_NAME_NEW + user.getFullName().toUpperCase());
             }
 
-            log.info("User set new full name: " + user.getFullName());
+            log.info("User set new full name: {}", user.getFullName());
         }
     }
 

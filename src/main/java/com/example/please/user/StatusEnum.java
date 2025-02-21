@@ -1,5 +1,10 @@
 package com.example.please.user;
 
 public enum StatusEnum {
-    WORK, SICK, VACATION, NOTHING, BUSINESS_TRIP, REMOTE
+    WORK,
+    SICK,
+    VACATION,
+    REMOTE,
+    BUSINESS_TRIP,
+    NOTHING;
 }

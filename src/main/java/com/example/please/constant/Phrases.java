@@ -10,9 +10,9 @@ public interface Phrases {
 
     String UNEXPECTED_MESSAGE = "Введіть правильно свої дані!";
 
-    String NOTIFICATION = "На даний час нагадування ";
+    String NOTIFICATION = "На даний час нагадування у Вас о ";
 
-    String STATUS = "Зараз Ви ";
+    String STATUS = "Ви змінили свій статус ";
 
     String CHOOSE = "Оберить одну зі списку:";
 

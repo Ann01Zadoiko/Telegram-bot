@@ -1,6 +1,7 @@
 package com.example.please.handler;
 
 import com.example.please.bot.TelegramBot;
+import com.example.please.constant.EnumNotification;
 import com.example.please.constant.Phrases;
 import com.example.please.constant.Steps;
 import com.example.please.notification.Notification;
@@ -20,7 +21,6 @@ public class Registration {
     private final UserService userService;
     private final NotificationService notificationService;
 
-
     //register a new user
     @SneakyThrows
     public void start(Message message, TelegramBot bot) {
@@ -34,12 +34,15 @@ public class Registration {
 
             Notification notification = new Notification();
             notification.setTurnOn(true);
-            notification.setTimeOfNotification("8:55");
+            notification.setTimeOfNotification(EnumNotification.EIGHT_FIFTY_FIVE.getTime());
             notification.setUser(user);
+
+            log.info("Notification before saving: {}", notification);
+
             notificationService.save(notification);
 
             bot.sendMessageRegistration(message.getChatId(), Steps.START);
-            log.info("User (" + user.getChatId() + ") is registered");
+            log.info("User ({}) is registered", user.getChatId());
 
         } else {
             bot.sendMessage(message.getChatId(), Phrases.START_OLD_USER);

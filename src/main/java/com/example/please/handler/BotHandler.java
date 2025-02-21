@@ -2,6 +2,7 @@ package com.example.please.handler;
 
 import com.example.please.bot.TelegramBot;
 import com.example.please.config.BotConfig;
+import com.example.please.handler.callback.*;
 import com.example.please.handler.message.*;
 import com.example.please.notification.Notification;
 import com.example.please.notification.NotificationService;
@@ -25,22 +26,16 @@ public class BotHandler {
         long messageId = update.getCallbackQuery().getMessage().getMessageId();
         Notification notification = notificationService.getNotificationByUser(user);
 
-        BotHandlerCallback callback = BotHandlerCallback
-                .builder()
-                .userService(userService)
-                .notificationService(notificationService)
-                .config(config)
-                .build();
-
         TelegramBot telegramBot = new TelegramBot(config, userService, notificationService);
 
-        callback.getNotification(data, notification, chatId, messageId, telegramBot);
-        callback.getFullName(data, user, chatId, messageId, telegramBot);
-        callback.getStatus(data, user, chatId, messageId, telegramBot);
-        callback.getPhoneNumber(data,user,chatId,messageId, telegramBot);
-        callback.getBackToSettings(data, chatId, messageId, telegramBot);
-        callback.commandsForCallbackOfNotifications(data, notification, chatId, messageId, telegramBot);
-        callback.commandsForStatuses(data, user, chatId, messageId, telegramBot);
+     //   new CallbackListOfNotification().getNotification(data, notification, chatId, messageId, telegramBot);
+        new CallbackFullName().getFullName(data, user, chatId, messageId, telegramBot);
+        new CallbackListOfStatus().getStatus(data, user, chatId, messageId, telegramBot);
+        new CallbackPhoneNumber().getPhoneNumber(data,user,chatId,messageId, telegramBot);
+        new CallbackSettingsBack().getBackToSettings(data, chatId, messageId, telegramBot);
+        new CallbackNotification(notificationService).commandsForCallbackOfNotifications(data, notification, chatId, messageId, telegramBot);
+        new CallbackStatus(userService).commandsForStatuses(data, user, chatId, messageId, telegramBot);
+
     }
 
     //answer to user's message

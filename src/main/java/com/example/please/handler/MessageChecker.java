@@ -1,6 +1,9 @@
 package com.example.please.handler;
 
 import com.example.please.constant.Commands;
+import com.example.please.constant.EnumNotification;
+import com.example.please.constant.Settings;
+import com.example.please.constant.UserStatus;
 import com.example.please.notification.Notification;
 import com.example.please.user.StatusEnum;
 import com.example.please.user.User;
@@ -39,4 +42,32 @@ public class MessageChecker {
                 && notification.getTimeOfNotification().equals(time) &&
                 (user.getStatusEnum().equals(StatusEnum.WORK) || user.getStatusEnum().equals(StatusEnum.REMOTE)));
     }
+
+    public static boolean isEnumValueNotification(String value) {
+        for (EnumNotification e : EnumNotification.values()) {
+            if (e.name().equals(value)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isEnumValueStatus(String value) {
+        for (UserStatus e : UserStatus.values()) {
+            if (e.name().equals(value)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isEnumValueSetting(String value) {
+        for (Settings e : Settings.values()) {
+            if (e.name().equals(value)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }

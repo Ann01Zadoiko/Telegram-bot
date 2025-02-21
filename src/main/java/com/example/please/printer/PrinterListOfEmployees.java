@@ -18,7 +18,7 @@ public class PrinterListOfEmployees {
 
     public String showAllUsersOfTheDay(){
         StringBuilder list = new StringBuilder();
-        PrinterListOfEmployeesByStatus printer = new PrinterListOfEmployeesByStatus(userService);
+        PrinterListOfEmployeesByStatus printer = new PrinterListOfEmployeesByStatus();
 
         List<User> users = userService.listAll();
 

@@ -1,10 +1,20 @@
 package com.example.please.constant;
 
-public interface Settings {
+public enum Settings {
 
-    String FULL_NAME = "ПІБ";
+    FULL_NAME ("ПІБ"),
 
-    String PHONE_NUMBER = "Номер телефона";
+    PHONE_NUMBER ("Номер телефона"),
 
-    String STATUS = "Статус";
+    STATUS ("Статус");
+
+    private final String name;
+
+    Settings(String name){
+        this.name = name;
+    }
+
+    public String getName(){
+        return name;
+    }
 }

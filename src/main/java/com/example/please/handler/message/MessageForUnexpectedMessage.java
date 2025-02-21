@@ -13,7 +13,7 @@ public class MessageForUnexpectedMessage {
     public void getUnexpectedMessage(String messageText, String [] stringBuilder, long charId, TelegramBot bot){
         if (MessageChecker.isUnexpectedMessage(messageText, stringBuilder)) {
             bot.sendMessage(charId, Phrases.UNEXPECTED_MESSAGE);
-            log.info("User (" + charId + ") entered incorrect message");
+            log.info("User ({}) entered incorrect message", charId);
         }
     }
 }

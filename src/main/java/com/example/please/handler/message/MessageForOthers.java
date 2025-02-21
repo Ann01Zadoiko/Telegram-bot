@@ -34,7 +34,6 @@ public class MessageForOthers {
         List<User> users = userService.listAll();
 
         switch (messageText){
-
             case Commands.START_PRIVATE -> new Registration(userService, notificationService).start(update.getMessage(), bot);
             case Commands.STATUS -> bot.sendMessage(chatId, printer.printStatus(LocalDate.now(), users));
             case Commands.AT_WORK -> {

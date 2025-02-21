@@ -23,7 +23,8 @@ public class Notification {
     @Column(name = "turn_on")
     private Boolean turnOn;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    //  @OneToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     @JoinColumn(name = "id_user")
     private User user;
 

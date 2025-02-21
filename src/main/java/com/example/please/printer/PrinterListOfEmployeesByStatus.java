@@ -1,9 +1,8 @@
 package com.example.please.printer;
 
-import com.example.please.counter.CounterOfUsersForList;
+import com.example.please.counter.CounterOfUsersForStatus;
 import com.example.please.user.StatusEnum;
 import com.example.please.user.User;
-import com.example.please.user.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -14,11 +13,9 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PrinterListOfEmployeesByStatus {
 
-    private final UserService userService;
-
     public StringBuilder printListByTheStatus(StatusEnum statusEnum, String text, List<User> users){
         StringBuilder list = new StringBuilder();
-        CounterOfUsersForList counter = new CounterOfUsersForList();
+        CounterOfUsersForStatus counter = new CounterOfUsersForStatus();
 
         int number = 1;
         DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm");

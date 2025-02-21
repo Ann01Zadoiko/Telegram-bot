@@ -11,4 +11,6 @@ public interface IUserService {
     User getByChatId(Long id);
 
     boolean existsByChatId(Long id);
+
+    void setNewDay();
 }
