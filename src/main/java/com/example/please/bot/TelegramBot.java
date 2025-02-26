@@ -4,7 +4,10 @@ import com.example.please.buttons.Buttons;
 import com.example.please.config.BotConfig;
 import com.example.please.constant.Phrases;
 import com.example.please.handler.BotHandler;
+import com.example.please.handler.registration.Registration;
+import com.example.please.handler.registration.UserStateManager;
 import com.example.please.notification.NotificationService;
+import com.example.please.user.User;
 import com.example.please.user.UserService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -30,12 +33,17 @@ public class TelegramBot extends TelegramLongPollingBot {
     private final BotConfig config;
     private final UserService userService;
     private final NotificationService notificationService;
+    private final Registration registration;
+    private final UserStateManager stateManager;
 
     @SneakyThrows
-    public TelegramBot(BotConfig config, UserService userService, NotificationService notificationService) {
+    public TelegramBot(BotConfig config, UserService userService, NotificationService notificationService, Registration registration,
+                       UserStateManager stateManager) {
         this.config = config;
         this.userService = userService;
         this.notificationService = notificationService;
+        this.registration = registration;
+        this.stateManager = stateManager;
 
         List<BotCommand> listofCommands = new ArrayList<>();
         listofCommands.add(new BotCommand("/status", "Інформація за день"));
@@ -46,7 +54,7 @@ public class TelegramBot extends TelegramLongPollingBot {
     @SneakyThrows
     @Override
     public void onUpdateReceived(Update update) {
-        BotHandler botHandler = new BotHandler(userService, notificationService, config);
+        BotHandler botHandler = new BotHandler(userService, notificationService, config, registration, stateManager);
 
         if (update.hasMessage() && update.getMessage().hasText()) {
             botHandler.getAllMessage(update);

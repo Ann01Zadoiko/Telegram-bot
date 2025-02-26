@@ -3,7 +3,7 @@ package com.example.please.handler.message;
 import com.example.please.atWork.AtWorkService;
 import com.example.please.bot.TelegramBot;
 import com.example.please.constant.Commands;
-import com.example.please.handler.Registration;
+import com.example.please.handler.registration.Registration;
 import com.example.please.notification.NotificationService;
 import com.example.please.printer.PrinterByStatus;
 import com.example.please.printer.PrinterListOfEmployees;
@@ -25,7 +25,7 @@ import java.util.List;
 public class MessageForOthers {
 
     private final UserService userService;
-    private final NotificationService notificationService;
+    private final Registration registration;
 
     @SneakyThrows
     public void commandForMessage(Update update, String messageText, TelegramBot bot, long chatId, User user){
@@ -34,7 +34,7 @@ public class MessageForOthers {
         List<User> users = userService.listAll();
 
         switch (messageText){
-            case Commands.START_PRIVATE -> new Registration(userService, notificationService).start(update.getMessage(), bot);
+            case Commands.START_PRIVATE -> registration.startRegistration(chatId, bot);
             case Commands.STATUS -> bot.sendMessage(chatId, printer.printStatus(LocalDate.now(), users));
             case Commands.AT_WORK -> {
                 String s = new AtWorkService(userService).addUserToTheList(user, LocalTime.now());

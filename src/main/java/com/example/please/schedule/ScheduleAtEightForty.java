@@ -20,3 +20,5 @@ public class ScheduleAtEightForty implements ScheduleDailyMessage{
         list.listOfUserForSchedule("8:40");
     }
 }
+
+

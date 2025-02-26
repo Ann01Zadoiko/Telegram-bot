@@ -1,10 +1,13 @@
 package com.example.please.user;
 
 
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
+
 
 
 @Slf4j
@@ -22,14 +25,16 @@ public class UserService implements IUserService{
     }
 
     //save a new user
+    @Transactional
     public void save(User user){
         repository.save(user);
+        repository.flush(); // Принудительно записываем в БД
         log.info("New user was saved: {}", user);
     }
 
     //get user by chat id
     public User getByChatId(Long id){
-        return repository.findByChatId(id);
+        return repository.findByChatId(id).orElse(null);
     }
 
     //check user (exist)
