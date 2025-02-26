@@ -1,4 +1,4 @@
-package com.telegram.handler;
+package com.telegram.handler.checker;
 
 import com.telegram.constant.Commands;
 import com.telegram.constant.EnumNotification;

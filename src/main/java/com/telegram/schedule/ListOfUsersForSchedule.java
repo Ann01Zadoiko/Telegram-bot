@@ -3,7 +3,7 @@ package com.telegram.schedule;
 import com.telegram.bot.TelegramBot;
 import com.telegram.config.BotConfig;
 import com.telegram.constant.Phrases;
-import com.telegram.handler.MessageChecker;
+import com.telegram.handler.checker.MessageChecker;
 import com.telegram.handler.registration.Registration;
 import com.telegram.handler.registration.UserStateManager;
 import com.telegram.notification.Notification;

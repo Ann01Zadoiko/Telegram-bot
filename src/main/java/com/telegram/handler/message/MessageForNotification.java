@@ -2,7 +2,6 @@ package com.telegram.handler.message;
 
 import com.telegram.bot.TelegramBot;
 import com.telegram.buttons.SettingsButton;
-import com.example.please.constant.*;
 import com.telegram.constant.Commands;
 import com.telegram.constant.EnumNotification;
 import com.telegram.constant.Phrases;

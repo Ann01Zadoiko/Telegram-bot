@@ -2,7 +2,7 @@ package com.telegram.handler.message;
 
 import com.telegram.bot.TelegramBot;
 import com.telegram.constant.Phrases;
-import com.telegram.handler.MessageChecker;
+import com.telegram.handler.checker.MessageChecker;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 

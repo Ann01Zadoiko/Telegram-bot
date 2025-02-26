@@ -3,7 +3,7 @@ package com.telegram.buttons;
 import com.telegram.constant.EnumNotification;
 import com.telegram.constant.Settings;
 import com.telegram.constant.UserStatus;
-import com.telegram.handler.MessageChecker;
+import com.telegram.handler.checker.MessageChecker;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 

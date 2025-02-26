@@ -75,7 +75,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 .build();
         execute(build);
 
-        log.info("Reply sent: " + build.getText() + "\nBy user: " + build.getChatId());
+        log.info("Reply sent: {}\nBy user: {}",build.getText(), build.getChatId());
     }
 
     @SneakyThrows
@@ -89,7 +89,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 .build();
         execute(editMessageText);
 
-        log.info("Reply sent: " + editMessageText.getText() + "\nBy user: " + editMessageText.getChatId());
+        log.info("Reply sent: {}\nBy user: {}", editMessageText.getText(), editMessageText.getChatId());
     }
 
     //send message where used buttons in callback
