@@ -5,7 +5,7 @@ import com.telegram.user.User;
 
 import java.util.List;
 
-public class CounterOfUsersForStatus implements Counter{
+public class CounterImp implements Counter{
 
     //count users for status
     @Override

@@ -52,5 +52,10 @@ public class UserService implements IUserService{
         }
     }
 
+    @Override
+    public List<User> listOfUsesAreNotAtWOrk() {
+        return repository.listOfUsesAreNotAtWOrk();
+    }
+
 }
 

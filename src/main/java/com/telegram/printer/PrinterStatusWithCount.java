@@ -1,6 +1,6 @@
 package com.telegram.printer;
 
-import com.telegram.counter.CounterOfUsersForStatus;
+import com.telegram.counter.CounterImp;
 import com.telegram.user.StatusEnum;
 import com.telegram.user.User;
 
@@ -10,7 +10,7 @@ public class PrinterStatusWithCount {
 
     public StringBuilder printCountAndList(List<User> users, StatusEnum statusEnum, String text){
         StringBuilder stringBuilder = new StringBuilder();
-        CounterOfUsersForStatus counter = new CounterOfUsersForStatus();
+        CounterImp counter = new CounterImp();
 
         stringBuilder.append(text).append(": ").append(counter.countOfUsers(users, statusEnum)).append("\n");
         for (User user: users){

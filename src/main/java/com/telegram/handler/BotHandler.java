@@ -2,13 +2,8 @@ package com.telegram.handler;
 
 import com.telegram.bot.TelegramBot;
 import com.telegram.config.BotConfig;
-import com.example.please.handler.callback.*;
-import com.example.please.handler.message.*;
 import com.telegram.handler.callback.*;
-import com.telegram.handler.message.MessageForNotification;
-import com.telegram.handler.message.MessageForOthers;
-import com.telegram.handler.message.MessageForSettings;
-import com.telegram.handler.message.MessageForUnexpectedMessage;
+import com.telegram.handler.message.*;
 import com.telegram.handler.registration.Registration;
 import com.telegram.handler.registration.RegistrationType;
 import com.telegram.handler.registration.UserStateManager;
@@ -79,12 +74,13 @@ public class BotHandler {
             return; // Прерываем дальнейшую обработку
         }
 
-     //   new MessageForFullName(userService).getFullName(user,messageText, charId, stringBuilder, telegramBot);
         new MessageForUnexpectedMessage().getUnexpectedMessage(messageText, stringBuilder, charId, telegramBot);
-   //     new MessageForPhoneNumber(userService).getPhoneNumber(user, messageText, charId, telegramBot);
         new MessageForSettings().getSettings(messageText, charId, telegramBot);
         new MessageForNotification(notificationService).getNotification(messageText, user, charId, telegramBot);
-        new MessageForOthers(userService, registration).commandForMessage(update, messageText,telegramBot, charId, user);
+        new MessageForAtWork(userService).commandForMessage(messageText, telegramBot, charId, user);
+        new MessageForList(userService).commandForMessage(messageText, telegramBot, charId);
+        new MessageForStart(userService, registration).commandForMessage(messageText, telegramBot, charId);
+        new MessageForStatus(userService).commandForMessage(messageText, telegramBot,charId);
     }
 
 }

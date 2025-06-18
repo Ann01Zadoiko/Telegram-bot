@@ -1,5 +1,10 @@
 package com.telegram.handler.registration;
 
+import lombok.Getter;
+import lombok.Setter;
+
+@Getter
+@Setter
 public class UserRegistration {
 
     private String fullName;
@@ -12,29 +17,8 @@ public class UserRegistration {
         this.step = step;
     }
 
-    public RegistrationType getType() {
-        return type;
-    }
-
-    public void setType(RegistrationType type) {
-        this.type = type;
-    }
-
     public void nextStep() {
         this.step++;
     }
-
-    public int getStep() {
-        return step;
-    }
-
-    public String getFullName() { return fullName; }
-
-    public void setFullName(String fullName) { this.fullName = fullName; }
-
-    public String getPhoneNumber() { return phoneNumber; }
-
-    public void setPhoneNumber(String phoneNumber) { this.phoneNumber = phoneNumber; }
-
 
 }

@@ -1,7 +1,7 @@
 package com.telegram.handler.callback;
 
 import com.telegram.bot.TelegramBot;
-import com.telegram.buttons.SettingsButton;
+import com.telegram.buttons.inline.InlineKeyboardSettingsButton;
 import com.telegram.constant.Phrases;
 import com.telegram.constant.Steps;
 import com.telegram.constant.UserStatus;
@@ -14,6 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
 
 import java.util.EnumSet;
+import java.util.Set;
 
 @RequiredArgsConstructor
 @Slf4j
@@ -24,7 +25,7 @@ public class CallbackStatus {
     @SneakyThrows
     public void commandsForStatuses(String data, User user, long chatId, long messageId, TelegramBot bot){
 
-        EnumSet<UserStatus> enumSet = EnumSet.of(UserStatus.BACK);
+        Set<UserStatus> enumSet = EnumSet.of(UserStatus.BACK);
         UserStatus[] userStatuses = UserStatus.values();
         StatusEnum[] statusEnums = StatusEnum.values();
 
@@ -40,14 +41,16 @@ public class CallbackStatus {
                             .text(Steps.THE_END)
                             .build());
                     bot.sendMessage(chatId, Steps.STEP_3);
-                    log.info("User ({}) change the status to {}", chatId, data);
                 } else {
                     user.setStatusEnum(statusEnums[i]);
                     userService.save(user);
-                    bot.executeEditMessageTextWithButton(Phrases.STATUS + userStatuses[i].getName().toLowerCase(), chatId, messageId, new SettingsButton().getButtonsDifferentCount(enumSet));
-                    log.info("User ({}) change the status to {}", chatId, data);
+                    String text = Phrases.STATUS + userStatuses[i].getName().toLowerCase();
+                    InlineKeyboardSettingsButton<UserStatus> button = new InlineKeyboardSettingsButton<>();
+                    bot.executeEditMessageTextWithButton(text, chatId, messageId, button.getButtonsDifferentCount(enumSet));
                 }
+                log.info("User ({}) change the status to {}", chatId, data);
             }
+
         }
     }
 }

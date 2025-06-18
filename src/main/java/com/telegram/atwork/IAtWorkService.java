@@ -4,7 +4,7 @@ import com.telegram.user.User;
 
 import java.time.LocalTime;
 
-public interface IAtWorkService {
+public sealed interface IAtWorkService permits AtWorkService{
 
     String addUserToTheList(User user, LocalTime time);
 }

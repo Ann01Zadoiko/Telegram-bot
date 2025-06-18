@@ -9,7 +9,7 @@ import java.time.LocalTime;
 
 @Slf4j
 @RequiredArgsConstructor
-public class AtWorkService implements IAtWorkService{
+public final class AtWorkService implements IAtWorkService{
 
     private final UserService userService;
 

@@ -1,7 +1,7 @@
 package com.telegram.handler.registration;
 
 import com.telegram.bot.TelegramBot;
-import com.telegram.buttons.SettingsButton;
+import com.telegram.buttons.inline.InlineKeyboardSettingsButton;
 import com.telegram.constant.EnumNotification;
 import com.telegram.constant.Steps;
 import com.telegram.constant.UserStatus;
@@ -16,6 +16,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.EnumSet;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -88,9 +89,10 @@ public class Registration {
                 userReg.nextStep();
                 stateManager.updateUserRegistration(chatId, userReg);
 
-                EnumSet<UserStatus> enumSet = EnumSet.allOf(UserStatus.class);
+                Set<UserStatus> enumSet = EnumSet.allOf(UserStatus.class);
                 enumSet.remove(UserStatus.BACK);
-                bot.executeSetting(chatId, new SettingsButton().getButtonsDifferentCount(enumSet), Steps.STEP_2);
+                InlineKeyboardSettingsButton<UserStatus> button = new InlineKeyboardSettingsButton<>();
+                bot.executeSetting(chatId, button.getButtonsDifferentCount(enumSet), Steps.STEP_2);
 
                 break;
         }

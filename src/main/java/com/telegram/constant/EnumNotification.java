@@ -1,5 +1,8 @@
 package com.telegram.constant;
 
+import lombok.Getter;
+
+@Getter
 public enum EnumNotification {
     EIGHT ("8:00"),
     EIGHT_FORTY ("8:40"),
@@ -9,14 +12,10 @@ public enum EnumNotification {
     TURN_OFF ("Вимкнути"),
     BACK ("Назад");
 
-    private String time;
+    private final String time;
 
     EnumNotification(String time){
         this.time = time;
-    }
-
-    public String getTime(){
-        return time;
     }
 
 }

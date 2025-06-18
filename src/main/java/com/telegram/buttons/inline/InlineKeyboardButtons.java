@@ -1,13 +1,13 @@
-package com.telegram.buttons;
+package com.telegram.buttons.inline;
 
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.InlineKeyboardButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class CreatorButton {
+public class InlineKeyboardButtons {
 
-    private CreatorButton(){}
+    private InlineKeyboardButtons(){}
 
     public static List<InlineKeyboardButton> createButton(String text){
         InlineKeyboardButton button = InlineKeyboardButton

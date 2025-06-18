@@ -8,7 +8,7 @@ public enum UserStatus {
     BUSINESS_TRIP ("У відрядженні"),
     BACK ("Назад");
 
-    private String name;
+    private final String name;
 
     UserStatus(String name){
         this.name = name;

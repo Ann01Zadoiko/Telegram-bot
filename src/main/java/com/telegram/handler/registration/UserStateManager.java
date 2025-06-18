@@ -47,18 +47,6 @@ public class UserStateManager {
             return reg.getType();
         }
 
-        // Проверяем БД только если нет данных в памяти
-//        boolean hasComplaint = complaintService.existsByChatId(chatId);
-//        boolean hasMuseum = museumService.existsByChatId(chatId);
-//
-//        if (hasComplaint && !hasMuseum) {
-//            return RegistrationType.COMPLAINT;
-//        } else if (!hasComplaint && hasMuseum) {
-//            return RegistrationType.MUSEUM;
-//        } else {
-//            return RegistrationType.UNKNOWN;
-//        }
-
         return RegistrationType.START;
     }
 }

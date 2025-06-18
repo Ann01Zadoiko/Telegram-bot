@@ -1,6 +1,6 @@
 package com.telegram.printer;
 
-import com.telegram.counter.CounterOfUsersForStatus;
+import com.telegram.counter.CounterImp;
 import com.telegram.user.StatusEnum;
 import com.telegram.user.User;
 
@@ -12,7 +12,7 @@ public class PrinterByStatus {
 
     public String printStatus(LocalDate date, List<User> users){
         StringBuilder status = new StringBuilder();
-        CounterOfUsersForStatus counter = new CounterOfUsersForStatus();
+        CounterImp counter = new CounterImp();
         PrinterStatusWithCount printer = new PrinterStatusWithCount();
 
         int countOfUsersAreNotAtWork = users.size() -

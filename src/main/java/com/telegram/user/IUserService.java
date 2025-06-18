@@ -13,4 +13,6 @@ public interface IUserService {
     boolean existsByChatId(Long id);
 
     void setNewDay();
+
+    List<User> listOfUsesAreNotAtWOrk();
 }

@@ -1,11 +1,15 @@
 package com.telegram.bot;
 
-import com.telegram.buttons.Buttons;
+import com.telegram.buttons.reply.ReplyKeyboardButtons;
 import com.telegram.config.BotConfig;
+import com.telegram.constant.Phrases;
 import com.telegram.handler.BotHandler;
 import com.telegram.handler.registration.Registration;
 import com.telegram.handler.registration.UserStateManager;
+import com.telegram.notification.Notification;
 import com.telegram.notification.NotificationService;
+import com.telegram.schedule.ReminderService;
+import com.telegram.user.User;
 import com.telegram.user.UserService;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
@@ -14,6 +18,7 @@ import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.commands.SetMyCommands;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
 import org.telegram.telegrambots.meta.api.methods.updatingmessages.EditMessageText;
+import org.telegram.telegrambots.meta.api.objects.Message;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.api.objects.commands.scope.BotCommandScopeDefault;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.InlineKeyboardMarkup;
@@ -43,9 +48,9 @@ public class TelegramBot extends TelegramLongPollingBot {
         this.registration = registration;
         this.stateManager = stateManager;
 
-        List<BotCommand> listofCommands = new ArrayList<>();
-        listofCommands.add(new BotCommand("/status", "Інформація за день"));
-        this.execute(new SetMyCommands(listofCommands, new BotCommandScopeDefault(), null));
+        List<BotCommand> listOfCommands = new ArrayList<>();
+        listOfCommands.add(new BotCommand("/status", "Інформація за день"));
+        this.execute(new SetMyCommands(listOfCommands, new BotCommandScopeDefault(), null));
     }
 
     //main work of bot
@@ -54,8 +59,34 @@ public class TelegramBot extends TelegramLongPollingBot {
     public void onUpdateReceived(Update update) {
         BotHandler botHandler = new BotHandler(userService, notificationService, config, registration, stateManager);
 
-        if (update.hasMessage() && update.getMessage().hasText()) {
+        Message message = update.getMessage();
+        String text = message.getText();
+        Long chatId = message.getChatId();
+
+        if (update.hasMessage() && message.hasText()) {
             botHandler.getAllMessage(update);
+
+            if (text.contains(":")) {
+                String[] parts = text.split(":");
+
+                if (parts.length == 2) {
+                    try {
+                        User byChatId = userService.getByChatId(chatId);
+                        Notification notification = notificationService.getNotificationByUser(byChatId);
+                        notification.setTimeOfNotification(text);
+                        notificationService.save(notification);
+
+                        int hour = Integer.parseInt(text.split(":")[0]);
+                        int minute = Integer.parseInt(text.split(":")[1]);
+                        ReminderService.scheduleReminder(hour, minute, chatId, this);
+                        sendMessage(chatId, Phrases.NOTIFICATION);
+                    } catch (NumberFormatException e) {
+                        sendMessage(chatId, "⚠ Ошибка! Время должно быть в формате HH:MM");
+                    }
+                } else {
+                    sendMessage(chatId, "⚠ Ошибка! Используй формат: /reminder HH:MM");
+                }
+            }
         }
 
         if (update.hasCallbackQuery()) {
@@ -115,20 +146,7 @@ public class TelegramBot extends TelegramLongPollingBot {
                 .builder()
                 .chatId(chatId)
                 .text(text)
-                .replyMarkup(Buttons.buttons())
-                .build();
-        execute(sendMessage);
-
-        log.info("Reply sent: " + sendMessage.getText() + "\nBy user: " + sendMessage.getChatId());
-    }
-
-    //registration
-    public void sendMessageRegistration(long chatId, String text) throws TelegramApiException {
-
-        SendMessage sendMessage = SendMessage
-                .builder()
-                .chatId(chatId)
-                .text(text)
+                .replyMarkup(ReplyKeyboardButtons.buttons())
                 .build();
         execute(sendMessage);
 

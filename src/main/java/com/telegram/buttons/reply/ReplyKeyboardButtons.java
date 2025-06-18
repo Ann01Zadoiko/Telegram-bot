@@ -1,4 +1,4 @@
-package com.telegram.buttons;
+package com.telegram.buttons.reply;
 
 import com.telegram.constant.Commands;
 import org.telegram.telegrambots.meta.api.objects.replykeyboard.ReplyKeyboardMarkup;
@@ -7,9 +7,9 @@ import org.telegram.telegrambots.meta.api.objects.replykeyboard.buttons.Keyboard
 import java.util.ArrayList;
 import java.util.List;
 
-public class Buttons {
+public class ReplyKeyboardButtons implements IReplyKeyboardButton{
 
-    private Buttons () {}
+    private ReplyKeyboardButtons() {}
 
     public static ReplyKeyboardMarkup buttons(){
         ReplyKeyboardMarkup keyboardMarkup = new ReplyKeyboardMarkup();

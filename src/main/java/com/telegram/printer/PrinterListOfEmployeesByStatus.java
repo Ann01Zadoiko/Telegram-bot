@@ -1,6 +1,6 @@
 package com.telegram.printer;
 
-import com.telegram.counter.CounterOfUsersForStatus;
+import com.telegram.counter.CounterImp;
 import com.telegram.user.StatusEnum;
 import com.telegram.user.User;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +15,7 @@ public class PrinterListOfEmployeesByStatus {
 
     public StringBuilder printListByTheStatus(StatusEnum statusEnum, String text, List<User> users){
         StringBuilder list = new StringBuilder();
-        CounterOfUsersForStatus counter = new CounterOfUsersForStatus();
+        CounterImp counter = new CounterImp();
 
         int number = 1;
         DateTimeFormatter formatterTime = DateTimeFormatter.ofPattern("HH:mm");

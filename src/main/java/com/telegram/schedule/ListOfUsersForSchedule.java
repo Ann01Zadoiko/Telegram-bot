@@ -3,7 +3,7 @@ package com.telegram.schedule;
 import com.telegram.bot.TelegramBot;
 import com.telegram.config.BotConfig;
 import com.telegram.constant.Phrases;
-import com.telegram.handler.checker.MessageChecker;
+import com.telegram.handler.checker.CheckerNotificationAt;
 import com.telegram.handler.registration.Registration;
 import com.telegram.handler.registration.UserStateManager;
 import com.telegram.notification.Notification;
@@ -35,7 +35,7 @@ public class ListOfUsersForSchedule {
         for (User user : users) {
             Notification notification = notificationService.getNotificationByUser(user);
 
-            if (MessageChecker.isNotificationAt(user, notification, time)) {
+            if (CheckerNotificationAt.isNotificationAt(user, notification, time)) {
                 new TelegramBot(config, userService, notificationService, registration, stateManager).sendMessage(user.getChatId(), Phrases.REMEMBER);
             }
 

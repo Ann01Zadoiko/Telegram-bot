@@ -29,7 +29,8 @@ public class CallbackNotification {
                 notification.setTurnOn(true);
                 notification.setTimeOfNotification(enumNotification.getTime());
                 notificationService.save(notification);
-                bot.executeEditMessage("Ви змінили своє нагадування о " + notification.getTimeOfNotification(), chatId, messageId);
+                String text = "Ви змінили своє нагадування о " + notification.getTimeOfNotification();
+                bot.executeEditMessage(text, chatId, messageId);
             }
             log.info("User ({}) change the notification at {}", chatId, data);
         }
